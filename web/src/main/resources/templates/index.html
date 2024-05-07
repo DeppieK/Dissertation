@@ -78,11 +78,17 @@
         <div class="content">
         </div>
     </div>
-<!--
+
     <div class="image-container">
-        <img src="https://external.webstorage.gr/mmimages/image/16/89/79/94/1671863-BOOK-hero-560x560.jpg" alt="Centered Image">
-        <label>this is a book title</label>
+        <ul class="books">
+            <li th:each="book : ${books}" th:if="${book.id le 12}" id="books">
+                <a th:href="@{books/{bookId}(bookId = ${book.id})}">
+                    <img th:src ="${book.photoUrl}"/>
+                </a>
+                <p id="book-title" th:text="${book.title}"></p>
+            </li>
+        </ul>
     </div>
--->
+
 </body>
 </html>

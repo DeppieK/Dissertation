@@ -5,10 +5,12 @@ import com.bookApp.web.models.Book;
 import com.bookApp.web.repositories.BookRepository;
 import com.bookApp.web.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
@@ -34,5 +36,8 @@ public class BookServiceImpl implements BookService {
                 .photoUrl(book.getPhotoUrl())
                 .build();
         return bookDto;
+    }
+    public List<Book> getBook(){
+        return bookRepository.findAll();
     }
 }
