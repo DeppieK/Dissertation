@@ -33,14 +33,14 @@ public class Book {
     private Long ISBN;
     private int pages;
     private String author;
-    private String photourl;
+    private String photoUrl;
 
     //Constructors
     public Book() {
 
     }
 
-    public Book(Long id, String title, String genre, String description,Long ISBN, int pages, String author, String photourl) {
+    public Book(Long id, String title, String genre, String description,Long ISBN, int pages, String author, String photoUrl) {
         this.id = id;
         this.title = title;
         this.genre = genre;
@@ -48,17 +48,17 @@ public class Book {
         this.ISBN = ISBN;
         this.pages = pages;
         this.author = author;
-        this.photourl = photourl;
+        this.photoUrl = photoUrl;
     }
 
-    public Book(String title, String genre, String description, Long ISBN, int pages, String author, String photourl) {
+    public Book(String title, String genre, String description, Long ISBN, int pages, String author, String photoUrl) {
         this.title = title;
         this.genre = genre;
         this.description = description;
         this.ISBN = ISBN;
         this.pages = pages;
         this.author = author;
-        this.photourl = photourl;
+        this.photoUrl = photoUrl;
 
     }
 
@@ -73,7 +73,7 @@ public class Book {
                 ", ISBN=" + ISBN +
                 ", pages=" + pages +
                 ", author='" + author + '\'' +
-                ", photourl='" + photourl + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
                 '}';
     }
 }
