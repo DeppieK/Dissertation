@@ -1,0 +1,356 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>e-Books</title>
+
+    <style>
+        h2 {
+            font-family: Arial, sans-serif;
+            font-size: 35px;
+            font-weight: lighter;
+            text-align: left;
+        }
+        h3 {
+            font-size: 30px;
+            text-align: center;
+            font-weight: lighter;
+        }
+        body{
+            margin: 0px 0px 0px 0px;
+            color: black;
+            font-family: Arial, sans-serif;
+            background-color:white;
+        }
+
+        header{
+            margin: 0px 0px 0px 0px;
+            background-color:#ffa434;
+
+        }
+        /* Reset some styles to ensure proper alignment */
+        ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            float: right;
+            position: relative;
+        }
+
+        li a {
+            font-size: 17px;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.76);
+            text-align: center;
+            padding: 10px 15px;
+            display: block;
+        }
+        .hover:hover{
+            background-color: #ff6d1fd4;
+
+        }
+
+        /* Style for the dropdown menu */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color:#ffa434;
+            z-index: 1; /* Ensure the dropdown appears above other content */
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu li {
+            display: block;
+        }
+
+        .dropdown-menu li a {
+            color: rgba(255, 255, 255, 0.76);
+            padding: 12px 22px;
+            display: block;
+            text-align: center;
+        }
+
+        /* Hover style for dropdown items */
+        .dropdown-menu li a:hover {
+            background-color: #ff6d1fd4;
+        }
+
+        img{
+            margin: 10px;
+            width: 50%; /* Adjust the width as needed */
+            height: auto; /* Maintain aspect ratio */            }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .href_2 {
+            font-family: Arial, sans-serif;
+            color: black;
+
+            font-weight: normal;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+        }
+        input[type=search] {
+            width: 100%;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+            background-image: url("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/search-512.png");
+            background-position: 5px center; /* Adjust the horizontal position */
+            background-repeat: no-repeat;
+            padding: 12px 20px 12px 30px; /* Adjust the right padding for the icon */
+            transition: width 0.4s ease-in-out;
+            background-size: 20px auto; /* Adjust the size of the icon */
+        }
+
+        input[type=search]:focus {
+            width: 100%;
+        }
+        .href {
+            font-family: Arial, sans-serif;
+            color:white;
+            text-decoration: none;
+        }
+        input[type=number] {
+            width: 30px;
+        }
+        .book-table{
+            border-collapse: collapse;
+            width: 70%;
+        }
+
+
+        .container {
+            margin-left: 70px;
+            margin-right: 70px;
+            padding: 20px;
+            background-color: white; /* Set the background color to white */
+            border: 1px solid #ddd; /* Add a 1px solid border with a shade */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+        }
+
+        .container table {
+            width: 100%;
+        }
+
+        .container table td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .container table td p {
+            margin: 0;
+        }
+
+        .container table b {
+            font-weight: bold;
+        }
+        button[type = submit]{
+            display: block;
+            width: 100%;
+            background-color: #ffa434;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            font-size: 18px;
+            margin-left: -10px;
+            cursor: pointer;
+        }
+        button[type = submit]:hover{
+            background-color: #ffb050ee;
+
+        }
+        .container input[type=number] {
+            width: 50px;
+            margin: 0px 0px 10px 0px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .margin{
+            margin: 100px 40px 0px 40px;
+        }
+        .comments-reviews-container {
+            margin: 70px 40px;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .comments-reviews-container h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .comment {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .comment-form {
+            margin-top: 20px;
+        }
+
+        .comment-form label {
+            font-weight: bold;
+            display: block;
+        }
+        .comment-form input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .comment-form .comment-submit {
+            background-color: #ffa434;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .comment-form .comment-submit:hover {
+            background-color: #ffb050ee;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+<!--
+    <table>
+        <tr>
+            <td style = "font-size: 35px; color:white;">
+                <a th:href="${baseURL + '/books'}"  class="href"> e-Books</a>
+            </td>
+            <td>
+                <form th:action="${baseURL + '/books/search'}">
+                    <input type="search" placeholder="Search books, authors, ISBNs..." name = "query" >
+                </form>
+
+            </td>
+            <td>
+                <nav>
+                    <ul>
+                        <li class="hover">
+                            <a th:if="${baseURL == ''}" th:href="${baseURL + '/signIn'}" th:text="'Sign in'">Sign in</a>
+                            <a th:if="${baseURL != ''}" th:href="${baseURL + '/myAccount'}" th:text="'My Account'">My Account</a>
+                        </li>
+                        <li class="dropdown">
+                            <a class="hover">Genres</a>
+                            <ul class="dropdown-menu">
+                                <li class="hover"><a th:href="${baseURL + '/books/genre/romance'}" >Romance</a></li>
+                                <li class="hover"><a th:href="${baseURL + '/books/genre/romcom'}">RomComs</a></li>
+                                <li class="hover"><a th:href="${baseURL + '/books/genre/thriller'}">Thriller</a></li>
+                                <li class="hover"><a th:href="${baseURL + '/books/genre/dark'}">Dark</a></li>
+                                <li class="hover"><a th:href="${baseURL + '/books/genre/mystery'}">Mystery</a></li>
+                                <li class="hover"><a th:href="${baseURL + '/books/genre/fantasy'}">Fantasy</a></li>
+                                <li class="hover"><a th:href="${baseURL + '/books/genre/drama'}">Drama</a></li>
+                                <li class="hover"><a th:href="${baseURL + '/books/genre/biography'}">Biography</a></li>
+                            </ul>
+                        </li>
+                        <li class="hover"><a th:href="${baseURL + '/books'}" >Home</a></li>
+                    </ul>
+                </nav>
+
+
+            </td>
+            <td>
+                <a th:href="${baseURL + '/cart'}" class="href"><img src="https://png2.cleanpng.com/sh/535017851c0794eab90a0aff986be805/L0KzQYm3VcIzN5h1h5H0aYP2gLBuTfUua5Dyhdd7Y3Wwc7F0kQV1baMygdV4boOwg7n2kQBqdpgye9N7dD32f7f7lBFzbV53RdZ4dIPogn7AhfIubKZnhNt3LUXlQIW6UfE2QGY5e9cBLkCzQIa9U8MxOWY3T6I5MUWzSYa7Vr5xdpg=/kisspng-e-commerce-computer-icons-shopping-cart-software-r-dotser-web-dublin-5b0431a5854ce6.000563301527001509546.png"style="width: 30px;height: 30px;"></a>
+            </td>
+
+        </tr>
+    </table>
+-->
+</header>
+<table class = "book-table">
+    <tr>
+        <td>
+            <img th:src ="${book.photoUrl}"/></td>
+        <td>
+            <div class="container">
+                <table>
+                    <tr>
+                        <td><p th:text="${book.title}" style="font-weight: bold"></p></td>
+                    </tr>
+                    <!--
+                    <tr>
+                        <td>
+                            <form th:action="@{../addToCart}" method="post">
+                                <input type="hidden" name="bookId" th:name="bookId" th:value="${book.id}" />
+                                <input type="number" name="quantity" th:name="quantity" value="1" min="1" />
+                                <button type="submit" th:text="'Add to Cart'" th:if="${book.availability && !(baseURL == '')}">Add to Cart</button>
+                            </form>
+                        </td>
+                    </tr>
+                    -->
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
+<div class="container margin">
+    <table class="book-table">
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td><b>Writer</b><br><!--<a class = "href_2" th:href="@{../books/author/{author}(author = ${book.author})}"> [[${book.author}]]</a>--></td>
+                    </tr>
+                    <tr>
+                        <td><b>ISBN</b><br><p th:text="${book.ISBN}"></p></td>
+                    </tr>
+                </table>
+            </td>
+            <td><p th:text="${book.description}"></p></td>
+        </tr>
+    </table>
+</div>
+<!--
+<div class="comments-reviews-container">
+    <h3>Comments and Reviews</h3>
+
+    <div th:each="comment : ${comments}" class="comment">
+        <p>
+            <span th:text="${comment.user.username}"></span>
+            <span th:if="${comment.user.role == 'Author'}">(Author)</span> says:
+        </p>
+        <p th:text="${comment.comment}"></p>
+    </div>
+
+    <div class="comment-form"  th:if="${!(baseURL == '')}">
+        <form th:action="@{../addComment}" method="post">
+            <input type="hidden" name="bookId" th:value="${book.id}" />
+            <label for="comment">Your Comment:</label>
+            <input type="text" id="comment" name="comment" />
+            <button type="submit" class="comment-submit" >Submit Comment</button>
+        </form>
+    </div>
+</div>
+-->
+</body>
+</html>
