@@ -53,6 +53,28 @@
             width: 30%;
 
         }
+
+        ul {
+            list-style-type: none;
+        }
+
+        #books {
+            text-align: left;
+        }
+        .books {
+            margin: 0px 30px 0px 0px;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .books li {
+            margin: 10px;
+            text-align: center;
+        }
+        #book-title{
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -81,7 +103,7 @@
 
     <div class="image-container">
         <ul class="books">
-            <li th:each="book : ${books}" th:if="${book.id le 12}" id="books">
+            <li th:each="book : ${books}" th:if="${book.id le 20}" id="books">
                 <a th:href="@{books/{bookId}(bookId = ${book.id})}">
                     <img th:src ="${book.photoUrl}"/>
                 </a>
