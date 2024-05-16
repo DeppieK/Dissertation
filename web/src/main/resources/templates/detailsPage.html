@@ -8,28 +8,47 @@
     <title>e-Books</title>
 
     <style>
-        h2 {
-            font-family: Arial, sans-serif;
-            font-size: 35px;
-            font-weight: lighter;
+        header {
+            display: flex;
+            align-items: center;
             text-align: left;
-        }
-        h3 {
-            font-size: 30px;
-            text-align: center;
-            font-weight: lighter;
-        }
-        body{
-            margin: 0px 0px 0px 0px;
-            color: black;
-            font-family: Arial, sans-serif;
-            background-color:white;
+            margin: 0px;
+            background-color: rgb(217, 202, 251);
+            padding: 1%;
+            width: 100%;
+            font-size: 25px;
+            font-family: geneva;
         }
 
-        header{
-            margin: 0px 0px 0px 0px;
-            background-color:#ffa434;
+        body {
+            margin: 0px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
 
+        .main-container {
+            display: flex;
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: rgba(230, 221, 249, 0.789);
+            font-size: 15px;
+            font-family: geneva;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .content {
+            flex-grow: 1;
+            overflow: auto;
+        }
+
+        .searchBar {
+            align-items: center;
+            margin:auto;
         }
         /* Reset some styles to ensure proper alignment */
         ul, li {
@@ -122,7 +141,7 @@
             transition: width 0.4s ease-in-out;
             background-size: 20px auto; /* Adjust the size of the icon */
         }
-
+/*
         input[type=search]:focus {
             width: 100%;
         }
@@ -134,6 +153,7 @@
         input[type=number] {
             width: 30px;
         }
+ */
         .book-table{
             border-collapse: collapse;
             width: 70%;
@@ -165,32 +185,7 @@
         .container table b {
             font-weight: bold;
         }
-        button[type = submit]{
-            display: block;
-            width: 100%;
-            background-color: #ffa434;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            font-size: 18px;
-            margin-left: -10px;
-            cursor: pointer;
-        }
-        button[type = submit]:hover{
-            background-color: #ffb050ee;
-
-        }
-        .container input[type=number] {
-            width: 50px;
-            margin: 0px 0px 10px 0px;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        .margin{
-            margin: 100px 40px 0px 40px;
-        }
+/*
         .comments-reviews-container {
             margin: 70px 40px;
             padding: 20px;
@@ -236,11 +231,33 @@
         .comment-form .comment-submit:hover {
             background-color: #ffb050ee;
         }
+ */
 
     </style>
 </head>
 <body>
 <header>
+    <header>
+        fooTitle
+        <div class="searchBar">
+            <label>
+                thisIsASearchBar
+            </label>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="sidebar">
+            testMenu
+            <ul>
+                <li>Menu Item 1</li>
+                <li>Menu Item 2</li>
+            </ul>
+        </div>
+
+        <div class="content">
+        </div>
+    </div>
 <!--
     <table>
         <tr>
@@ -352,5 +369,6 @@
     </div>
 </div>
 -->
+
 </body>
 </html>

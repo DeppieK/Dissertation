@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+/*
 @Service
 public class BookServiceImpl implements BookService {
 
@@ -40,4 +40,4 @@ public class BookServiceImpl implements BookService {
     public List<Book> getBook(){
         return bookRepository.findAll();
     }
-}
+}*/
