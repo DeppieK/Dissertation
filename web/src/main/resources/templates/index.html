@@ -122,6 +122,10 @@
         input[type=search]:focus {
             width: 150%;
         }
+        .href{
+            color:black;
+            text-decoration: none;
+        }
 
 
     </style>
@@ -129,7 +133,7 @@
 
 <body>
 <header>
-    fooTitle
+    <a th:href="@{/books}"  class="href"> fooTitle</a>
     <div class="searchBar">
         <form th:action="@{/books/search}">
             <input type="search" placeholder="Search books, authors, ISBNs..." name = "query" >
@@ -149,7 +153,7 @@
     <div class="content">
         <div class="image-container">
             <ul class="books">
-                <li th:each="book : ${books}" th:if="${book.id le 20}" id="books">
+                <li th:each="book : ${books}" th:if="${book.id le 60}" id="books">
                     <a th:href="@{/books/{bookId}(bookId = ${book.id})}">
                         <img th:src="${book.photoUrl}" />
                     </a>
