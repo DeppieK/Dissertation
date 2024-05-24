@@ -17,100 +17,129 @@
             font-family: geneva;
         }
 
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: geneva;
+        }
+
         body {
-            margin: 0px;
             display: flex;
             flex-direction: column;
-            height: 100vh;
         }
 
         .main-container {
             display: flex;
             flex-grow: 1;
-            margin-left: 20px; 
+            margin-left: 20px;
         }
+
         .sidebar {
-            width: 200px;
             background-color: rgba(230, 221, 249, 0.789);
             font-size: 15px;
-            font-family: geneva;
-            padding: 15px;
+            padding: 30px;
             box-sizing: border-box;
+        }
+
+        .sidebar ul {
+            padding: 0;
+            margin-left: 10px;
+            list-style-type: none;
+        }
+
+        .sidebar ul li {
+            white-space: nowrap;
+            margin-bottom: 10px;
         }
 
         .content {
             flex-grow: 1;
-            overflow: auto; 
+            overflow: auto;
         }
 
         .searchBar {
             align-items: center;
-            margin:auto;
+            margin: auto;
         }
-        body img{
+
+        body img {
             display: block;
             margin: auto;
             width: 30%;
-
         }
 
         ul {
             list-style-type: none;
+            padding: 0;
         }
 
         #books {
             text-align: left;
         }
+
         .books {
             margin: 0px 30px 0px 0px;
             text-align: center;
-            display: flex;
             flex-wrap: wrap;
             justify-content: flex-start;
         }
+
         .books li {
             margin: 10px;
             text-align: center;
+            width: 300px;
+
         }
-        #book-title{
+
+        .books li img {
+            width: 300px;
+            height: auto;
+        }
+
+        #book-title {
             text-align: center;
         }
+        .image-container {
+            margin-left: 580px;
+        }
+
+
     </style>
 </head>
 
 <body>
-    <header>
-        fooTitle
-        <div class="searchBar">
-            <label>
-                thisIsASearchBar
-            </label>
-        </div>
-    </header>
-
-    <div class="main-container">
-        <div class="sidebar">
-            testMenu
-            <ul>
-                <li>Menu Item 1</li>
-                <li>Menu Item 2</li>
-            </ul>
-        </div>
-
-        <div class="content">
-        </div>
+<header>
+    fooTitle
+    <div class="searchBar">
+        <label>
+            thisIsASearchBar
+        </label>
     </div>
+</header>
 
-    <div class="image-container">
-        <ul class="books">
-            <li th:each="book : ${books}" th:if="${book.id le 20}" id="books">
-                <a th:href="@{books/{bookId}(bookId = ${book.id})}">
-                    <img th:src ="${book.photoUrl}"/>
-                </a>
-                <p id="book-title" th:text="${book.title}"></p>
-            </li>
+<div class="main-container">
+    <div class="sidebar">
+        testMenu
+        <ul>
+            <li>Menu Item 1</li>
+            <li>Menu Item 2</li>
         </ul>
     </div>
+
+    <div class="content">
+        <div class="image-container">
+            <ul class="books">
+                <li th:each="book : ${books}" th:if="${book.id le 20}" id="books">
+                    <a th:href="@{books/{bookId}(bookId = ${book.id})}">
+                        <img th:src="${book.photoUrl}" />
+                    </a>
+                    <p id="book-title" th:text="${book.title}"></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
