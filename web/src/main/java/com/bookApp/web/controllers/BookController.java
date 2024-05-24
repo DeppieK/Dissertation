@@ -1,6 +1,7 @@
 package com.bookApp.web.controllers;
 
 import com.bookApp.web.dto.BookDto;
+import com.bookApp.web.services.BookSearchService;
 import com.bookApp.web.services.BookService;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -20,13 +22,16 @@ public class BookController {
     //private final BookServiceImpl bookServiceImpl;
     private final BookRepository bookRepository;
     private final BookService bookService;
+    private final BookSearchService bookSearchService;
+
 
     //constructor
     @Autowired
-    public BookController(/*BookServiceImpl bookServiceImpl,*/ BookRepository bookRepository, BookService bookService) {
+    public BookController(/*BookServiceImpl bookServiceImpl,*/ BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService) {
         //this.bookServiceImpl = bookServiceImpl;
         this.bookRepository = bookRepository;
         this.bookService = bookService;
+        this.bookSearchService = bookSearchService;
     }
 
     //main page
@@ -38,7 +43,6 @@ public class BookController {
     }
 
     //details page
-//page with the book details
     @GetMapping("/books/{bookId}")
     public String bookDetail(@PathVariable("bookId") long bookId, Model model) throws ChangeSetPersister.NotFoundException {
         Book book = bookService.findBookById(bookId);
@@ -48,5 +52,37 @@ public class BookController {
         //model.addAttribute("user", userId);
 
         return "detailsPage";
+    }
+
+    //search method
+    @GetMapping("books/search")
+    public String searchBooks(@RequestParam(value = "query") String query, Model model){
+        List<Book> books = bookSearchService.searchBooks(query);
+        model.addAttribute("books",books);
+        return "index";
+    }
+
+    //search books based on isbn
+    @GetMapping("/books/isbn/{isbn}")
+    public String findBooksByISBN(@PathVariable("isbn") Long isbn, Model model) {
+        List<Book> books = bookRepository.findByISBN(isbn);
+        model.addAttribute("books", books);
+        return "index";
+    }
+
+    //display books based on a specific genre
+    @GetMapping("/books/genre/{genre}")
+    public String findBooksByGenre(@PathVariable("genre") String genre, Model model) {
+        List<Book> books = bookRepository.findByGenre(genre);
+        model.addAttribute("books", books);
+        return "index";
+    }
+
+    //display books based on a specific author
+    @GetMapping("/books/author/{author}")
+    public String findBooksByAuthor(@PathVariable("author") String author, Model model) {
+        List<Book> books = bookRepository.findByAuthor(author);
+        model.addAttribute("books", books);
+        return "index";
     }
 }

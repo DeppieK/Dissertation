@@ -8,11 +8,23 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class BookService {
+public class BookService implements BookSearchService{
     private final BookRepository bookRepository;
+
     @Autowired
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
+    }
+
+    @Override
+    public List<Book> searchBooks(String query) {
+        List<Book> books = bookRepository.searchBooks(query);
+        return books;
+    }
+
+    @Override
+    public List<Book> searchBooksByISBN(Long isbn) {
+        return null;
     }
 
     public List<Book> getBook(){

@@ -64,7 +64,6 @@
             align-items: center;
             margin:auto;
         }
-        /* Reset some styles to ensure proper alignment */
         ul, li {
             margin: 0;
             padding: 0;
@@ -92,14 +91,13 @@
 
         }
 
-        /* Style for the dropdown menu */
         .dropdown-menu {
             display: none;
             position: absolute;
             top: 100%;
             left: 0;
             background-color:#ffa434;
-            z-index: 1; /* Ensure the dropdown appears above other content */
+            z-index: 1;
         }
 
         .dropdown:hover .dropdown-menu {
@@ -117,7 +115,6 @@
             text-align: center;
         }
 
-        /* Hover style for dropdown items */
         .dropdown-menu li a:hover {
             background-color: #ff6d1fd4;
         }
@@ -143,32 +140,34 @@
             text-align: center;
         }
         input[type=search] {
-            width: 100%;
+            width: 121%;
             box-sizing: border-box;
             border: 2px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
             background-color: white;
             background-image: url("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/search-512.png");
-            background-position: 5px center; /* Adjust the horizontal position */
+            background-position: 5px center;
             background-repeat: no-repeat;
-            padding: 12px 20px 12px 30px; /* Adjust the right padding for the icon */
+            padding: 12px 20px 12px 30px;
             transition: width 0.4s ease-in-out;
-            background-size: 20px auto; /* Adjust the size of the icon */
+            background-size: 20px auto;
         }
-/*
+
         input[type=search]:focus {
-            width: 100%;
+            width: 150%;
         }
+        /*
         .href {
             font-family: Arial, sans-serif;
             color:white;
             text-decoration: none;
         }
-        input[type=number] {
-            width: 30px;
-        }
- */
+
+                input[type=number] {
+                    width: 30px;
+                }
+         */
         .book-table{
             border-collapse: collapse;
             width: 70%;
@@ -254,9 +253,9 @@
 <header>
     fooTitle
     <div class="searchBar">
-        <label>
-            thisIsASearchBar
-        </label>
+        <form th:action="@{/books/search}">
+            <input type="search" placeholder="Search books, authors, ISBNs..." name = "query" >
+        </form>
     </div>
 </header>
 

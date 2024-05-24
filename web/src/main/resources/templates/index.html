@@ -104,6 +104,24 @@
         .image-container {
             margin-left: 580px;
         }
+        input[type=search] {
+            width: 121%;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+            background-image: url("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/search-512.png");
+            background-position: 5px center;
+            background-repeat: no-repeat;
+            padding: 12px 20px 12px 30px;
+            transition: width 0.4s ease-in-out;
+            background-size: 20px auto;
+        }
+
+        input[type=search]:focus {
+            width: 150%;
+        }
 
 
     </style>
@@ -113,9 +131,9 @@
 <header>
     fooTitle
     <div class="searchBar">
-        <label>
-            thisIsASearchBar
-        </label>
+        <form th:action="@{/books/search}">
+            <input type="search" placeholder="Search books, authors, ISBNs..." name = "query" >
+        </form>
     </div>
 </header>
 
@@ -132,7 +150,7 @@
         <div class="image-container">
             <ul class="books">
                 <li th:each="book : ${books}" th:if="${book.id le 20}" id="books">
-                    <a th:href="@{books/{bookId}(bookId = ${book.id})}">
+                    <a th:href="@{../books/{bookId}(bookId = ${book.id})}">
                         <img th:src="${book.photoUrl}" />
                     </a>
                     <p id="book-title" th:text="${book.title}"></p>
