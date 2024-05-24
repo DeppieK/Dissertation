@@ -13,18 +13,23 @@
             align-items: center;
             text-align: left;
             margin: 0px;
-            background-color: rgb(217, 202, 251);
-            padding: 1%;
+            background-color: #8c9cef;
+            padding: 1.5%;
             width: 100%;
             font-size: 25px;
             font-family: geneva;
         }
 
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: geneva;
+        }
+
         body {
-            margin: 0px;
             display: flex;
             flex-direction: column;
-            height: 100vh;
         }
 
         .main-container {
@@ -33,12 +38,21 @@
             margin-left: 20px;
         }
         .sidebar {
-            width: 200px;
-            background-color: rgba(230, 221, 249, 0.789);
+            background-color: #cbd3ff;
             font-size: 15px;
-            font-family: geneva;
-            padding: 15px;
+            padding: 30px;
             box-sizing: border-box;
+        }
+
+        .sidebar ul {
+            padding: 0;
+            margin-left: 10px;
+            list-style-type: none;
+        }
+
+        .sidebar ul li {
+            white-space: nowrap;
+            margin-bottom: 10px;
         }
 
         .content {
@@ -110,8 +124,9 @@
 
         img{
             margin: 10px;
-            width: 50%; /* Adjust the width as needed */
-            height: auto; /* Maintain aspect ratio */            }
+            width: 60%;
+            height: auto;
+        }
         table {
             border-collapse: collapse;
             width: 100%;
@@ -237,14 +252,13 @@
 </head>
 <body>
 <header>
-    <header>
-        fooTitle
-        <div class="searchBar">
-            <label>
-                thisIsASearchBar
-            </label>
-        </div>
-    </header>
+    fooTitle
+    <div class="searchBar">
+        <label>
+            thisIsASearchBar
+        </label>
+    </div>
+</header>
 
     <div class="main-container">
         <div class="sidebar">
@@ -256,6 +270,49 @@
         </div>
 
         <div class="content">
+            <table class = "book-table">
+                <tr>
+                    <td>
+                        <img th:src ="${book.photoUrl}"/></td>
+                    <td>
+                        <div class="container">
+                            <table>
+                                <tr>
+                                    <td><p th:text="${book.title}" style="font-weight: bold"></p></td>
+                                </tr>
+                                <!--
+                                <tr>
+                                    <td>
+                                        <form th:action="@{../addToCart}" method="post">
+                                            <input type="hidden" name="bookId" th:name="bookId" th:value="${book.id}" />
+                                            <input type="number" name="quantity" th:name="quantity" value="1" min="1" />
+                                            <button type="submit" th:text="'Add to Cart'" th:if="${book.availability && !(baseURL == '')}">Add to Cart</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                -->
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="container margin">
+                <table class="book-table">
+                    <tr>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td><b>Writer</b><br><!--<a class = "href_2" th:href="@{../books/author/{author}(author = ${book.author})}"> [[${book.author}]]</a>--></td>
+                                </tr>
+                                <tr>
+                                    <td><b>ISBN</b><br><p th:text="${book.ISBN}"></p></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td><p th:text="${book.description}"></p></td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 <!--
@@ -302,51 +359,9 @@
 
         </tr>
     </table>
--->
 </header>
-<table class = "book-table">
-    <tr>
-        <td>
-            <img th:src ="${book.photoUrl}"/></td>
-        <td>
-            <div class="container">
-                <table>
-                    <tr>
-                        <td><p th:text="${book.title}" style="font-weight: bold"></p></td>
-                    </tr>
-                    <!--
-                    <tr>
-                        <td>
-                            <form th:action="@{../addToCart}" method="post">
-                                <input type="hidden" name="bookId" th:name="bookId" th:value="${book.id}" />
-                                <input type="number" name="quantity" th:name="quantity" value="1" min="1" />
-                                <button type="submit" th:text="'Add to Cart'" th:if="${book.availability && !(baseURL == '')}">Add to Cart</button>
-                            </form>
-                        </td>
-                    </tr>
-                    -->
-                </table>
-            </div>
-        </td>
-    </tr>
-</table>
-<div class="container margin">
-    <table class="book-table">
-        <tr>
-            <td>
-                <table>
-                    <tr>
-                        <td><b>Writer</b><br><!--<a class = "href_2" th:href="@{../books/author/{author}(author = ${book.author})}"> [[${book.author}]]</a>--></td>
-                    </tr>
-                    <tr>
-                        <td><b>ISBN</b><br><p th:text="${book.ISBN}"></p></td>
-                    </tr>
-                </table>
-            </td>
-            <td><p th:text="${book.description}"></p></td>
-        </tr>
-    </table>
-</div>
+-->
+
 <!--
 <div class="comments-reviews-container">
     <h3>Comments and Reviews</h3>
