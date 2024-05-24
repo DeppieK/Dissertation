@@ -37,6 +37,7 @@
             flex-grow: 1;
             margin-left: 20px;
         }
+
         .sidebar {
             background-color: #cbd3ff;
             font-size: 15px;
@@ -64,60 +65,6 @@
             align-items: center;
             margin:auto;
         }
-        ul, li {
-            margin: 0;
-            padding: 0;
-        }
-
-        ul {
-            list-style-type: none;
-        }
-
-        li {
-            float: right;
-            position: relative;
-        }
-
-        li a {
-            font-size: 17px;
-            text-decoration: none;
-            color: rgba(255, 255, 255, 0.76);
-            text-align: center;
-            padding: 10px 15px;
-            display: block;
-        }
-        .hover:hover{
-            background-color: #ff6d1fd4;
-
-        }
-
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color:#ffa434;
-            z-index: 1;
-        }
-
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-
-        .dropdown-menu li {
-            display: block;
-        }
-
-        .dropdown-menu li a {
-            color: rgba(255, 255, 255, 0.76);
-            padding: 12px 22px;
-            display: block;
-            text-align: center;
-        }
-
-        .dropdown-menu li a:hover {
-            background-color: #ff6d1fd4;
-        }
 
         img{
             margin: 10px;
@@ -127,12 +74,6 @@
         table {
             border-collapse: collapse;
             width: 100%;
-        }
-        .href_2 {
-            font-family: Arial, sans-serif;
-            color: black;
-
-            font-weight: normal;
         }
 
         td {
@@ -199,6 +140,12 @@
         .container table b {
             font-weight: bold;
         }
+        .href{
+            color: #5e72e4;
+        }
+        .href:hover{
+            color: #4d5cda;
+        }
 /*
         .comments-reviews-container {
             margin: 70px 40px;
@@ -259,14 +206,14 @@
     </div>
 </header>
 
-    <div class="main-container">
-        <div class="sidebar">
-            testMenu
-            <ul>
-                <li>Menu Item 1</li>
-                <li>Menu Item 2</li>
-            </ul>
-        </div>
+<div class="main-container">
+    <div class="sidebar">
+        testMenu
+        <ul>
+            <li>Menu Item 1</li>
+            <li>Menu Item 2</li>
+        </ul>
+    </div>
 
         <div class="content">
             <table class = "book-table">
@@ -301,7 +248,7 @@
                         <td>
                             <table>
                                 <tr>
-                                    <td><b>Writer</b><br><!--<a class = "href_2" th:href="@{../books/author/{author}(author = ${book.author})}"> [[${book.author}]]</a>--></td>
+                                    <td><b>Writer</b><br><a class = "href" th:href="@{../books/author/{author}(author = ${book.author})}"> [[${book.author}]]</a></td>
                                 </tr>
                                 <tr>
                                     <td><b>ISBN</b><br><p th:text="${book.ISBN}"></p></td>
