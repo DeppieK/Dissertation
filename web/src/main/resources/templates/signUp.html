@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf8">
+  <title>Sign Up</title>
+  <style>
+    header {
+      display: flex;
+      align-items: center;
+      text-align: left;
+      margin: 0px;
+      background-color: rgb(217, 202, 251);
+      padding: 1%;
+      width: 100%;
+      font-size: 25px;
+      font-family: geneva;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: geneva;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-container {
+      display: flex;
+      flex-grow: 1;
+      margin-left: 20px;
+    }
+
+    .sidebar {
+      background-color: rgba(230, 221, 249, 0.789);
+      font-size: 15px;
+      padding: 70px;
+      box-sizing: border-box;
+    }
+
+    .content {
+      margin-top: 30px;
+      flex-grow: 1;
+      overflow: auto;
+    }
+
+    body img {
+      display: block;
+      margin: auto;
+      width: 30%;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+
+    .books li {
+      margin: 10px;
+      text-align: center;
+      width: 300px;
+
+    }
+
+    .books li img {
+      width: 300px;
+      height: auto;
+    }
+
+    .signup-form {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f4f7f8;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .signup-form h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .signup-form input[type="text"],
+    .signup-form input[type="email"],
+    .signup-form input[type="password"] {
+      width: 92%;
+      font-size: 13px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .signup-form button {
+      width: 100%;
+      background: #5e72e4;
+      color: #fff;
+      border: none;
+      font-size: 13px;
+      padding: 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .signup-form button:hover {
+      background: #4d5cda;
+    }
+    a{
+      color: #4d5cda;
+    }
+    .formtext{
+      margin-top: 10px;
+      
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  Sign Up
+</header>
+
+<div class="main-container">
+  <div class="sidebar">
+
+  </div>
+
+  <div class="content">
+    <div class="signup-form">
+      <h2>Create an Account</h2>
+      <form action="#" method="post">
+        <input type="text" name="firstname" placeholder="First Name" required>
+        <input type="text" name="lastname" placeholder="Last Name" required>
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" name="confirmpassword" placeholder="Confirm Password" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <button type="submit">Sign Up</button>
+        <div class="formtext">Already a member? <a href="logIn.html">Sign In</a></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+
+</html>
