@@ -13,7 +13,6 @@ import org.springframework.context.annotation.ComponentScan;
 @Entity
 @Table(name = "books")
 public class Book {
-    //Getters and Setters
     @Id
     @SequenceGenerator(
             name = "book_sequence",
