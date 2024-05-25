@@ -1,4 +1,4 @@
-package com.bookApp.web.models;
+package com.bookApp.web.book;
 
 import jakarta.persistence.*;
 import lombok.Getter;

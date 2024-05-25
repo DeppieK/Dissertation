@@ -1,6 +1,5 @@
-package com.bookApp.web.services;
+package com.bookApp.web.book;
 
-import com.bookApp.web.models.Book;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

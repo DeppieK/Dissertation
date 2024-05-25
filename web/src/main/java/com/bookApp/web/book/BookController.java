@@ -1,12 +1,7 @@
-package com.bookApp.web.controllers;
+package com.bookApp.web.book;
 
-import com.bookApp.web.dto.BookDto;
-import com.bookApp.web.services.BookSearchService;
-import com.bookApp.web.services.BookService;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.ui.Model;
-import com.bookApp.web.models.Book;
-import com.bookApp.web.repositories.BookRepository;
 //import com.bookApp.web.services.impl.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

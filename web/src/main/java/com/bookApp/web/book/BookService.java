@@ -1,7 +1,5 @@
-package com.bookApp.web.services;
+package com.bookApp.web.book;
 
-import com.bookApp.web.models.Book;
-import com.bookApp.web.repositories.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
