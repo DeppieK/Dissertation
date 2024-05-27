@@ -38,7 +38,9 @@ public class User {
 
     //Constructors
     public User() {
+
     }
+
 
     public User(Long id) {
         this.id = id;
