@@ -22,11 +22,15 @@
             padding: 0;
             height: 100%;
             font-family: geneva;
+            background-color: rgba(248, 249, 255, 0.58);
         }
 
         body {
             display: flex;
             flex-direction: column;
+        }
+        h2{
+            font-size: 30px;
         }
 
         .main-container {
@@ -79,7 +83,6 @@
             margin: 10px;
             text-align: center;
             width: 300px;
-
         }
 
         .books li img {
@@ -105,21 +108,59 @@
         input[type=search]:focus {
             width: 150%;
         }
-        .href{
-            color:black;
+
+        .href {
+            color: black;
             text-decoration: none;
         }
 
+        .userDetails {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .userDetails table {
+            width: 70%;
+            border-collapse: collapse;
+            margin: 70px 0;
+            font-size: 18px;
+            text-align: left;
+            position: relative;
+        }
+
+        .userDetails th, .userDetails td {
+            padding: 14px;
+            border-bottom: 1px solid;
+            border-color: rgba(140, 156, 239, 0.53);
+
+            position: relative;
+        }
+
+        .userDetails th::after {
+            content: "";
+            position: absolute;
+            top: -30px;
+            bottom: -30px;
+            right: -1px;
+            width: 1px;
+            background-color: rgba(140, 156, 239, 0.53);
+        }
+        .userDetails .last-row th,
+        .userDetails .last-row td {
+            border-bottom: none;
+        }
 
     </style>
 </head>
 
 <body>
 <header>
-    <a th:href="@{/books}"  class="href"> fooTitle</a>
+    <a th:href="@{/books}" class="href">fooTitle</a>
     <div class="searchBar">
         <form th:action="@{/books/search}">
-            <input type="search" placeholder="Search books, authors, ISBNs..." name = "query" >
+            <input type="search" placeholder="Search books, authors, ISBNs..." name="query">
         </form>
     </div>
     <div>
@@ -137,7 +178,39 @@
     </div>
 
     <div class="content">
-        this is a user profile
+        <div class="userDetails">
+            <h2> [[${user.username}]]'s account</h2>
+            <table>
+                <tr>
+                    <th>First Name</th>
+                    <td th:text="${user.username}"></td>
+                </tr>
+                <tr>
+                    <th>Last Name</th>
+                    <td th:text="${user.firstname}"></td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td th:text="${user.email}"></td>
+                </tr>
+                <tr>
+                    <th>Books read</th>
+                    <td>45</td>
+                </tr>
+                <tr>
+                    <th>Books in bookshelf</th>
+                    <td>57</td>
+                </tr>
+                <tr>
+                    <th>Friends</th>
+                    <td>13</td>
+                </tr>
+                <tr class="last-row">
+                    <th>Account since</th>
+                    <td th:text="${#temporals.format(user.dateOfRegistration.toLocalDate(), 'yyyy-MM-dd')}"></td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 
