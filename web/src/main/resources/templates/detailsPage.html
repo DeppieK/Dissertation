@@ -150,7 +150,7 @@
             color: #4d5cda;
         }
 
-        .href{
+        .href, .hrefTitle{
             color:black;
             text-decoration: none;
         }
@@ -210,7 +210,7 @@
 </head>
 <body>
 <header>
-    <a th:href="@{/books}"  class="href"> fooTitle</a>
+    <a th:href="@{/books}"  class="hrefTitle"> fooTitle</a>
     <div class="searchBar">
         <form th:action="@{/books/search}">
             <input type="search" placeholder="Search books, authors, ISBNs..." name = "query" >
