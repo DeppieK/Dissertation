@@ -21,8 +21,7 @@ public class BookController {
 
     //constructor
     @Autowired
-    public BookController(/*BookServiceImpl bookServiceImpl,*/ BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService) {
-        //this.bookServiceImpl = bookServiceImpl;
+    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookSearchService = bookSearchService;
