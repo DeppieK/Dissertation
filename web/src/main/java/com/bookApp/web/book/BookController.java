@@ -79,4 +79,11 @@ public class BookController {
         model.addAttribute("books", books);
         return "index";
     }
+
+    //genres page
+    @GetMapping("/genres")
+    public String genres() {
+
+        return "genres";
+    }
 }

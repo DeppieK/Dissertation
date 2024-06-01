@@ -141,15 +141,22 @@
         .container table b {
             font-weight: bold;
         }
-        .href{
+
+        .href2{
             color: #5e72e4;
         }
-        .href:hover{
+
+        .href2:hover, .href:hover{
             color: #4d5cda;
         }
-        .href2{
+
+        .href{
             color:black;
             text-decoration: none;
+        }
+
+        .menu{
+            font-size: 20px;
         }
 /*
         .comments-reviews-container {
@@ -203,20 +210,38 @@
 </head>
 <body>
 <header>
-    <a th:href="@{/books}"  class="href2"> fooTitle</a>
+    <a th:href="@{/books}"  class="href"> fooTitle</a>
     <div class="searchBar">
         <form th:action="@{/books/search}">
             <input type="search" placeholder="Search books, authors, ISBNs..." name = "query" >
         </form>
     </div>
+    <div>
+        <a th:href="@{/profile}" class="profileIcon"> <img th:src="@{/templates/icons/output-onlinepngtools.png}" style="width: 30px;height: 30px;"></a>
+    </div>
+    <div>
+        <a th:href="@{/logout}" class="logoutIcon"> <img th:src="@{/templates/icons/images.png}" style="width: 30px;height: 30px;"></a>
+    </div>
 </header>
 
 <div class="main-container">
     <div class="sidebar">
-        testMenu
+        <div class="menu">
+            Menu
+        </div>
         <ul>
-            <li>Menu Item 1</li>
-            <li>Menu Item 2</li>
+            <li>
+                <a class="href" th:href="@{/genres}"> Genres </a>
+            </li>
+            <li>
+                <a class="href" th:href="@{/myBooks}"> My Books </a>
+            </li>
+            <li>
+                <a class="href" href="#"> Discover Books </a>
+            </li>
+            <li>
+                <a class="href" href="#"> My Friends </a>
+            </li>
         </ul>
     </div>
 
@@ -253,7 +278,7 @@
                         <td>
                             <table>
                                 <tr>
-                                    <td><b>Writer</b><br><a class = "href" th:href="@{../books/author/{author}(author = ${book.author})}"> [[${book.author}]]</a></td>
+                                    <td><b>Writer</b><br><a class = "href2" th:href="@{../books/author/{author}(author = ${book.author})}"> [[${book.author}]]</a></td>
                                 </tr>
                                 <tr>
                                     <td><b>ISBN</b><br><p th:text="${book.ISBN}"></p></td>

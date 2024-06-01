@@ -19,17 +19,20 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    //login page
     @GetMapping("/login")
     public String login() {
 
         return "login";
     }
 
+    //sign up page
     @GetMapping("/signup")
     public String signup() {
         return "signUp";
     }
 
+    //register user
     @PostMapping("/register")
     public String register(@RequestParam String username,
                            @RequestParam String password,
@@ -56,6 +59,7 @@ public class UserController {
         return "redirect:/login";
     }
 
+    //profile page
     @GetMapping("/profile")
     public String profile(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
