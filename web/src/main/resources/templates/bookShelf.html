@@ -195,19 +195,19 @@
             <tr>
                 <td>image</td>
                 <td>books currently reading
-                <div class="amountOfBooks">10 books</div>
+                    <div class="amountOfBooks" th:text="${currentlyReadingCount} + ' books'"></div>
                 </td>
             </tr>
             <tr>
                 <td>image</td>
                 <td>books to read
-                    <div class="amountOfBooks">10 books</div>
+                    <div class="amountOfBooks" th:text="${toReadCount} + ' books'"></div>
                 </td>
             </tr>
             <tr>
                 <td>image</td>
                 <td>want to read
-                    <div class="amountOfBooks">10 books</div>
+                    <div class="amountOfBooks" th:text="${wantToReadCount} + ' books'"></div>
                 </td>
             </tr>
             </tbody>
