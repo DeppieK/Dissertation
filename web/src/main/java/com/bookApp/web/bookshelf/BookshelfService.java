@@ -25,4 +25,13 @@ public class BookshelfService {
     public long countBooksByUserAndLabel(User user, String label) {
         return bookshelfRepository.countByUserAndLabel(user, label);
     }
+
+    public List<Bookshelf> getBookshelvesWithoutSpecifiedLabels(User user) {
+        return bookshelfRepository.findBookshelvesWithoutSpecifiedLabels(user);
+    }
+
+    public List<Bookshelf> getBookshelvesByUserAndLabels(User user, List<String> labels) {
+        return bookshelfRepository.findByUserAndLabelIn(user, labels);
+    }
 }
+
