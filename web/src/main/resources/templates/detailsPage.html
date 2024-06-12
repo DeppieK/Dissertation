@@ -289,6 +289,25 @@
                     </tr>
                 </table>
             </div>
+            <div>
+                <div class="container margin">
+                    <table class="book-table">
+                        <tr>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td><b>Writer</b><br><a class = "href2" th:href="@{../books/author/{author}(author = ${book.author})}"> [[${book.author}]]</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>ISBN</b><br><p th:text="${book.ISBN}"></p></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td><p th:text="${book.description}"></p></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 <!--
