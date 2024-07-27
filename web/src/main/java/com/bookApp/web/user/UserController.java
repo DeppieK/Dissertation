@@ -69,4 +69,22 @@ public class UserController {
         model.addAttribute("user", user);
         return "profile";
     }
+
+    @GetMapping("/myFriends")
+    public String friendsList(Model model) {
+        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //String username = authentication.getName();
+        //User user = userService.findByUsername(username);
+
+        return "friendsList";
+    }
+
+    @GetMapping("/discoverBooks")
+    public String discoverBooks(Model model) {
+        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //String username = authentication.getName();
+        //User user = userService.findByUsername(username);
+
+        return "discoverBooks";
+    }
 }
