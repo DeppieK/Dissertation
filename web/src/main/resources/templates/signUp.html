@@ -122,6 +122,10 @@
       margin-top: 10px;
 
     }
+    .error {
+      color: red;
+      font-size: 0.875rem;
+    }
   </style>
 </head>
 
@@ -130,29 +134,54 @@
   Sign Up
 </header>
 
+<div class="main-container">
+  <div class="sidebar"></div>
 
-
-  <div class="main-container">
-    <div class="sidebar"></div>
-
-    <div class="content">
-      <div class="signup-form">
-        <h2>Create an Account</h2>
-        <form th:action="@{/register}" method="post">
-          <input type="text" name="firstname" placeholder="First Name" required>
-          <input type="text" name="lastname" placeholder="Last Name" required>
-          <input type="text" name="username" placeholder="Username" required>
-          <input type="password" name="password" placeholder="Password" required>
-          <input type="password" name="confirmpassword" placeholder="Confirm Password" required>
-          <input type="email" name="email" placeholder="Email" required>
-          <button type="submit">Sign Up</button>
-          <div class="formText">Already a member? <a th:href="@{/login}">Sign In</a></div>
-        </form>
-      </div>
+  <div class="content">
+    <div class="signup-form">
+      <h2>Create an Account</h2>
+      <form th:action="@{/register}" method="post" id="registrationForm">
+        <input type="text" name="firstname" id="firstname" placeholder="First Name" required>
+        <input type="text" name="lastname" id="lastname" placeholder="Last Name" required>
+        <input type="text" name="username" id="username" placeholder="Username" required>
+        <input type="password" name="password" id="password" placeholder="Password" required>
+        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
+        <span id="message" class="error"></span> <br><br>
+        <input type="email" name="email" id="email" placeholder="Email" required>
+        <button type="submit" id="submitBtn">Sign Up</button>
+        <div class="formText">Already a member? <a th:href="@{/login}">Sign In</a></div>
+      </form>
     </div>
   </div>
 </div>
 
+<script>
+  document.getElementById('registrationForm').addEventListener('input', validateForm);
+
+  function validateForm() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const message = document.getElementById('message');
+
+    if (password.length < 8) {
+      message.textContent = "Password length must be at least 8 characters";
+      return false;
+    }
+
+    if (password.length > 15) {
+      message.textContent = "Password length must not exceed 15 characters";
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      message.textContent = "Passwords do not match";
+      return false;
+    }
+
+    message.textContent = "";
+    return true;
+  }
+</script>
 </body>
 
 </html>
