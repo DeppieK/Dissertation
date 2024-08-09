@@ -227,10 +227,12 @@
 
         <table class="bookshelf">
             <tbody>
-            <tr th:each="bookshelf : ${otherBookshelves}">
+            <tr th:each="entry : ${otherBookshelvesWithCount}">
                 <td>image</td>
-                <td>[[${bookshelf.label}]]
-                    <div class="amountOfBooks" th:href="@{/myBookshelf}">20 books</div>
+                <td>[[${entry.key}]]
+                    <a class="amountOfBooks" th:href="@{/myBookshelf}">
+                        <div class="amountOfBooks">[[${entry.value}]] books</div>
+                    </a>
                 </td>
             </tr>
             </tbody>

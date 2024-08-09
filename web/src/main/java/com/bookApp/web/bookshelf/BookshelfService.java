@@ -4,6 +4,8 @@ import com.bookApp.web.user.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BookshelfService {
@@ -32,6 +34,16 @@ public class BookshelfService {
 
     public List<Bookshelf> getBookshelvesByUserAndLabels(User user, List<String> labels) {
         return bookshelfRepository.findByUserAndLabelIn(user, labels);
+    }
+
+    public Map<String, Long> getBookshelvesWithCountByUser(User user) {
+        List<Bookshelf> bookshelves = bookshelfRepository.findBookshelvesWithoutSpecifiedLabels(user);
+        return bookshelves.stream()
+                .collect(Collectors.toMap(
+                        Bookshelf::getLabel,
+                        bookshelf -> countBooksByUserAndLabel(user, bookshelf.getLabel()),
+                        (existing, replacement) -> existing // handle duplicate keys
+                ));
     }
 }
 

@@ -13,7 +13,6 @@ import java.util.List;
 @Controller
 public class BookController {
 
-    //private final BookServiceImpl bookServiceImpl;
     private final BookRepository bookRepository;
     private final BookService bookService;
     private final BookSearchService bookSearchService;

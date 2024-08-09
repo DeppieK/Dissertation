@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class BookshelfController {
@@ -44,6 +45,11 @@ public class BookshelfController {
         //get the user's bookshelves without specified labels
         List<Bookshelf> otherBookshelves = bookshelfService.getBookshelvesWithoutSpecifiedLabels(user);
         model.addAttribute("otherBookshelves", otherBookshelves);
+
+        // Get the user's bookshelves without specified labels
+        Map<String, Long> otherBookshelvesWithCount = bookshelfService.getBookshelvesWithCountByUser(user);
+        model.addAttribute("otherBookshelvesWithCount", otherBookshelvesWithCount);
+
 
         //calculate the number of books per shelf label
         long currentlyReadingCount = bookshelfService.countBooksByUserAndLabel(user, "currently_reading");

@@ -36,12 +36,12 @@ public class UserController {
     @PostMapping("/register")
     public String register(@RequestParam String username,
                            @RequestParam String password,
-                           @RequestParam String confirmpassword,
+                           @RequestParam String confirmPassword,
                            @RequestParam String firstname,
                            @RequestParam String lastname,
                            @RequestParam String email,
                            RedirectAttributes redirectAttributes) {
-        if (!password.equals(confirmpassword)) {
+        if (!password.equals(confirmPassword)) {
             redirectAttributes.addFlashAttribute("error", "Passwords do not match");
             return "redirect:/signup";
         }
