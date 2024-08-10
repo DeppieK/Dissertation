@@ -1,5 +1,8 @@
 package com.bookApp.web.book;
 
+import com.bookApp.web.ratings.Ratings;
+import com.bookApp.web.ratings.RatingsRepository;
+import com.bookApp.web.ratings.RatingsService;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +19,15 @@ public class BookController {
     private final BookRepository bookRepository;
     private final BookService bookService;
     private final BookSearchService bookSearchService;
-
+    private final RatingsRepository ratingsRepository;
 
     //constructor
     @Autowired
-    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService) {
+    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookSearchService = bookSearchService;
+        this.ratingsRepository = ratingsRepository;
     }
 
     //main page
@@ -38,9 +42,11 @@ public class BookController {
     @GetMapping("/books/{bookId}")
     public String bookDetail(@PathVariable("bookId") long bookId, Model model) throws ChangeSetPersister.NotFoundException {
         Book book = bookService.findBookById(bookId);
-        //Long userId = commentsService.getUserIdByBookId(bookId); // Updated to Long
+        //Long userId = commentsService.getUserIdByBookId(bookId);
+        List<Ratings> ratings = ratingsRepository.findByBookId(bookId);
 
         model.addAttribute("book", book);
+        model.addAttribute("ratings", ratings);
         //model.addAttribute("user", userId);
 
         return "detailsPage";

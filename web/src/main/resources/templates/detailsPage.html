@@ -293,54 +293,19 @@
                     </tr>
                 </table>
             </div>
+            <br><br>
+            <div class="container margin">
+                <div th:each="rating : ${ratings}" class="comment">
+                    <p>
+                        <span th:text="${rating.user.username}"></span>
+                    </p>
+                    <p th:text="${rating.starsAsEmoji}"></p> <!-- Calls getStarsAsEmoji() method -->
+                    <p th:text="${rating.description}"></p>
+                    <hr>
+                </div>
+            </div>
         </div>
     </div>
-<!--
-    <table>
-        <tr>
-            <td style = "font-size: 35px; color:white;">
-                <a th:href="${baseURL + '/books'}"  class="href"> e-Books</a>
-            </td>
-            <td>
-                <form th:action="${baseURL + '/books/search'}">
-                    <input type="search" placeholder="Search books, authors, ISBNs..." name = "query" >
-                </form>
-
-            </td>
-            <td>
-                <nav>
-                    <ul>
-                        <li class="hover">
-                            <a th:if="${baseURL == ''}" th:href="${baseURL + '/signIn'}" th:text="'Sign in'">Sign in</a>
-                            <a th:if="${baseURL != ''}" th:href="${baseURL + '/myAccount'}" th:text="'My Account'">My Account</a>
-                        </li>
-                        <li class="dropdown">
-                            <a class="hover">Genres</a>
-                            <ul class="dropdown-menu">
-                                <li class="hover"><a th:href="${baseURL + '/books/genre/romance'}" >Romance</a></li>
-                                <li class="hover"><a th:href="${baseURL + '/books/genre/romcom'}">RomComs</a></li>
-                                <li class="hover"><a th:href="${baseURL + '/books/genre/thriller'}">Thriller</a></li>
-                                <li class="hover"><a th:href="${baseURL + '/books/genre/dark'}">Dark</a></li>
-                                <li class="hover"><a th:href="${baseURL + '/books/genre/mystery'}">Mystery</a></li>
-                                <li class="hover"><a th:href="${baseURL + '/books/genre/fantasy'}">Fantasy</a></li>
-                                <li class="hover"><a th:href="${baseURL + '/books/genre/drama'}">Drama</a></li>
-                                <li class="hover"><a th:href="${baseURL + '/books/genre/biography'}">Biography</a></li>
-                            </ul>
-                        </li>
-                        <li class="hover"><a th:href="${baseURL + '/books'}" >Home</a></li>
-                    </ul>
-                </nav>
-
-
-            </td>
-            <td>
-                <a th:href="${baseURL + '/cart'}" class="href"><img src="https://png2.cleanpng.com/sh/535017851c0794eab90a0aff986be805/L0KzQYm3VcIzN5h1h5H0aYP2gLBuTfUua5Dyhdd7Y3Wwc7F0kQV1baMygdV4boOwg7n2kQBqdpgye9N7dD32f7f7lBFzbV53RdZ4dIPogn7AhfIubKZnhNt3LUXlQIW6UfE2QGY5e9cBLkCzQIa9U8MxOWY3T6I5MUWzSYa7Vr5xdpg=/kisspng-e-commerce-computer-icons-shopping-cart-software-r-dotser-web-dublin-5b0431a5854ce6.000563301527001509546.png"style="width: 30px;height: 30px;"></a>
-            </td>
-
-        </tr>
-    </table>
-</header>
--->
 
 <!--
 <div class="comments-reviews-container">
