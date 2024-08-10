@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="x-apple-disable-message-reformatting">
-    <title>fooTitle</title>
+    <title>Book Things</title>
 
     <style>
         header {
@@ -211,7 +211,7 @@
 </head>
 <body>
 <header>
-    <a th:href="@{/books}"  class="hrefTitle"> fooTitle</a>
+    <a th:href="@{/books}"  class="hrefTitle">Book Things</a>
     <div class="searchBar">
         <form th:action="@{/books/search}">
             <input type="search" placeholder="Search books, authors, ISBNs..." name = "query" >
@@ -255,7 +255,10 @@
                         <div class="container">
                             <table>
                                 <tr>
-                                    <td><p th:text="${book.title}" style="font-weight: bold"></p></td>
+                                    <td>
+                                        <p th:text="${book.title}" style="font-weight: bold; display: inline-block; white-space: nowrap;"></p><br><br>
+                                        <p th:text="${book.genre}" style="font-weight: bold"></p>
+                                    </td>
                                 </tr>
                                 <!--
                                 <tr>
@@ -289,25 +292,6 @@
                         <td><p th:text="${book.description}"></p></td>
                     </tr>
                 </table>
-            </div>
-            <div>
-                <div class="container margin">
-                    <table class="book-table">
-                        <tr>
-                            <td>
-                                <table>
-                                    <tr>
-                                        <td><b>Writer</b><br><a class = "href2" th:href="@{../books/author/{author}(author = ${book.author})}"> [[${book.author}]]</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>ISBN</b><br><p th:text="${book.ISBN}"></p></td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td><p th:text="${book.description}"></p></td>
-                        </tr>
-                    </table>
-                </div>
             </div>
         </div>
     </div>
