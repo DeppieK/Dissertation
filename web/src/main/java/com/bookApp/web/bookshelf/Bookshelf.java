@@ -25,6 +25,7 @@ public class Bookshelf {
             strategy = GenerationType.SEQUENCE,
             generator = "bookshelf_sequence"
     )
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @ManyToOne
@@ -32,8 +33,9 @@ public class Bookshelf {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false)
+    @JoinColumn(name = "book_id")
     private Book book;
+
 
     @Column(name = "shelf_id", nullable = false)
     private Long shelfId;

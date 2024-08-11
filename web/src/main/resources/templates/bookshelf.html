@@ -238,7 +238,9 @@
             </tbody>
         </table>
 
-        <button class="addShelf" >+ add shelf</button>
+        <form th:action="@{/addShelf}" method="post">
+            <button class="addShelf" >+ add shelf</button>
+        </form>
 
     </div>
 </div>

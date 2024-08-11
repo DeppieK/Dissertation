@@ -19,4 +19,6 @@ public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
 
     List<Bookshelf> findByUserAndLabelIn(User user, List<String> labels);
 
+    @Query("SELECT COALESCE(MAX(b.shelfId), 0) FROM Bookshelf b")
+    Long findMaxShelfId();
 }

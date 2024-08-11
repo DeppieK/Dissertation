@@ -1,5 +1,6 @@
 package com.bookApp.web.bookshelf;
 
+import com.bookApp.web.book.Book;
 import com.bookApp.web.user.User;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,9 @@ public class BookshelfService {
 
     private final BookshelfRepository bookshelfRepository;
 
+    public void save(Bookshelf bookshelf) {
+        bookshelfRepository.save(bookshelf);
+    }
     public BookshelfService(BookshelfRepository bookshelfRepository) {
         this.bookshelfRepository = bookshelfRepository;
     }
@@ -45,5 +49,11 @@ public class BookshelfService {
                         (existing, replacement) -> existing // handle duplicate keys
                 ));
     }
+
+    public Long getNextShelfId() {
+        Long maxShelfId = bookshelfRepository.findMaxShelfId();
+        return maxShelfId + 1;
+    }
+
 }
 

@@ -8,7 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +66,18 @@ public class BookshelfController {
         return "bookshelf";
     }
 
+    @PostMapping("/addShelf")
+    public String addShelf(Model model, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.setLabel("untitled");
+        bookshelf.setShelfId(bookshelfService.getNextShelfId());
+        bookshelf.setUser(user);
+
+        bookshelfService.save(bookshelf);
+        return "redirect:/myBooks"; //change this
+    }
     //bookshelf details
     @GetMapping("/myBookshelf")
     public String myBookshelf(Model model, Principal principal) {
