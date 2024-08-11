@@ -32,7 +32,6 @@ public class UserController {
         return "signUp";
     }
 
-    //register user
     @PostMapping("/register")
     public String register(@RequestParam String username,
                            @RequestParam String password,
@@ -46,6 +45,10 @@ public class UserController {
             return "redirect:/signup";
         }
 
+        //capitalize the first letter of the first name and last name
+        firstname = capitalizeFirstLetter(firstname);
+        lastname = capitalizeFirstLetter(lastname);
+
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
@@ -57,6 +60,13 @@ public class UserController {
         userService.save(user);
 
         return "redirect:/login";
+    }
+
+    private String capitalizeFirstLetter(String name) {
+        if (name == null || name.isEmpty()) {
+            return name;
+        }
+        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
 
     //profile page
