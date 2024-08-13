@@ -165,7 +165,7 @@
     const confirmPassword = document.getElementById('confirmPassword').value;
     const message = document.getElementById('message');
 
-    if (password.length < 8) {
+    if ((password.length > 0) && (password.length < 8)) {
       message.textContent = "Password length must be at least 8 characters";
       return false;
     }
