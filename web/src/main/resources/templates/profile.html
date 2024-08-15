@@ -41,6 +41,11 @@
             margin-left: 20px;
         }
 
+        .title{
+            text-align: left;
+            display: inline-flex;
+        }
+
         .sidebar {
             background-color: #cbd3ff;
             font-size: 15px;
@@ -120,6 +125,10 @@
             color: #4d5cda;
         }
 
+        .href{
+            margin-top: 10px;
+        }
+
         .userDetails {
             display: flex;
             flex-direction: column;
@@ -167,17 +176,20 @@
 
 <body>
 <header>
-    <a th:href="@{/books}" class="href">Book Things</a>
+    <div class="title">
+        <img th:src="@{/booksIcon.png}" style="width: 50px;height: 50px; ">
+        <a th:href="@{/books}" class="href">&nbsp;Bookly.com</a>
+    </div>
     <div class="searchBar">
         <form th:action="@{/books/search}">
             <input type="search" placeholder="Search books, authors, ISBNs..." name="query">
         </form>
     </div>
     <div>
-        <a th:href="@{/profile}" class="profileIcon"> <img th:src="@{/templates/icons/output-onlinepngtools.png}" style="width: 30px;height: 30px;"></a>
+        <a th:href="@{/profile}" class="profileIcon"> <img th:src="@{/profileIcon.png}" style="width: 30px;height: 30px;"></a>
     </div>
     <div>
-        <a th:href="@{/logout}" class="logoutIcon"> <img th:src="@{/templates/icons/images.png}" style="width: 30px;height: 30px;"></a>
+        <a th:href="@{/logout}" class="logoutIcon"> <img th:src="@{/logoutIcon.png}" style="width: 30px;height: 30px;"></a>
     </div>
 </header>
 
@@ -220,11 +232,11 @@
                 </tr>
                 <tr>
                     <th>Books read</th>
-                    <td>45</td>
+                    <td th:text="${readCount}"></td>
                 </tr>
                 <tr>
                     <th>Books in bookshelf</th>
-                    <td>57</td>
+                    <td th:text="${booksInBookshelf.size()}"></td>
                 </tr>
                 <tr>
                     <th>Friends</th>

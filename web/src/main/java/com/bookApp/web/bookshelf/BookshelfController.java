@@ -42,7 +42,7 @@ public class BookshelfController {
         User user = userService.findByUsername(principal.getName());
 
         //get the user's bookshelves with specified labels
-        List<Bookshelf> specificLabelBookshelves = bookshelfService.getBookshelvesByUserAndLabels(user, List.of("currently_reading", "to_read", "want_to_read"));
+        List<Bookshelf> specificLabelBookshelves = bookshelfService.getBookshelvesByUserAndLabels(user, List.of("currently_reading", "read", "want_to_read"));
         model.addAttribute("specificLabelBookshelves", specificLabelBookshelves);
 
         //get the user's bookshelves without specified labels
@@ -56,11 +56,11 @@ public class BookshelfController {
 
         //calculate the number of books per shelf label
         long currentlyReadingCount = bookshelfService.countBooksByUserAndLabel(user, "currently_reading");
-        long toReadCount = bookshelfService.countBooksByUserAndLabel(user, "to_read");
+        long readCount = bookshelfService.countBooksByUserAndLabel(user, "read");
         long wantToReadCount = bookshelfService.countBooksByUserAndLabel(user, "want_to_read");
 
         model.addAttribute("currentlyReadingCount", currentlyReadingCount);
-        model.addAttribute("toReadCount", toReadCount);
+        model.addAttribute("readCount", readCount);
         model.addAttribute("wantToReadCount", wantToReadCount);
 
         return "bookshelf";

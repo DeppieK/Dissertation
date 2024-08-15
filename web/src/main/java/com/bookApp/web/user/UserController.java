@@ -1,6 +1,9 @@
 package com.bookApp.web.user;
 
 
+import com.bookApp.web.book.Book;
+import com.bookApp.web.bookshelf.Bookshelf;
+import com.bookApp.web.bookshelf.BookshelfService;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -12,12 +15,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 public class UserController {
 
     @Autowired
     private UserService userService;
+    private BookshelfService bookshelfService;
+
+    public UserController(UserService userService, BookshelfService bookshelfService) {
+        this.userService = userService;
+        this.bookshelfService = bookshelfService;
+    }
 
     //login page
     @GetMapping("/login")
@@ -76,7 +86,14 @@ public class UserController {
         String username = authentication.getName();
 
         User user = userService.findByUsername(username);
+        long readCount = bookshelfService.countBooksByUserAndLabel(user, "read");
+        List<Bookshelf> booksInBookshelf = bookshelfService.getBookshelfByUser(user);
+
         model.addAttribute("user", user);
+        model.addAttribute("readCount", readCount);
+        model.addAttribute("booksInBookshelf", booksInBookshelf);
+
+
         return "profile";
     }
 

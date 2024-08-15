@@ -14,7 +14,7 @@ public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
 
     long countByUserAndLabel(User user, String label);
 
-    @Query("SELECT b FROM Bookshelf b WHERE b.user = :user AND b.label NOT IN ('currently_reading', 'to_read', 'want_to_read')")
+    @Query("SELECT b FROM Bookshelf b WHERE b.user = :user AND b.label NOT IN ('currently_reading', 'read', 'want_to_read')")
     List<Bookshelf> findBookshelvesWithoutSpecifiedLabels(User user);
 
     List<Bookshelf> findByUserAndLabelIn(User user, List<String> labels);
