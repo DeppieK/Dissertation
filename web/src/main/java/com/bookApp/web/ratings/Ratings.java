@@ -36,7 +36,8 @@ public class Ratings {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    private int stars;
+    // Changed stars from int to double
+    private double stars;
     private String description;
 
     public Ratings() {
@@ -46,7 +47,7 @@ public class Ratings {
         this.id = id;
     }
 
-    public Ratings(Long id, User user, Book book, int stars, String description) {
+    public Ratings(Long id, User user, Book book, double stars, String description) {
         this.id = id;
         this.user = user;
         this.book = book;
@@ -65,7 +66,24 @@ public class Ratings {
                 '}';
     }
 
+    // Modified to support half stars
     public String getStarsAsEmoji() {
-        return "⭐".repeat(stars);
+        StringBuilder starBuilder = new StringBuilder();
+        int fullStars = (int) stars;
+        double remainder = stars - fullStars;
+        String fullStar = "⭐";
+        String halfStarImg =  ".5";
+
+        // Append full stars
+        for (int i = 0; i < fullStars; i++) {
+            starBuilder.append(fullStar);
+        }
+
+        // Append a half star if needed
+        if (remainder >= 0.5) {
+            starBuilder.append(halfStarImg);
+        }
+
+        return starBuilder.toString();
     }
 }

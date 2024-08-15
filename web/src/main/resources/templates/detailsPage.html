@@ -318,7 +318,7 @@
                     <p>
                         <span th:text="${rating.user.username}"></span>
                     </p>
-                    <p th:text="${rating.starsAsEmoji}"></p> <!-- Calls getStarsAsEmoji() method -->
+                    <p th:utext="${rating.getStarsAsEmoji()}"></p>
                     <p th:text="${rating.description}"></p>
                     <hr>
                 </div>
@@ -351,3 +351,5 @@
 
 </body>
 </html>
+
+
