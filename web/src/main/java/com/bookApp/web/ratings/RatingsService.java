@@ -16,4 +16,8 @@ public class RatingsService {
         return ratingsRepository.findByBookId(bookId);
     }
 
+    public void save(Ratings ratings) {
+        ratingsRepository.save(ratings);
+    }
+
 }

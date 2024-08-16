@@ -3,12 +3,17 @@ package com.bookApp.web.book;
 import com.bookApp.web.ratings.Ratings;
 import com.bookApp.web.ratings.RatingsRepository;
 import com.bookApp.web.ratings.RatingsService;
+import com.bookApp.web.user.User;
+import com.bookApp.web.user.UserService;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -20,14 +25,18 @@ public class BookController {
     private final BookService bookService;
     private final BookSearchService bookSearchService;
     private final RatingsRepository ratingsRepository;
+    private final UserService userService;
+    private final RatingsService ratingsService;
 
     //constructor
     @Autowired
-    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository) {
+    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookSearchService = bookSearchService;
         this.ratingsRepository = ratingsRepository;
+        this.userService = userService;
+        this.ratingsService = ratingsService;
     }
 
     //main page
@@ -50,6 +59,25 @@ public class BookController {
         //model.addAttribute("user", userId);
 
         return "detailsPage";
+    }
+
+    @PostMapping("/addRating")
+    public String addRating(@RequestParam("bookId") long bookId, @RequestParam("rating") String rating, @RequestParam("stars") double stars){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userService.findByUsername(username);
+        Book book = bookService.findBookById(bookId);
+
+        Ratings newRating = new Ratings();
+        newRating.setUser(user);
+        newRating.setBook(book);
+        newRating.setDescription(rating);
+        newRating.setStars(stars);
+
+        ratingsService.save(newRating);
+
+        return "redirect:/books/" + bookId;
     }
 
     //search method
