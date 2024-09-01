@@ -212,7 +212,7 @@
             <tr>
                 <td>image</td>
                 <td>books currently reading
-                    <a class="amountOfBooks" th:href="@{/myBookshelf}">
+                    <a class="amountOfBooks" th:href="@{/myBookshelf/{label}(label='currently_reading')}">
                         <div th:text="${currentlyReadingCount} + ' books'"></div>
                     </a>
                 </td>
@@ -220,7 +220,7 @@
             <tr>
                 <td>image</td>
                 <td>books read
-                    <a class="amountOfBooks" th:href="@{/myBookshelf}">
+                    <a class="amountOfBooks" th:href="@{/myBookshelf/{label}(label='read')}">
                         <div class="amountOfBooks" th:text="${readCount} + ' books'"></div>
                     </a>
                 </td>
@@ -228,7 +228,7 @@
             <tr>
                 <td>image</td>
                 <td>want to read
-                    <a class="amountOfBooks" th:href="@{/myBookshelf}">
+                    <a class="amountOfBooks" th:href="@{/myBookshelf/{label}(label='want_to_read')}">
                         <div class="amountOfBooks" th:text="${wantToReadCount} + ' books'"></div>
                     </a>
                 </td>

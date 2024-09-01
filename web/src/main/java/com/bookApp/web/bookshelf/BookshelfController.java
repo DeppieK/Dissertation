@@ -84,8 +84,8 @@ public class BookshelfController {
         return "redirect:/myBooks"; //change this
     }
     //bookshelf details
-    @GetMapping("/myBookshelf/{shelfId}")
-    public String myBookshelf(@PathVariable("shelfId") long shelfId, Model model, Principal principal) throws ChangeSetPersister.NotFoundException {
+    @GetMapping("/myBookshelf/{label}")
+    public String myBookshelf(@PathVariable("label") String label, Model model, Principal principal) throws ChangeSetPersister.NotFoundException {
 
         // Get the current user
         User user = userService.findByUsername(principal.getName());
