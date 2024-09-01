@@ -171,7 +171,7 @@
 <header>
     <div class="title">
         <img th:src="@{/booksIcon.png}" style="width: 50px;height: 50px; ">
-        <a th:href="@{/books}" class="href">&nbsp;Bookly.com</a>
+        <a th:href="@{/books}" class="href">&nbsp;Literary Haven</a>
     </div>
     <div class="searchBar">
         <form th:action="@{/books/search}">
@@ -241,7 +241,7 @@
             <tr th:each="entry : ${otherBookshelvesWithCount}">
                 <td>image</td>
                 <td>[[${entry.key}]]
-                    <a class="amountOfBooks" th:href="@{/myBookshelf}">
+                    <a class="amountOfBooks" th:href="@{/myBookshelf/{shelfId}(shelfId=${entry.key})}">
                         <div class="amountOfBooks">[[${entry.value}]] books</div>
                     </a>
                 </td>
