@@ -82,6 +82,32 @@
             padding: 0;
         }
 
+        .books {
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .books li {
+            margin: 10px;
+            text-align: center;
+            width: 18%;
+            min-width: 160px;
+            box-sizing: border-box;
+        }
+
+        .books li img {
+            width: 80%;
+            height: 80%;
+        }
+
+        #book-title {
+            text-align: center;
+            font-size: 14px;
+        }
 
         input[type=search] {
             width: 121%;
@@ -202,7 +228,16 @@
         </ul>
     </div>
     <div class="content">
-
+        <div class="image-container">
+            <ul class="books">
+                <li th:each="bookshelf : ${bookshelves}" id="books">
+                    <a th:href="@{/books/{bookId}(bookId = ${bookshelf.book.id})}">
+                        <img th:src="${bookshelf.book.photoUrl}" />
+                    </a>
+                    <p id="book-title" th:text="${bookshelf.book.title}"></p>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 

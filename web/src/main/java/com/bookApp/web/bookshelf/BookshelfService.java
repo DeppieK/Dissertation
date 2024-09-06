@@ -39,6 +39,9 @@ public class BookshelfService {
     public List<Bookshelf> getBookshelvesByUserAndLabels(User user, List<String> labels) {
         return bookshelfRepository.findByUserAndLabelIn(user, labels);
     }
+    public List<Bookshelf> getBookshelvesByUserAndLabel(User user, String label) {
+        return bookshelfRepository.findByUserAndLabel(user, label);
+    }
 
     public Map<String, Long> getBookshelvesWithCountByUser(User user) {
         List<Bookshelf> bookshelves = bookshelfRepository.findBookshelvesWithoutSpecifiedLabels(user);

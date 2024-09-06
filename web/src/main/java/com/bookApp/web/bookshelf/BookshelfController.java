@@ -91,7 +91,7 @@ public class BookshelfController {
         User user = userService.findByUsername(principal.getName());
 
         // Get the user's bookshelves
-        List<Bookshelf> bookshelves = bookshelfService.getBookshelfByUser(user);
+        List<Bookshelf> bookshelves = bookshelfService.getBookshelvesByUserAndLabel(user,label);
         model.addAttribute("bookshelves", bookshelves);
 
         return "bookshelfDetails";

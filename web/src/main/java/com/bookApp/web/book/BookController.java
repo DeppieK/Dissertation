@@ -44,7 +44,7 @@ public class BookController {
     public String listBooks(Model model){
         List<Book> books = bookService.getBook();
         model.addAttribute("books", books);
-        return "index";
+        return "books";
     }
 
     //details page
@@ -85,7 +85,7 @@ public class BookController {
     public String searchBooks(@RequestParam(value = "query") String query, Model model){
         List<Book> books = bookSearchService.searchBooks(query);
         model.addAttribute("books",books);
-        return "index";
+        return "books";
     }
 
     //search books based on isbn
@@ -93,7 +93,7 @@ public class BookController {
     public String findBooksByISBN(@PathVariable("isbn") Long isbn, Model model) {
         List<Book> books = bookRepository.findByISBN(isbn);
         model.addAttribute("books", books);
-        return "index";
+        return "books";
     }
 
     //display books based on a specific genre
@@ -101,7 +101,7 @@ public class BookController {
     public String findBooksByGenre(@PathVariable("genre") String genre, Model model) {
         List<Book> books = bookRepository.findByGenre(genre);
         model.addAttribute("books", books);
-        return "index";
+        return "books";
     }
 
     //display books based on a specific author
@@ -109,7 +109,7 @@ public class BookController {
     public String findBooksByAuthor(@PathVariable("author") String author, Model model) {
         List<Book> books = bookRepository.findByAuthor(author);
         model.addAttribute("books", books);
-        return "index";
+        return "books";
     }
 
     //genres page
