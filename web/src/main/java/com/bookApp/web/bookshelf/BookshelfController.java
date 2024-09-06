@@ -1,5 +1,6 @@
 package com.bookApp.web.bookshelf;
 
+import com.bookApp.web.book.Book;
 import com.bookApp.web.book.BookRepository;
 import com.bookApp.web.book.BookService;
 import com.bookApp.web.user.User;
@@ -81,7 +82,7 @@ public class BookshelfController {
         bookshelf.setUser(user);
 
         bookshelfService.save(bookshelf);
-        return "redirect:/myBooks"; //change this
+        return "redirect:/myBookshelf/untitled"; //change this
     }
     //bookshelf details
     @GetMapping("/myBookshelf/{label}")
