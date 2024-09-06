@@ -143,6 +143,7 @@
             font-weight: bold;
         }
 
+
         .href2{
             color:black;
             text-decoration: none;
@@ -224,6 +225,34 @@
             outline: none;
             box-shadow: 0 0 5px rgba(77, 92, 218, 0.5);
         }
+/*
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color:#ffa434;
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu  {
+            display: block;
+        }
+
+        .dropdown-menu a {
+            color: rgba(255, 255, 255, 0.76);
+            padding: 12px 22px;
+            display: block;
+            text-align: center;
+        }
+
+        .dropdown-menu  a:hover {
+            background-color: #ff6d1fd4;
+        }*/
 
     </style>
 </head>
@@ -278,8 +307,15 @@
                         <table>
                             <tr>
                                 <td>
-                                    <p th:text="${book.title}" style="font-weight: bold; display: inline-block; white-space: nowrap;"></p><br><br>
-                                    <p th:text="${book.genre}" style="font-weight: bold"></p>
+                                    <p th:text="${book.title}" style="font-weight: bold;  white-space: nowrap; font-size: 21px;"></p><br><br>
+                                    <p> ✨ Genre: <span th:text="${book.genre}" style="font-weight: bold"></span></p><br>
+                                    <p> 📖 Pages: <span th:text="${book.pages}"></span></p>
+                                        <!--<a class="hover" href="#">Genres</a>
+                                        <ul class="dropdown-menu">
+                                            <li class="hover"><a th:href="@{/myBookshelf/boooksCurentlyReading}" >Books currently reading</a></li>
+                                            <li class="hover"><a th:href="@{/myBookshelf/BooksRead}">Books read</a></li>
+                                            <li class="hover"><a th:href="@{/myBookshelf/WantToRead}">Want to read</a></li>
+                                        </ul>-->
                                 </td>
                             </tr>
                         </table>
