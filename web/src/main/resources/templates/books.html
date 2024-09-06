@@ -66,6 +66,8 @@
             margin-top: 30px;
             flex-grow: 1;
             overflow: auto;
+            justify-content: center;
+            align-items: center;
         }
 
         .searchBar {
@@ -103,16 +105,28 @@
         }
 
         .books li img {
-            width: 300px;
+            width: 100%;
             height: auto;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .books li:hover img {
+            transform: scale(1.04);
+            box-shadow: 0 0 50px #5168ef;
         }
 
         #book-title {
             text-align: center;
         }
+
         .image-container {
-            margin-left: 580px;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            width: 100%;
+            flex-wrap: wrap;
         }
+
         input[type=search] {
             width: 121%;
             box-sizing: border-box;
