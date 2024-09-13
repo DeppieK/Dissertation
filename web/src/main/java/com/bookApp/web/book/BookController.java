@@ -100,7 +100,7 @@ public class BookController {
     public String findBooksByGenre(@PathVariable("genre") String genre, Model model) {
         List<Book> books = bookRepository.findByGenre(genre);
         model.addAttribute("books", books);
-        return "books";
+        return "genres";
     }
 
     //display books based on a specific author
@@ -113,7 +113,7 @@ public class BookController {
 
     //genres page
     @GetMapping("/genres")
-    public String genres() {
+    public String genres(Model model) {
 
         return "genres";
     }

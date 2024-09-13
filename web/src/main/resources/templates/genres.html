@@ -146,6 +146,34 @@
             text-align: center;
         }
 
+        .books {
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .books li {
+            margin: 10px;
+            text-align: center;
+            width: 18%;
+            min-width: 160px;
+            box-sizing: border-box;
+        }
+
+        .books li img {
+            width: 80%;
+            height: 80%;
+            transition: all 0.4s ease-in-out;
+
+        }
+        .books li:hover img {
+            transform: scale(1.03);
+            box-shadow: 0 0 50px #5168ef;
+        }
+
     </style>
 </head>
 
@@ -190,29 +218,40 @@
         </div>
 
         <div class="content">
-            <a class="genre-button href2" href="#">Fantasy</a>
-            <a class="genre-button href2" href="#">Science Fiction</a>
-            <a class="genre-button href2" href="#">Dystopian</a>
-            <a class="genre-button href2" href="#">Action & Adventure</a>
-            <a class="genre-button href2" href="#">Mystery</a>
-            <a class="genre-button href2" href="#">Horror</a>
-            <a class="genre-button href2" href="#">Thriller</a>
-            <a class="genre-button href2" href="#">Historical Fiction</a>
-            <a class="genre-button href2" href="#">Romance</a>
-            <a class="genre-button href2" href="#">Fiction</a>
-            <a class="genre-button href2" href="#">LGBTQ+</a>
-            <a class="genre-button href2" href="#">Literary Fiction</a>
-            <a class="genre-button href2" href="#">Magical Realism</a>
-            <a class="genre-button href2" href="#">Graphic Novel</a>
-            <a class="genre-button href2" href="#">Short Story</a>
-            <a class="genre-button href2" href="#">Young Adult</a>
-            <a class="genre-button href2" href="#">Memoir & Autobiography</a>
-            <a class="genre-button href2" href="#">Self-help</a>
-            <a class="genre-button href2" href="#">Comedy</a>
-            <a class="genre-button href2" href="#">Drama</a>
-            <a class="genre-button href2" href="#">Dark</a>
-            <a class="genre-button href2" href="#">Contemporary</a>
-            <a class="genre-button href2" href="#">Classic Literature</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Romance}">Fantasy</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Science Fiction}">Science Fiction</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Dystopian}">Dystopian</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Action Adventure}">Action & Adventure</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Mystery}">Mystery</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Horror}">Horror</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Thriller}">Thriller</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Historical Fiction}">Historical Fiction</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Romance}">Romance</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Fiction}">Fiction</a>
+            <a class="genre-button href2" th:href="@{/books/genre/LGBTQ}">LGBTQ+</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Literary Fiction}">Literary Fiction</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Magical Realism}">Magical Realism</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Graphic Novel}">Graphic Novel</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Short Story}">Short Story</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Young Adult}">Young Adult</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Memoir Autobiography}">Memoir & Autobiography</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Self-help}">Self-help</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Comedy}">Comedy</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Drama}">Drama</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Dark}">Dark</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Contemporary}">Contemporary</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Classic Literature}">Classic Literature</a>
+
+            <div class="image-container">
+                <ul class="books">
+                    <li th:each="book : ${books}" id="books">
+                        <a th:href="@{/books/{bookId}(bookId = ${book.id})}">
+                            <img th:src="${book.photoUrl}" />
+                        </a>
+                        <p id="book-title" th:text="${book.title}"></p>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 
