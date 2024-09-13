@@ -26,7 +26,6 @@ public class Book {
 
     private Long id;
     private String title;
-    private String genre;
     @Column(columnDefinition = "TEXT")
     private String description;
     private Long ISBN;
@@ -39,10 +38,9 @@ public class Book {
 
     }
 
-    public Book(Long id, String title, String genre, String description,Long ISBN, int pages, String author, String photoUrl) {
+    public Book(Long id, String title, String description,Long ISBN, int pages, String author, String photoUrl) {
         this.id = id;
         this.title = title;
-        this.genre = genre;
         this.description = description;
         this.ISBN = ISBN;
         this.pages = pages;
@@ -50,9 +48,8 @@ public class Book {
         this.photoUrl = photoUrl;
     }
 
-    public Book(String title, String genre, String description, Long ISBN, int pages, String author, String photoUrl) {
+    public Book(String title, String description, Long ISBN, int pages, String author, String photoUrl) {
         this.title = title;
-        this.genre = genre;
         this.description = description;
         this.ISBN = ISBN;
         this.pages = pages;
@@ -67,7 +64,6 @@ public class Book {
         return "Book{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", genre='" + genre + '\'' +
                 ", description='" + description + '\'' +
                 ", ISBN=" + ISBN +
                 ", pages=" + pages +

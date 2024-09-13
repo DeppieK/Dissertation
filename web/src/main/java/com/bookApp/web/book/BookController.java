@@ -1,5 +1,7 @@
 package com.bookApp.web.book;
 
+import com.bookApp.web.genre.Genre;
+import com.bookApp.web.genre.GenreRepository;
 import com.bookApp.web.ratings.Ratings;
 import com.bookApp.web.ratings.RatingsRepository;
 import com.bookApp.web.ratings.RatingsService;
@@ -27,16 +29,18 @@ public class BookController {
     private final RatingsRepository ratingsRepository;
     private final UserService userService;
     private final RatingsService ratingsService;
+    private final GenreRepository genreRepository;
 
     //constructor
     @Autowired
-    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService) {
+    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService, GenreRepository genreRepository) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookSearchService = bookSearchService;
         this.ratingsRepository = ratingsRepository;
         this.userService = userService;
         this.ratingsService = ratingsService;
+        this.genreRepository = genreRepository;
     }
 
     //main page
@@ -53,9 +57,11 @@ public class BookController {
         Book book = bookService.findBookById(bookId);
         //Long userId = commentsService.getUserIdByBookId(bookId);
         List<Ratings> ratings = ratingsRepository.findByBookId(bookId);
+        List<Genre> genres = genreRepository.findByBookId(bookId);
 
         model.addAttribute("book", book);
         model.addAttribute("ratings", ratings);
+        model.addAttribute("genres", genres);
         //model.addAttribute("user", userId);
 
         return "detailsPage";
@@ -88,13 +94,6 @@ public class BookController {
         return "books";
     }
 
-    //search books based on isbn
-    @GetMapping("/books/isbn/{isbn}")
-    public String findBooksByISBN(@PathVariable("isbn") Long isbn, Model model) {
-        List<Book> books = bookRepository.findByISBN(isbn);
-        model.addAttribute("books", books);
-        return "books";
-    }
 
     //display books based on a specific genre
     @GetMapping("/books/genre/{genre}")

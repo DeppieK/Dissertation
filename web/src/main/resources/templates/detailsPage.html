@@ -72,7 +72,7 @@
         }
 
         header img {
-            margin: 0; /* Remove margin */
+            margin: 0;
             width: 50px;
             height: 50px;
         }
@@ -225,6 +225,9 @@
             outline: none;
             box-shadow: 0 0 5px rgba(77, 92, 218, 0.5);
         }
+        .genres{
+            list-style-type: none;
+        }
 /*
         .dropdown-menu {
             display: none;
@@ -308,7 +311,12 @@
                             <tr>
                                 <td>
                                     <p th:text="${book.title}" style="font-weight: bold;  white-space: nowrap; font-size: 21px;"></p><br><br>
-                                    <p> ✨ Genre: <span th:text="${book.genre}" style="font-weight: bold"></span></p><br>
+                                    <p>✨ Genres:
+                                    <ul>
+                                        <li class="genres" th:each="genre : ${genres}">
+                                            <span th:text="${genre.genre}" ></span>
+                                        </li>
+                                    </ul>
                                     <p> 📖 Pages: <span th:text="${book.pages}"></span></p>
                                         <!--<a class="hover" href="#">Genres</a>
                                         <ul class="dropdown-menu">
@@ -330,7 +338,7 @@
                     <td>
                         <table>
                             <tr>
-                                <td><b>Writer</b><br><a class="href2" th:href="@{../books/author/{author}(author=${book.author})}"> [[${book.author}]]</a></td>
+                                <td><b>Writer</b><br><a class="href2" th:href="@{/books/author/{author}(author=${book.author})}"> [[${book.author}]]</a></td>
                             </tr>
                             <tr>
                                 <td><b>ISBN</b><br><p th:text="${book.ISBN}"></p></td>

@@ -14,16 +14,13 @@ public class BookService implements BookSearchService{
         this.bookRepository = bookRepository;
     }
 
+
     @Override
     public List<Book> searchBooks(String query) {
         List<Book> books = bookRepository.searchBooks(query);
         return books;
     }
 
-    @Override
-    public List<Book> searchBooksByISBN(Long isbn) {
-        return null;
-    }
 
     public List<Book> getBook(){
         return bookRepository.findAll();
