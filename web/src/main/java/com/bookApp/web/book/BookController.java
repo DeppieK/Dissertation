@@ -1,10 +1,14 @@
 package com.bookApp.web.book;
 
+import com.bookApp.web.bookshelf.Bookshelf;
+import com.bookApp.web.bookshelf.BookshelfService;
 import com.bookApp.web.genre.Genre;
 import com.bookApp.web.genre.GenreRepository;
 import com.bookApp.web.ratings.Ratings;
 import com.bookApp.web.ratings.RatingsRepository;
 import com.bookApp.web.ratings.RatingsService;
+import com.bookApp.web.shelf_book.ShelfBook;
+import com.bookApp.web.shelf_book.ShelfBookService;
 import com.bookApp.web.user.User;
 import com.bookApp.web.user.UserService;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -30,10 +34,13 @@ public class BookController {
     private final UserService userService;
     private final RatingsService ratingsService;
     private final GenreRepository genreRepository;
+    private final BookshelfService bookshelfService;
+    private final Bookshelf bookshelf;
+    private final ShelfBookService shelfBookService;
 
     //constructor
     @Autowired
-    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService, GenreRepository genreRepository) {
+    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService, GenreRepository genreRepository, BookshelfService bookshelfService, Bookshelf bookshelf, ShelfBookService shelfBookService) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookSearchService = bookSearchService;
@@ -41,6 +48,9 @@ public class BookController {
         this.userService = userService;
         this.ratingsService = ratingsService;
         this.genreRepository = genreRepository;
+        this.bookshelfService = bookshelfService;
+        this.bookshelf = bookshelf;
+        this.shelfBookService = shelfBookService;
     }
 
     //main page
@@ -116,5 +126,59 @@ public class BookController {
     public String genres(Model model) {
 
         return "genres";
+    }
+
+    //maybe make refine it with some more functions (make it cleaner)
+    @PostMapping("/currentlyReading")
+    public String currentlyReading(@RequestParam("bookId") long bookId, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userService.findByUsername(username);
+        Book book = bookService.findBookById(bookId);
+
+        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"currently_reading");
+
+        ShelfBook shelfBook = new ShelfBook();
+        shelfBook.setShelfId(shelfId);
+        shelfBook.setBook(book);
+        shelfBookService.save(shelfBook);
+
+        return "redirect:/books/" + bookId;
+    }
+
+    @PostMapping("/read")
+    public String read(@RequestParam("bookId") long bookId, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userService.findByUsername(username);
+        Book book = bookService.findBookById(bookId);
+
+        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"read");
+
+        ShelfBook shelfBook = new ShelfBook();
+        shelfBook.setShelfId(shelfId);
+        shelfBook.setBook(book);
+        shelfBookService.save(shelfBook);
+
+        return "redirect:/books/" + bookId;
+    }
+
+    @PostMapping("/wantToRead")
+    public String wantToRead(@RequestParam("bookId") long bookId, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userService.findByUsername(username);
+        Book book = bookService.findBookById(bookId);
+
+        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"want_to_read");
+        ShelfBook shelfBook = new ShelfBook();
+        shelfBook.setShelfId(shelfId);
+        shelfBook.setBook(book);
+        shelfBookService.save(shelfBook);
+
+        return "redirect:/books/" + bookId;
     }
 }

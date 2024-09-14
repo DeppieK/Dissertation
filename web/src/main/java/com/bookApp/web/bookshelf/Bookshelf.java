@@ -32,11 +32,6 @@ public class Bookshelf {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "book_id")
-    private Book book;
-
-
     @Column(name = "shelf_id", nullable = false)
     private Long shelfId;
 
@@ -53,7 +48,6 @@ public class Bookshelf {
 
     public Bookshelf(User user, Book book, Long shelfId, String label) {
         this.user = user;
-        this.book = book;
         this.shelfId = shelfId;
         this.label = label;
     }
@@ -64,7 +58,6 @@ public class Bookshelf {
         return "Bookshelf{" +
                 "id=" + id +
                 ", user=" + user +
-                ", book=" + book +
                 ", shelfId=" + shelfId +
                 ", label='" + label + '\'' +
                 '}';

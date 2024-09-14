@@ -3,6 +3,8 @@ package com.bookApp.web.bookshelf;
 import com.bookApp.web.book.Book;
 import com.bookApp.web.book.BookRepository;
 import com.bookApp.web.book.BookService;
+import com.bookApp.web.shelf_book.ShelfBook;
+import com.bookApp.web.shelf_book.ShelfBookRepository;
 import com.bookApp.web.user.User;
 import com.bookApp.web.user.UserService;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -26,16 +28,18 @@ public class BookshelfController {
     private final BookshelfRepository bookshelfRepository;
     private final BookshelfService bookshelfService;
     private final UserService userService;
+    private final ShelfBookRepository shelfBookRepository;
 
     @Autowired
     public BookshelfController(BookRepository bookRepository, BookService bookService,
                                BookshelfRepository bookshelfRepository, BookshelfService bookshelfService,
-                               UserService userService) {
+                               UserService userService, ShelfBookRepository shelfBookRepository) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookshelfRepository = bookshelfRepository;
         this.bookshelfService = bookshelfService;
         this.userService = userService;
+        this.shelfBookRepository = shelfBookRepository;
     }
 
     //bookshelf page
@@ -59,11 +63,10 @@ public class BookshelfController {
         Map<String, Long> otherBookshelvesWithCount = bookshelfService.getBookshelvesWithCountByUser(user);
         model.addAttribute("otherBookshelvesWithCount", otherBookshelvesWithCount);
 
-
         //calculate the number of books per shelf label
-        long currentlyReadingCount = bookshelfService.countBooksByUserAndLabel(user, "currently_reading");
-        long readCount = bookshelfService.countBooksByUserAndLabel(user, "read");
-        long wantToReadCount = bookshelfService.countBooksByUserAndLabel(user, "want_to_read");
+        long currentlyReadingCount = bookshelfService.countByShelfId(bookshelfService.getShelfIdByUserAndLabel(user,"currently_reading"));
+        long readCount = bookshelfService.countByShelfId(bookshelfService.getShelfIdByUserAndLabel(user,"read"));
+        long wantToReadCount = bookshelfService.countByShelfId(bookshelfService.getShelfIdByUserAndLabel(user,"want_to_read"));
 
         model.addAttribute("currentlyReadingCount", currentlyReadingCount);
         model.addAttribute("readCount", readCount);
@@ -77,12 +80,12 @@ public class BookshelfController {
         User user = userService.findByUsername(principal.getName());
 
         Bookshelf bookshelf = new Bookshelf();
-        bookshelf.setLabel("untitled");
+        bookshelf.setLabel("untitled"); //change this
         bookshelf.setShelfId(bookshelfService.getNextShelfId());
         bookshelf.setUser(user);
 
         bookshelfService.save(bookshelf);
-        return "redirect:/myBookshelf/untitled"; //change this
+        return "redirect:/myBookshelf/untitled"; //and change this
     }
     //bookshelf details
     @GetMapping("/myBookshelf/{label}")
@@ -94,6 +97,13 @@ public class BookshelfController {
         // Get the user's bookshelves
         List<Bookshelf> bookshelves = bookshelfService.getBookshelvesByUserAndLabel(user,label);
         model.addAttribute("bookshelves", bookshelves);
+
+        if (!bookshelves.isEmpty()) {
+            Long shelfId = bookshelves.get(0).getShelfId(); //use the first bookshelf's shelfId
+            // Get all books associated with this shelfId
+            List<ShelfBook> shelfBooks = shelfBookRepository.findByShelfId(shelfId);
+            model.addAttribute("shelfBooks", shelfBooks);
+        }
 
         return "bookshelfDetails";
 

@@ -86,7 +86,8 @@ public class UserController {
         String username = authentication.getName();
 
         User user = userService.findByUsername(username);
-        long readCount = bookshelfService.countBooksByUserAndLabel(user, "read");
+        long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"read");
+        long readCount = bookshelfService.countByShelfId(shelfId);
         List<Bookshelf> booksInBookshelf = bookshelfService.getBookshelfByUser(user);
 
         model.addAttribute("user", user);

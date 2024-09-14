@@ -215,11 +215,11 @@
     <div class="content">
         <div class="image-container">
             <ul class="books">
-                <li th:each="bookshelf : ${bookshelves}" id="books">
-                    <a th:href="@{/books/{bookId}(bookId = ${bookshelf.book.id})}">
-                        <img th:src="${bookshelf.book.photoUrl}" />
+                <li th:each="shelfBook : ${shelfBooks}" id="books">
+                    <a th:href="@{/books/{bookId}(bookId = ${shelfBook.book.id})}">
+                        <img th:src="${shelfBook.book.photoUrl}" alt="Book Cover"/>
                     </a>
-                    <p id="book-title" th:text="${bookshelf.book.title}"></p>
+                    <p id="book-title" th:text="${shelfBook.book.title}"></p>
                 </li>
             </ul>
         </div>

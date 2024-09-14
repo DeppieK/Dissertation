@@ -12,6 +12,9 @@ import java.util.List;
 public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
     List<Bookshelf> findByUser(User user);
 
+    @Query("SELECT COUNT(s) FROM ShelfBook s WHERE s.shelfId = :shelfId")
+    long countByShelfId(Long shelfId);
+
     long countByUserAndLabel(User user, String label);
 
     @Query("SELECT b FROM Bookshelf b WHERE b.user = :user AND b.label NOT IN ('currently_reading', 'read', 'want_to_read')")
@@ -23,4 +26,8 @@ public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
     Long findMaxShelfId();
 
     List<Bookshelf> findByUserAndLabel(User user, String label);
+
+    @Query("SELECT COALESCE(b.shelfId, 0) FROM Bookshelf b WHERE b.user = :user AND b.label = :label")
+    Long findShelfIdByUserAndLabel(@Param("user") User user, @Param("label") String label);
+
 }

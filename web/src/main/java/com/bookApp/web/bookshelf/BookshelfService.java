@@ -1,6 +1,5 @@
 package com.bookApp.web.bookshelf;
 
-import com.bookApp.web.book.Book;
 import com.bookApp.web.user.User;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +31,10 @@ public class BookshelfService {
         return bookshelfRepository.countByUserAndLabel(user, label);
     }
 
+    public long countByShelfId(Long shelfId) {
+        return bookshelfRepository.countByShelfId(shelfId);
+    }
+
     public List<Bookshelf> getBookshelvesWithoutSpecifiedLabels(User user) {
         return bookshelfRepository.findBookshelvesWithoutSpecifiedLabels(user);
     }
@@ -39,8 +42,13 @@ public class BookshelfService {
     public List<Bookshelf> getBookshelvesByUserAndLabels(User user, List<String> labels) {
         return bookshelfRepository.findByUserAndLabelIn(user, labels);
     }
+
     public List<Bookshelf> getBookshelvesByUserAndLabel(User user, String label) {
         return bookshelfRepository.findByUserAndLabel(user, label);
+    }
+
+    public Long getShelfIdByUserAndLabel(User user, String label) {
+        return bookshelfRepository.findShelfIdByUserAndLabel(user, label);
     }
 
     public Map<String, Long> getBookshelvesWithCountByUser(User user) {
