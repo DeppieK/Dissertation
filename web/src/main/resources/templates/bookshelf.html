@@ -210,7 +210,15 @@
         <table>
             <tbody>
             <tr>
-                <td>image</td>
+                <td>
+                    image
+                    <!--<li th:each="bookshelf, iterStat : ${currentlyReadingBookshelves}"
+                        th:if="${iterStat.index < 3}"
+                        id="currentlyReadingBooks">
+                        <img th:src="${bookshelf.book.photoUrl}" alt="Book Image" />
+                    </li>-->
+                </td>
+
                 <td>books currently reading
                     <a class="amountOfBooks" th:href="@{/myBookshelf/{label}(label='currently_reading')}">
                         <div th:text="${currentlyReadingCount} + ' books'"></div>
@@ -218,7 +226,12 @@
                 </td>
             </tr>
             <tr>
-                <td>image</td>
+                <td>
+                    image
+                    <!--<li th:each="bookshelf : ${readBookshelves}" id="readBooks">
+                        <img th:src="${bookshelf.book.photoUrl}" />
+                    </li>-->
+                </td>
                 <td>books read
                     <a class="amountOfBooks" th:href="@{/myBookshelf/{label}(label='read')}">
                         <div class="amountOfBooks" th:text="${readCount} + ' books'"></div>
@@ -226,7 +239,12 @@
                 </td>
             </tr>
             <tr>
-                <td>image</td>
+                <td>
+                    image
+                    <!--<li th:each="bookshelf : ${wantToReadBookshelves}" id="wantToReadBooks">
+                        <img th:src="${bookshelf.book.photoUrl}" />
+                    </li>-->
+                </td>
                 <td>want to read
                     <a class="amountOfBooks" th:href="@{/myBookshelf/{label}(label='want_to_read')}">
                         <div class="amountOfBooks" th:text="${wantToReadCount} + ' books'"></div>

@@ -52,8 +52,14 @@ public class BookshelfController {
         model.addAttribute("bookshelves", bookshelves);
 
         //get the user's bookshelves with specified labels
-        List<Bookshelf> specificLabelBookshelves = bookshelfService.getBookshelvesByUserAndLabels(user, List.of("currently_reading", "read", "want_to_read"));
-        model.addAttribute("specificLabelBookshelves", specificLabelBookshelves);
+        List<Bookshelf> currentlyReadingBookshelves = bookshelfService.getBookshelvesByUserAndLabel(user,"currently_reading");
+        model.addAttribute("currentlyReadingBookshelves", currentlyReadingBookshelves);
+
+        List<Bookshelf> readBookshelves = bookshelfService.getBookshelvesByUserAndLabel(user,"read");
+        model.addAttribute("readBookshelves", readBookshelves);
+
+        List<Bookshelf> wantToReadBookshelves = bookshelfService.getBookshelvesByUserAndLabel(user,"want_to_read");
+        model.addAttribute("wantToReadBookshelves", wantToReadBookshelves);
 
         //get the user's bookshelves without specified labels
         List<Bookshelf> otherBookshelves = bookshelfService.getBookshelvesWithoutSpecifiedLabels(user);
