@@ -52,13 +52,13 @@ public class BookshelfController {
         model.addAttribute("bookshelves", bookshelves);
 
         //get the user's bookshelves with specified labels
-        List<Bookshelf> currentlyReadingBookshelves = bookshelfService.getBookshelvesByUserAndLabel(user,"currently_reading");
+        Bookshelf currentlyReadingBookshelves = bookshelfService.getBookshelfByUserAndLabel(user,"Currently Reading");
         model.addAttribute("currentlyReadingBookshelves", currentlyReadingBookshelves);
 
-        List<Bookshelf> readBookshelves = bookshelfService.getBookshelvesByUserAndLabel(user,"read");
+        Bookshelf readBookshelves = bookshelfService.getBookshelfByUserAndLabel(user,"Read");
         model.addAttribute("readBookshelves", readBookshelves);
 
-        List<Bookshelf> wantToReadBookshelves = bookshelfService.getBookshelvesByUserAndLabel(user,"want_to_read");
+        Bookshelf wantToReadBookshelves = bookshelfService.getBookshelfByUserAndLabel(user,"Want to Read");
         model.addAttribute("wantToReadBookshelves", wantToReadBookshelves);
 
         //get the user's bookshelves without specified labels
@@ -70,9 +70,9 @@ public class BookshelfController {
         model.addAttribute("otherBookshelvesWithCount", otherBookshelvesWithCount);
 
         //calculate the number of books per shelf label
-        long currentlyReadingCount = bookshelfService.countByShelfId(bookshelfService.getShelfIdByUserAndLabel(user,"currently_reading"));
-        long readCount = bookshelfService.countByShelfId(bookshelfService.getShelfIdByUserAndLabel(user,"read"));
-        long wantToReadCount = bookshelfService.countByShelfId(bookshelfService.getShelfIdByUserAndLabel(user,"want_to_read"));
+        long currentlyReadingCount = bookshelfService.countByShelfId(bookshelfService.getShelfIdByUserAndLabel(user,"Currently Reading"));
+        long readCount = bookshelfService.countByShelfId(bookshelfService.getShelfIdByUserAndLabel(user,"Read"));
+        long wantToReadCount = bookshelfService.countByShelfId(bookshelfService.getShelfIdByUserAndLabel(user,"Want to Read"));
 
         model.addAttribute("currentlyReadingCount", currentlyReadingCount);
         model.addAttribute("readCount", readCount);
@@ -85,14 +85,16 @@ public class BookshelfController {
     public String addShelf(Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
+        Long untitledNumber = bookshelfRepository.countUntitledLabels() + 1L;
         Bookshelf bookshelf = new Bookshelf();
-        bookshelf.setLabel("untitled"); //change this
+        bookshelf.setLabel("untitled " + untitledNumber); //change this
         bookshelf.setShelfId(bookshelfService.getNextShelfId());
         bookshelf.setUser(user);
 
         bookshelfService.save(bookshelf);
-        return "redirect:/myBookshelf/untitled"; //and change this
+        return "redirect:/myBookshelf/untitled " + untitledNumber; //and change this
     }
+
     //bookshelf details
     @GetMapping("/myBookshelf/{label}")
     public String myBookshelf(@PathVariable("label") String label, Model model, Principal principal) throws ChangeSetPersister.NotFoundException {
@@ -101,15 +103,13 @@ public class BookshelfController {
         User user = userService.findByUsername(principal.getName());
 
         // Get the user's bookshelves
-        List<Bookshelf> bookshelves = bookshelfService.getBookshelvesByUserAndLabel(user,label);
-        model.addAttribute("bookshelves", bookshelves);
+        Bookshelf bookshelves = bookshelfService.getBookshelfByUserAndLabel(user,label);
+        model.addAttribute("label", label);
 
-        if (!bookshelves.isEmpty()) {
-            Long shelfId = bookshelves.get(0).getShelfId(); //use the first bookshelf's shelfId
-            // Get all books associated with this shelfId
-            List<ShelfBook> shelfBooks = shelfBookRepository.findByShelfId(shelfId);
-            model.addAttribute("shelfBooks", shelfBooks);
-        }
+        Long shelfId = bookshelves.getShelfId(); //use the first bookshelf's shelfId
+
+        List<ShelfBook> shelfBooks = shelfBookRepository.findByShelfId(shelfId);
+        model.addAttribute("shelfBooks", shelfBooks);
 
         return "bookshelfDetails";
 

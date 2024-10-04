@@ -3,6 +3,7 @@ package com.bookApp.web.bookshelf;
 import com.bookApp.web.user.User;
 import org.springframework.stereotype.Service;
 
+import com.bookApp.web.shelf_book.ShelfBookRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,12 +12,15 @@ import java.util.stream.Collectors;
 public class BookshelfService {
 
     private final BookshelfRepository bookshelfRepository;
+    private final ShelfBookRepository shelfBookRepository;
+
+    public BookshelfService(BookshelfRepository bookshelfRepository, ShelfBookRepository shelfBookRepository) {
+        this.bookshelfRepository = bookshelfRepository;
+        this.shelfBookRepository = shelfBookRepository;
+    }
 
     public void save(Bookshelf bookshelf) {
         bookshelfRepository.save(bookshelf);
-    }
-    public BookshelfService(BookshelfRepository bookshelfRepository) {
-        this.bookshelfRepository = bookshelfRepository;
     }
 
     public List<Bookshelf> getBookshelf() {
@@ -25,10 +29,6 @@ public class BookshelfService {
 
     public List<Bookshelf> getBookshelfByUser(User user) {
         return bookshelfRepository.findByUser(user);
-    }
-
-    public long countBooksByUserAndLabel(User user, String label) {
-        return bookshelfRepository.countByUserAndLabel(user, label);
     }
 
     public long countByShelfId(Long shelfId) {
@@ -43,7 +43,7 @@ public class BookshelfService {
         return bookshelfRepository.findByUserAndLabelIn(user, labels);
     }
 
-    public List<Bookshelf> getBookshelvesByUserAndLabel(User user, String label) {
+    public Bookshelf getBookshelfByUserAndLabel(User user, String label) {
         return bookshelfRepository.findByUserAndLabel(user, label);
     }
 
@@ -56,8 +56,8 @@ public class BookshelfService {
         return bookshelves.stream()
                 .collect(Collectors.toMap(
                         Bookshelf::getLabel,
-                        bookshelf -> countBooksByUserAndLabel(user, bookshelf.getLabel()),
-                        (existing, replacement) -> existing // handle duplicate keys
+                        bookshelf -> countByShelfId(bookshelf.getShelfId()), // Get count by shelfId
+                        (existing, replacement) -> existing //handle duplicate keys
                 ));
     }
 

@@ -17,4 +17,8 @@ public class ShelfBookService {
     public void save(ShelfBook shelfbook) {
         shelfBookRepository.save(shelfbook);
     }
+
+    public Long countBooksByShelfId(Long shelfId) {
+        return shelfBookRepository.countBooksByShelfId(shelfId);
+    }
 }

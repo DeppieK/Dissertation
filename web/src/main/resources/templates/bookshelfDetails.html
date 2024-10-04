@@ -168,6 +168,10 @@
             font-size: 20px;
         }
 
+        .bookshelfLabel{
+            text-align: center;
+            margin-bottom: 35px;
+        }
 
 
     </style>
@@ -214,6 +218,7 @@
     </div>
     <div class="content">
         <div class="image-container">
+            <h2 class="bookshelfLabel"> 📚 <span th:text="${label}"></span> Bookshelf</h2>
             <ul class="books">
                 <li th:each="shelfBook : ${shelfBooks}" id="books">
                     <a th:href="@{/books/{bookId}(bookId = ${shelfBook.book.id})}">
