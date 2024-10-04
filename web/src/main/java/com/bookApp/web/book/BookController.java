@@ -137,7 +137,7 @@ public class BookController {
         User user = userService.findByUsername(username);
         Book book = bookService.findBookById(bookId);
 
-        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"currently_reading");
+        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"Currently Reading");
 
         ShelfBook shelfBook = new ShelfBook();
         shelfBook.setShelfId(shelfId);
@@ -155,7 +155,7 @@ public class BookController {
         User user = userService.findByUsername(username);
         Book book = bookService.findBookById(bookId);
 
-        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"read");
+        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"Read");
 
         ShelfBook shelfBook = new ShelfBook();
         shelfBook.setShelfId(shelfId);
@@ -173,7 +173,7 @@ public class BookController {
         User user = userService.findByUsername(username);
         Book book = bookService.findBookById(bookId);
 
-        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"want_to_read");
+        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"Want to Read");
         ShelfBook shelfBook = new ShelfBook();
         shelfBook.setShelfId(shelfId);
         shelfBook.setBook(book);
