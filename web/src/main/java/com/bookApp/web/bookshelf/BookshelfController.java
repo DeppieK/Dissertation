@@ -87,12 +87,12 @@ public class BookshelfController {
 
         Long untitledNumber = bookshelfRepository.countUntitledLabels() + 1L;
         Bookshelf bookshelf = new Bookshelf();
-        bookshelf.setLabel("untitled " + untitledNumber); //change this
+        bookshelf.setLabel("untitled " + untitledNumber);
         bookshelf.setShelfId(bookshelfService.getNextShelfId());
         bookshelf.setUser(user);
 
         bookshelfService.save(bookshelf);
-        return "redirect:/myBookshelf/untitled " + untitledNumber; //and change this
+        return "redirect:/myBookshelf/untitled " + untitledNumber;
     }
 
     //bookshelf details
@@ -106,7 +106,7 @@ public class BookshelfController {
         Bookshelf bookshelves = bookshelfService.getBookshelfByUserAndLabel(user,label);
         model.addAttribute("label", label);
 
-        Long shelfId = bookshelves.getShelfId(); //use the first bookshelf's shelfId
+        Long shelfId = bookshelves.getShelfId();
 
         List<ShelfBook> shelfBooks = shelfBookRepository.findByShelfId(shelfId);
         model.addAttribute("shelfBooks", shelfBooks);
