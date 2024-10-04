@@ -1,5 +1,6 @@
 package com.bookApp.web.shelf_book;
 
+import com.bookApp.web.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,10 +13,12 @@ public interface ShelfBookRepository extends JpaRepository<ShelfBook, Integer> {
 
     List<ShelfBook> findByShelfId(Long shelfId);
 
-    List<ShelfBook> findAllByShelfId(Long shelfId);
-
     List<ShelfBook> findAll();
 
     @Query("SELECT COUNT(sb) FROM ShelfBook sb WHERE sb.shelfId = :shelfId")
     Long countBooksByShelfId(@Param("shelfId") Long shelfId);
+
+    // Custom query to count books by user
+    @Query("SELECT COUNT(sb) FROM ShelfBook sb JOIN Bookshelf b ON sb.shelfId = b.shelfId WHERE b.user = :user")
+    long countBooksByUser(@Param("user") User user);
 }

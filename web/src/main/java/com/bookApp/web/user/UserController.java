@@ -4,6 +4,7 @@ package com.bookApp.web.user;
 import com.bookApp.web.book.Book;
 import com.bookApp.web.bookshelf.Bookshelf;
 import com.bookApp.web.bookshelf.BookshelfService;
+import com.bookApp.web.shelf_book.ShelfBookRepository;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -23,10 +24,12 @@ public class UserController {
     @Autowired
     private UserService userService;
     private BookshelfService bookshelfService;
+    private ShelfBookRepository shelfBookRepository;
 
-    public UserController(UserService userService, BookshelfService bookshelfService) {
+    public UserController(UserService userService, BookshelfService bookshelfService, ShelfBookRepository shelfBookRepository) {
         this.userService = userService;
         this.bookshelfService = bookshelfService;
+        this.shelfBookRepository = shelfBookRepository;
     }
 
     //login page
@@ -88,7 +91,7 @@ public class UserController {
         User user = userService.findByUsername(username);
         long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"Read");
         long readCount = bookshelfService.countByShelfId(shelfId);
-        List<Bookshelf> booksInBookshelf = bookshelfService.getBookshelfByUser(user);
+        Long booksInBookshelf = shelfBookRepository.countBooksByUser(user);
 
         model.addAttribute("user", user);
         model.addAttribute("readCount", readCount);
