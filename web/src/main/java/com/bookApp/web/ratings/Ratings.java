@@ -38,6 +38,8 @@ public class Ratings {
 
     // Changed stars from int to double
     private double stars;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     public Ratings() {

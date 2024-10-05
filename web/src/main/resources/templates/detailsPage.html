@@ -287,12 +287,14 @@
             display: inline-block;
         }
 
-        /* Adjust dropdown to stay inside the container and not overflow */
         .dropdown-container .dropdown-menu {
             right: 0;
             top: 40px;
         }
 
+        .username{
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -405,7 +407,7 @@
 
         <div class="container margin">
             <div th:each="rating : ${ratings}" class="comment">
-                <p><span th:text="${rating.user.username}"></span></p>
+                <p><span class="username" th:text="${rating.user.username}"></span></p>
                 <p th:utext="${rating.getStarsAsEmoji()}"></p>
                 <p th:text="${rating.description}"></p>
                 <hr>
