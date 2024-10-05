@@ -25,6 +25,8 @@ public class UserController {
     private UserService userService;
     private BookshelfService bookshelfService;
     private ShelfBookRepository shelfBookRepository;
+    @Autowired
+    private Book book;
 
     public UserController(UserService userService, BookshelfService bookshelfService, ShelfBookRepository shelfBookRepository) {
         this.userService = userService;
@@ -71,6 +73,25 @@ public class UserController {
         user.setDateOfRegistration(LocalDateTime.now());
 
         userService.save(user);
+
+        //make a function for this ;)
+        Bookshelf bookshelf1 = new Bookshelf();
+        bookshelf1.setLabel("Currently Reading");
+        bookshelf1.setUser(user);
+        bookshelf1.setShelfId(bookshelfService.getNextShelfId());
+        bookshelfService.save(bookshelf1);
+
+        Bookshelf bookshelf2 = new Bookshelf();
+        bookshelf2.setLabel("Read");
+        bookshelf2.setUser(user);
+        bookshelf2.setShelfId(bookshelfService.getNextShelfId());
+        bookshelfService.save(bookshelf2);
+
+        Bookshelf bookshelf3 = new Bookshelf();
+        bookshelf3.setLabel("Want to Read");
+        bookshelf3.setUser(user);
+        bookshelf3.setShelfId(bookshelfService.getNextShelfId());
+        bookshelfService.save(bookshelf3);
 
         return "redirect:/login";
     }
