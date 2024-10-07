@@ -35,12 +35,11 @@ public class BookController {
     private final RatingsService ratingsService;
     private final GenreRepository genreRepository;
     private final BookshelfService bookshelfService;
-    private final Bookshelf bookshelf;
     private final ShelfBookService shelfBookService;
 
     //constructor
     @Autowired
-    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService, GenreRepository genreRepository, BookshelfService bookshelfService, Bookshelf bookshelf, ShelfBookService shelfBookService) {
+    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService, GenreRepository genreRepository, BookshelfService bookshelfService, ShelfBookService shelfBookService) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookSearchService = bookSearchService;
@@ -49,7 +48,6 @@ public class BookController {
         this.ratingsService = ratingsService;
         this.genreRepository = genreRepository;
         this.bookshelfService = bookshelfService;
-        this.bookshelf = bookshelf;
         this.shelfBookService = shelfBookService;
     }
 
@@ -103,7 +101,6 @@ public class BookController {
         model.addAttribute("books",books);
         return "books";
     }
-
 
     //display books based on a specific genre
     @GetMapping("/books/genre/{genre}")

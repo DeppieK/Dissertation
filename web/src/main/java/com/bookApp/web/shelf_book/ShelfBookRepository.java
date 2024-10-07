@@ -21,4 +21,10 @@ public interface ShelfBookRepository extends JpaRepository<ShelfBook, Integer> {
     // Custom query to count books by user
     @Query("SELECT COUNT(sb) FROM ShelfBook sb JOIN Bookshelf b ON sb.shelfId = b.shelfId WHERE b.user = :user")
     long countBooksByUser(@Param("user") User user);
+
+    @Query("SELECT sb FROM ShelfBook sb JOIN Book b ON sb.book.id = b.id WHERE sb.shelfId = :shelfId AND " +
+            "(LOWER(b.title) LIKE CONCAT('%', LOWER(:query), '%') OR " +
+            "LOWER(b.author) LIKE CONCAT('%', LOWER(:query), '%') OR " +
+            "CAST(b.ISBN AS STRING) LIKE CONCAT('%', LOWER(:query), '%'))")
+    List<ShelfBook> searchBooksInBookshelf(@Param("shelfId") Long shelfId, @Param("query") String query);
 }
