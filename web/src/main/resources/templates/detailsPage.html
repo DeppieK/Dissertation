@@ -124,6 +124,7 @@
             background-color: white;
             border: 1px solid #ddd;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
 
         .container table {
@@ -164,6 +165,20 @@
 
         .menu{
             font-size: 20px;
+        }
+
+        .rating-container {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+
+        .rating-container:nth-child(odd) {
+            background-color: rgb(238, 239, 255);
+        }
+
+        .rating-container:nth-child(even) {
+            background-color: #f3e6ff;
         }
 
         .rating-form {
@@ -229,7 +244,6 @@
             list-style-type: none;
         }
 
-        /* Basic button styles */
         .hover {
             background-color: #4d5cda;
             color: white;
@@ -245,20 +259,18 @@
             background-color: #3a48b1;
         }
 
-        /* Style the dropdown menu */
         .dropdown-menu {
             list-style: none;
             margin: 0;
             padding: 0;
             position: absolute;
-            display: none; /* Hidden by default */
+            display: none;
             background-color: #f8f9ff;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             z-index: 1;
             width: 200px;
-            border-radius: 5px;
+            border-radius: 10px;
             overflow: hidden;
-            font-family: geneva;
         }
 
         .dropdown-menu li {
@@ -275,7 +287,6 @@
             font-size: 16px;
             color: #333;
             transition: background-color 0.3s ease;
-            font-family: geneva;
         }
 
         .dropdown-menu li button:hover {
@@ -406,13 +417,11 @@
         <br><br>
 
         <div class="container margin">
-            <div th:each="rating : ${ratings}" class="comment">
+            <div th:each="rating : ${ratings}" class="rating-container comment">
                 <p><span class="username" th:text="${rating.user.username}"></span></p>
                 <p th:utext="${rating.getStarsAsEmoji()}"></p>
                 <p th:text="${rating.description}"></p>
-                <hr>
             </div>
-
         </div>
 
         <br><br>
