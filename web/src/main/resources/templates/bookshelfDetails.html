@@ -103,8 +103,8 @@
             width: 80%;
             height: 80%;
             transition: all 0.4s ease-in-out;
-
         }
+
         .books li:hover img {
             transform: scale(1.03);
             box-shadow: 0 0 50px #5168ef;
@@ -168,18 +168,66 @@
             font-size: 20px;
         }
 
-        .bookshelfLabel{
+        .bookshelfContainer {
+            position: relative;
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
         }
 
-        .BookshelfSearchBar{
-            align-items: start;
-            margin-bottom: 20px;
+        .bookshelfLabel {
+            font-size: 24px;
+            display: inline-block;
+        }
+
+        .BookshelfButtons {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .circle-button, .buttons {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(204, 210, 253);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle-button img, .buttons img {
+            width: 35px;
+            height: 35px;
+        }
+
+        .BookshelfSearchBar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .BookshelfSearch::placeholder {
+            color: #6f81e4;
+            opacity: 1;
+        }
+
+        .BookshelfSearchForm {
+            display: flex;
+            align-items: center;
+            width: 80%;
+            gap: 15px;
         }
 
         .BookshelfSearch {
-            width: 19%;
+            width: 23%;
             box-sizing: border-box;
             border: 2px solid #6f81e4;
             border-radius: 4px;
@@ -195,35 +243,8 @@
         }
 
         .BookshelfSearch:focus {
-            width:23%;
-
+            width: 26%;
         }
-
-        .BookshelfSearch::placeholder {
-            color: #6f81e4;
-            opacity: 1;
-        }
-
-        .circle-button {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: rgb(204, 210, 253);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 10px;
-        }
-
-        .circle-button img {
-            width: 40px;
-            height: 40px;
-        }
-
-
-
     </style>
 </head>
 
@@ -268,15 +289,27 @@
     </div>
     <div class="content">
         <div class="image-container">
-            <h2 class="bookshelfLabel"> 📚 <span th:text="${label}"></span> Bookshelf 📚</h2>
+            <div class="bookshelfContainer">
+                <h2 class="bookshelfLabel">📚 <span th:text="${label}"></span> Bookshelf 📚</h2>
+                <div class="BookshelfButtons">
+                    <button class="buttons">
+                        <img th:src="@{/2.png}" />
+                    </button>
+                    <button class="buttons">
+                        <img th:src="@{/1.png}" />
+                    </button>
+                </div>
+            </div>
+
             <div class="BookshelfSearchBar">
-                <form th:action="@{'/books/myBookshelf/' + ${label} + '/bookshelf-search'}" method="get" style="display: flex; align-items: center;">
+                <form th:action="@{'/books/myBookshelf/' + ${label} + '/bookshelf-search'}" method="get" class="BookshelfSearchForm">
                     <input class="BookshelfSearch" placeholder="Search books in bookshelf 💫" name="query">
                     <a th:href="@{/myBookshelf/{label}(label=${label})}" class="circle-button">
                         <img th:src="@{/refresh1.png}" alt="Refresh" />
                     </a>
                 </form>
             </div>
+
             <ul class="books">
                 <li th:each="shelfBook : ${shelfBooks}" id="books">
                     <a th:href="@{/books/{bookId}(bookId = ${shelfBook.book.id})}">

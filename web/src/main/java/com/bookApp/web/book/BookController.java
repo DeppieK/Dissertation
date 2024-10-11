@@ -63,14 +63,12 @@ public class BookController {
     @GetMapping("/books/{bookId}")
     public String bookDetail(@PathVariable("bookId") long bookId, Model model) throws ChangeSetPersister.NotFoundException {
         Book book = bookService.findBookById(bookId);
-        //Long userId = commentsService.getUserIdByBookId(bookId);
         List<Ratings> ratings = ratingsRepository.findByBookId(bookId);
         List<Genre> genres = genreRepository.findByBookId(bookId);
 
         model.addAttribute("book", book);
         model.addAttribute("ratings", ratings);
         model.addAttribute("genres", genres);
-        //model.addAttribute("user", userId);
 
         return "detailsPage";
     }
