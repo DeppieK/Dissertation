@@ -10,13 +10,13 @@ import com.bookApp.web.shelf_book.ShelfBookService;
 import com.bookApp.web.user.User;
 import com.bookApp.web.user.UserService;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -120,6 +120,30 @@ public class BookshelfController {
 
         return "bookshelfDetails";
 
+    }
+
+    @PostMapping("/{label}/add")
+    public ResponseEntity<String> addBookToShelf(@PathVariable String label, @RequestBody Map<String, Long> requestData) {
+        //get the current authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        //find the book by id
+        Long bookId = requestData.get("bookId");
+        Book book = bookService.findBookById(bookId);
+
+        //get the shelf id for the user and label
+        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user, label);
+
+        //create and save the ShelfBook entry
+        ShelfBook shelfBook = new ShelfBook();
+        shelfBook.setShelfId(shelfId);
+        shelfBook.setBook(book);
+        shelfBookService.save(shelfBook);
+
+        //return a success response
+        return ResponseEntity.ok("Book added to the shelf successfully!");
     }
 
     // bookshelf search method

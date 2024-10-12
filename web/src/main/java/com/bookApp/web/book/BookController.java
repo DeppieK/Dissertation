@@ -17,12 +17,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class BookController {
@@ -98,6 +98,23 @@ public class BookController {
         List<Book> books = bookSearchService.searchBooks(query);
         model.addAttribute("books",books);
         return "books";
+    }
+
+    @GetMapping("/books/search-json")
+    @ResponseBody
+    public List<Map<String, Object>> searchBooksJson(@RequestParam(value = "query") String query) {
+        List<Book> books = bookSearchService.searchBooks(query);
+
+        // Create a response with a list of maps containing only the necessary fields
+        return books.stream()
+                .map(book -> {
+                    Map<String, Object> bookData = new HashMap<>();
+                    bookData.put("id", book.getId());
+                    bookData.put("title", book.getTitle());
+                    bookData.put("photoUrl", book.getPhotoUrl());
+                    return bookData;
+                })
+                .collect(Collectors.toList());
     }
 
     //display books based on a specific genre

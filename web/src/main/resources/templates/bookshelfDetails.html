@@ -189,7 +189,7 @@
             align-items: center;
         }
 
-        .circle-button, .buttons {
+        .circle-button, .plusButton, .sortButton {
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -201,7 +201,7 @@
             justify-content: center;
         }
 
-        .circle-button img, .buttons img {
+        .circle-button img, .plusButton img, .sortButton img {
             width: 35px;
             height: 35px;
         }
@@ -245,6 +245,109 @@
         .BookshelfSearch:focus {
             width: 26%;
         }
+
+        #searchPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            max-height: 90%;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+            border: 2px solid #6f81e4;
+        }
+
+        #bookSearchInput {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #6f81e4;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        #bookSearchInput:focus {
+            border-color: #4d5cda;
+            outline: none;
+        }
+
+        #searchResults {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+
+        #searchResults::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #searchResults::-webkit-scrollbar-thumb {
+            background: #6f81e4;
+            border-radius: 4px;
+        }
+
+        #searchResults::-webkit-scrollbar-track {
+            background: rgba(204, 210, 253, 0.3);
+        }
+
+        #searchResults li {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #searchResults li:hover {
+            background-color: #f0f4ff;
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .result-image {
+            width: 70px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .result-title {
+            flex-grow: 1;
+            font-size: 16px;
+        }
+
+        #closePopupButton {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            background-color: #6f81e4;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #closePopupButton:hover {
+            background-color: #4d5cda;
+        }
+
     </style>
 </head>
 
@@ -290,15 +393,21 @@
     <div class="content">
         <div class="image-container">
             <div class="bookshelfContainer">
-                <h2 class="bookshelfLabel">📚 <span th:text="${label}"></span> Bookshelf 📚</h2>
+                <h2 class="bookshelfLabel">📚 <span id="shelfLabelText" th:text="${label}"></span> Bookshelf 📚</h2>
                 <div class="BookshelfButtons">
-                    <button class="buttons">
+                    <button class="plusButton">
                         <img th:src="@{/2.png}" />
                     </button>
-                    <button class="buttons">
+                    <button class="sortButton">
                         <img th:src="@{/1.png}" />
                     </button>
                 </div>
+                <div id="searchPopup">
+                    <input type="text" id="bookSearchInput" placeholder="Search books..." style="width: 100%; padding: 5px;">
+                    <ul class="search-results" id="searchResults"></ul>
+                    <button id="closePopupButton">Close</button>
+                </div>
+
             </div>
 
             <div class="BookshelfSearchBar">
@@ -321,6 +430,95 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () =>{
 
+        const searchPopup = document.getElementById('searchPopup');
+        const bookSearchInput = document.getElementById('bookSearchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        //show popup on click of plus button
+        const plusButton = document.querySelector('.BookshelfButtons .plusButton');
+        plusButton.addEventListener('click', () => {
+            searchPopup.style.display = 'block'; //display popup
+            searchPopup.style.opacity = '1';
+            bookSearchInput.focus(); //focus the search bar
+        });
+
+        bookSearchInput.addEventListener('keyup', function (){
+            const query = this.value;
+
+            //check if input not empty
+            if (query.length > 2) {
+                //send AJAX request to search books
+                fetch(`/books/search-json?query=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        displaySearchResults(data);
+                    })
+                    .catch(error => console.error('Error fetching search results:', error));
+            } else {
+                searchResults.innerHTML = '';
+            }
+        });
+
+        function displaySearchResults(books) {
+            searchResults.innerHTML = ''; //clear previous results
+
+            if (books.length > 0) {
+                books.forEach(book => {
+                    const li = document.createElement('li');
+                    li.classList.add('search-result-item');
+
+                    const img = document.createElement('img');
+                    img.src = book.photoUrl;
+                    img.alt = book.title;
+                    img.classList.add('result-image');
+
+                    const titleText = document.createElement('span');
+                    titleText.textContent = book.title;
+                    titleText.classList.add('result-title');
+
+                    li.appendChild(img);
+                    li.appendChild(titleText);
+
+                    li.addEventListener('click', () => addToBookshelf(book)); //add click event to add to bookshelf
+                    searchResults.appendChild(li);
+                });
+            } else {
+                searchResults.innerHTML = '<li>No results found</li>';
+            }
+        }
+
+
+        function addToBookshelf(book) {
+            const shelfLabel = document.getElementById('shelfLabelText').innerText;
+            const url = `/${shelfLabel}/add`; //construct the URL
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ bookId: book.id }) //send the book id in the request body
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Book added to bookshelf!');
+                    } else {
+                        alert('Error adding book to bookshelf. Status: ' + response.status);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        const closePopupButton = document.getElementById('closePopupButton');
+        closePopupButton.addEventListener('click', () => {
+            //searchPopup.style.display = 'none';
+            location.reload(); // Refresh the page
+        });
+
+    });
+</script>
 </body>
 </html>
