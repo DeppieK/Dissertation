@@ -140,16 +140,15 @@ public class BookController {
         return "genres";
     }
 
-    //maybe make refine it with some more functions (make it cleaner)
-    @PostMapping("/currentlyReading")
-    public String currentlyReading(@RequestParam("bookId") long bookId, Model model) {
+    @PostMapping("/{label}")
+    public String addToLabel(@PathVariable String label, @RequestParam("bookId") long bookId, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
         User user = userService.findByUsername(username);
         Book book = bookService.findBookById(bookId);
 
-        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"Currently Reading");
+        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,label);
 
         ShelfBook shelfBook = new ShelfBook();
         shelfBook.setShelfId(shelfId);
@@ -159,38 +158,4 @@ public class BookController {
         return "redirect:/books/" + bookId;
     }
 
-    @PostMapping("/read")
-    public String read(@RequestParam("bookId") long bookId, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userService.findByUsername(username);
-        Book book = bookService.findBookById(bookId);
-
-        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"Read");
-
-        ShelfBook shelfBook = new ShelfBook();
-        shelfBook.setShelfId(shelfId);
-        shelfBook.setBook(book);
-        shelfBookService.save(shelfBook);
-
-        return "redirect:/books/" + bookId;
-    }
-
-    @PostMapping("/wantToRead")
-    public String wantToRead(@RequestParam("bookId") long bookId, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userService.findByUsername(username);
-        Book book = bookService.findBookById(bookId);
-
-        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"Want to Read");
-        ShelfBook shelfBook = new ShelfBook();
-        shelfBook.setShelfId(shelfId);
-        shelfBook.setBook(book);
-        shelfBookService.save(shelfBook);
-
-        return "redirect:/books/" + bookId;
-    }
 }

@@ -371,15 +371,15 @@
                                     <div class="dropdown-container">
                                         <button class="hover" id="dropdownButton">Add to Bookshelf</button>
                                         <ul class="dropdown-menu" id="dropdownMenu">
-                                            <form th:action="@{/currentlyReading}" method="post">
+                                            <form th:action="@{/Currently Reading}" method="post">
                                                 <li class="hover"><button type="submit">Books Currently Reading</button></li>
                                                 <input type="hidden" name="bookId" th:value="${book.id}" />
                                             </form>
-                                            <form th:action="@{/read}" method="post">
+                                            <form th:action="@{/Read}" method="post">
                                                 <li class="hover"><button type="submit">Books Read</button></li>
                                                 <input type="hidden" name="bookId" th:value="${book.id}" />
                                             </form>
-                                            <form th:action="@{/wantToRead}" method="post">
+                                            <form th:action="@{/Want to Read}" method="post">
                                                 <li class="hover"><button type="submit">Want to Read</button></li>
                                                 <input type="hidden" name="bookId" th:value="${book.id}" />
                                             </form>
