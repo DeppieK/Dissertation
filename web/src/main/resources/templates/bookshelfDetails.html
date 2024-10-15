@@ -354,7 +354,7 @@
 <body>
 <header>
     <div class="title">
-        <img th:src="@{/booksIcon.png}" style="width: 50px;height: 50px; ">
+        <img th:src="@{/images/booksIcon.png}" style="width: 50px;height: 50px; ">
         <a th:href="@{/books}" class="href">&nbsp;Literary Haven</a>
     </div>
     <div class="searchBar">
@@ -363,10 +363,10 @@
         </form>
     </div>
     <div>
-        <a th:href="@{/profile}" class="profileIcon"> <img th:src="@{/profileIcon.png}" style="width: 30px;height: 30px;"></a>
+        <a th:href="@{/profile}" class="profileIcon"> <img th:src="@{/images/profileIcon.png}" style="width: 30px;height: 30px;"></a>
     </div>
     <div>
-        <a th:href="@{/logout}" class="logoutIcon"> <img th:src="@{/logoutIcon.png}" style="width: 30px;height: 30px;"></a>
+        <a th:href="@{/logout}" class="logoutIcon"> <img th:src="@{/images/logoutIcon.png}" style="width: 30px;height: 30px;"></a>
     </div>
 </header>
 
@@ -396,10 +396,10 @@
                 <h2 class="bookshelfLabel">📚 <span id="shelfLabelText" th:text="${label}"></span> Bookshelf 📚</h2>
                 <div class="BookshelfButtons">
                     <button class="plusButton">
-                        <img th:src="@{/2.png}" />
+                        <img th:src="@{/images/2.png}" />
                     </button>
                     <button class="sortButton">
-                        <img th:src="@{/1.png}" />
+                        <img th:src="@{/images/1.png}" />
                     </button>
                 </div>
                 <div id="searchPopup">
@@ -414,7 +414,7 @@
                 <form th:action="@{'/books/myBookshelf/' + ${label} + '/bookshelf-search'}" method="get" class="BookshelfSearchForm">
                     <input class="BookshelfSearch" placeholder="Search books in bookshelf 💫" name="query">
                     <a th:href="@{/myBookshelf/{label}(label=${label})}" class="circle-button">
-                        <img th:src="@{/refresh1.png}" alt="Refresh" />
+                        <img th:src="@{/images/refresh1.png}" alt="Refresh" />
                     </a>
                 </form>
             </div>
