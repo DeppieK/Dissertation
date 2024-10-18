@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan("com.bookApp.web")
 @Entity
-@Table(name = "shelf_book")
+@Table(name = "shelf_book", uniqueConstraints = @UniqueConstraint(columnNames = {"shelf_id", "book_id"}))
 public class ShelfBook{
     @Id
     @SequenceGenerator(
