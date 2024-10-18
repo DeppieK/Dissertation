@@ -12,6 +12,8 @@ import java.util.List;
 public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
     List<Bookshelf> findByUser(User user);
 
+    Bookshelf findByShelfId(Long shelfId);
+
     @Query("SELECT COUNT(s) FROM ShelfBook s WHERE s.shelfId = :shelfId")
     long countByShelfId(Long shelfId);
 

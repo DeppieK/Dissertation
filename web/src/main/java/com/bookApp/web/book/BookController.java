@@ -105,7 +105,7 @@ public class BookController {
     public List<Map<String, Object>> searchBooksJson(@RequestParam(value = "query") String query) {
         List<Book> books = bookSearchService.searchBooks(query);
 
-        // Create a response with a list of maps containing only the necessary fields
+        //create a response with a list of maps containing only the necessary fields
         return books.stream()
                 .map(book -> {
                     Map<String, Object> bookData = new HashMap<>();

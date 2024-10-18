@@ -10,6 +10,7 @@ import com.bookApp.web.shelf_book.ShelfBookService;
 import com.bookApp.web.user.User;
 import com.bookApp.web.user.UserService;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,8 +21,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class BookshelfController {
@@ -151,8 +154,6 @@ public class BookshelfController {
     public String bookshelfSearchBooks(@PathVariable("label") String label, @RequestParam(value = "query") String query, Model model, Principal principal){
         User user = userService.findByUsername(principal.getName());
 
-        System.out.println("Label " + label);
-
         Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user, label);
 
         System.out.println("Search query: " + query);
@@ -163,6 +164,23 @@ public class BookshelfController {
         model.addAttribute("shelfBooks", shelfBooks);
         model.addAttribute("label", label);
         return "bookshelfDetails";
+    }
+
+    @GetMapping("/bookshelf/rename/{label}")
+    @ResponseBody
+    public ResponseEntity<Void> renameBookshelfJson(@PathVariable("label") String label, @RequestParam("newLabel") String newLabel,Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+
+        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user, label);
+
+        Bookshelf bookshelf = bookshelfRepository.findByShelfId(shelfId);
+
+        if (bookshelf != null){
+            bookshelf.setLabel(newLabel);
+            bookshelfService.save(bookshelf);
+            return ResponseEntity.ok().build(); //success
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
 }
