@@ -246,7 +246,7 @@
             width: 26%;
         }
 
-        #searchPopup {
+        #searchPopup, #deletePopup {
             display: none;
             position: fixed;
             top: 50%;
@@ -333,7 +333,7 @@
             font-size: 16px;
         }
 
-        #closeBtn, #saveBtn, #cancelBtn {
+        #closeBtn, #saveBtn, #cancelBtn, #yesBtn, #noBtn {
             margin-top: 10px;
             padding: 10px 15px;
             border: none;
@@ -344,7 +344,7 @@
             transition: background-color 0.3s ease;
         }
 
-        #closeBtn:hover, #saveBtn:hover, #cancelBtn:hover  {
+        #closeBtn:hover, #saveBtn:hover, #cancelBtn:hover, #yesBtn:hover, #noBtn:hover  {
             background-color: #4d5cda;
         }
 
@@ -374,16 +374,18 @@
         }
 
         .books li .deleteBtn img {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             margin-left: 5px;
             display: inline-block;
             opacity: 0;
             transition: opacity 0.3s ease;
+            border-radius: 30px;
+            background-color: #8c9cef;
         }
 
         .books li:hover .deleteBtn img {
-            opacity: 0.45;
+            opacity: 1;
             cursor: pointer;
         }
 
@@ -398,7 +400,7 @@
             cursor: pointer;
         }
 
-        #editLabelPopup, #deletePopup{
+        #editLabelPopup{
             display: none;
             position: fixed;
             top: 50%;
@@ -519,12 +521,12 @@
                         <img th:src="${shelfBook.book.photoUrl}" alt="Book Cover"/>
                     </a>
                         <p id="book-title" th:text="${shelfBook.book.title}"></p>
-                        <button class="deleteBtn">
-                            <img th:src="@{/images/1.png}"/>
+                        <button class="deleteBtn" th:data-book-id="${shelfBook.book.id}">
+                            <img th:src="@{/images/test2.png}"/>
                         </button>
 
                     <div id="deletePopup">
-                        <label>Are you sure you want to remove this book from your bookshelf?</label>
+                        <label>Are you sure you want to remove this book from your bookshelf?</label></br>
                         <button id="yesBtn">Yes</button>
                         <button id="noBtn">No</button>
                     </div>
@@ -535,6 +537,8 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', () =>{
+
+        let selectedBookId = null; //to store the bookId for the clicked delete button
 
         const searchPopup = document.getElementById('searchPopup');
         const bookSearchInput = document.getElementById('bookSearchInput');
@@ -671,18 +675,38 @@
         const cancelBtn = document.getElementById('cancelBtn');
         //cancel the edit and hide the popup
         cancelBtn.addEventListener('click', () => {
-            editPopup.style.display = 'block'; //display popup
+            editPopup.style.display = 'none'; //hide popup
         });
 
-        const deleteBtn = document.getElementById('deleteBtn');
-        //delete book on click
-        deleteBtn.addEventListener('click', () => {
-            deletePopup.style.display = 'none';
+        const deleteBtns = document.querySelectorAll('.deleteBtn');
+        deleteBtns.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                selectedBookId = btn.getAttribute('data-book-id');
+                deletePopup.style.display = 'block'; //show popup
+            });
         });
 
         const yesBtn = document.getElementById('yesBtn');
         yesBtn.addEventListener('click', () =>{
-            //impl
+                const label = shelfLabel.innerText; //get bookshelf label
+
+                if (selectedBookId) {
+                    //AJAX request
+                    fetch(`/bookshelf/delete/${selectedBookId}?label=${encodeURIComponent(label)}`, {
+                        method: 'GET',
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Book removed from bookshelf!');
+                                location.reload(); //refresh the page
+                            } else {
+                                alert('Error removing book from bookshelf');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
         });
 
         const noBtn = document.getElementById('noBtn');

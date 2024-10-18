@@ -13,6 +13,9 @@ public interface ShelfBookRepository extends JpaRepository<ShelfBook, Integer> {
 
     List<ShelfBook> findByShelfId(Long shelfId);
 
+    ShelfBook findByShelfIdAndBookId(Long shelfId, Long bookId);
+
+
     List<ShelfBook> findAll();
 
     @Query("SELECT COUNT(sb) FROM ShelfBook sb WHERE sb.shelfId = :shelfId")

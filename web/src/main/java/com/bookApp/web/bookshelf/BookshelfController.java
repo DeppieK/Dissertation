@@ -183,4 +183,23 @@ public class BookshelfController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
+    @GetMapping("/bookshelf/delete/{bookId}")
+    @ResponseBody
+    public ResponseEntity<Void> deleteBookFromBookshelf(@PathVariable("bookId") Long bookId, @RequestParam("label") String label, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+        System.out.println("Book ID: " + bookId);
+        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user, label);
+
+        ShelfBook shelfBook = shelfBookRepository.findByShelfIdAndBookId(shelfId,bookId);
+
+        System.out.println("shelfbook: " + shelfBook);
+
+
+        if (shelfBook != null){
+           shelfBookRepository.delete(shelfBook);
+            return ResponseEntity.ok().build(); //success
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
 }
