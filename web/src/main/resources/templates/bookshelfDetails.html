@@ -176,7 +176,12 @@
 
         .bookshelfLabel {
             font-size: 24px;
-            display: inline-block;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            text-align: center;
         }
 
         .BookshelfButtons {
@@ -389,11 +394,6 @@
             cursor: pointer;
         }
 
-        .bookshelfLabel:hover{
-            text-decoration: underline;
-            text-decoration-color: rgba(121, 121, 128, 0.58);
-            cursor: pointer;
-        }
 
         .bookshelfLabel:hover .editBtn img {
             opacity: 0.45;
@@ -429,6 +429,16 @@
             border-radius: 5px;
             border: 1px solid #ccc;
             font-size: 13px;
+        }
+
+        .underline-on-hover:hover {
+            text-decoration: underline;
+            text-decoration-color: rgba(121, 121, 128, 0.58);
+            cursor: pointer;
+        }
+
+        #label{
+            display: flex;
         }
 
     </style>
@@ -476,8 +486,12 @@
         <div class="image-container">
             <div class="bookshelfContainer">
 
-                <h2 class="bookshelfLabel">📚
-                    <span id="shelfLabelText" th:text="${label}"></span> Bookshelf 📚
+                <h2 class="bookshelfLabel">
+                    <div id="label">
+                        📚
+                        <span id="shelfLabelText" th:text="${label}"></span>
+                        &nbsp;Bookshelf 📚
+                    </div>
                     <button class="editBtn">
                         <img th:src="@{/images/pencil.png}"/>
                     </button>
@@ -558,6 +572,16 @@
 
         //show edit label popup on click of edit button
         const editBtn = document.querySelector(' .editBtn');
+        const label = document.getElementById('label');
+
+        if (["Currently Reading", "Read", "Want to Read"].includes(shelfLabel.innerText)) {
+            editBtn.style.display = "none";
+            label.classList.remove('underline-on-hover'); //disable underline for these labels
+        } else {
+            editBtn.style.display = "inline-block"; //show the button if condition is not met
+            label.classList.add('underline-on-hover'); //enable underline for other labels
+        }
+
         editBtn.addEventListener('click', () => {
             editPopup.style.display = 'block'; //display popup
             editPopup.style.opacity = '1';
@@ -584,6 +608,7 @@
                             //update the URL path in the browser without reloading the page
                             const newUrl = `/myBookshelf/${encodeURIComponent(newLabel)}`;
                             window.history.pushState({}, '', newUrl);
+                            location.reload(); //refresh the page
 
                             editPopup.style.display = 'none'
                         }
