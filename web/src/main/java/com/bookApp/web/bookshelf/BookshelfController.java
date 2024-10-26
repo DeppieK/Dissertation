@@ -139,14 +139,20 @@ public class BookshelfController {
         //get the shelf id for the user and label
         Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user, label);
 
-        //create and save the ShelfBook entry
-        ShelfBook shelfBook = new ShelfBook();
-        shelfBook.setShelfId(shelfId);
-        shelfBook.setBook(book);
-        shelfBookService.save(shelfBook);
+        ShelfBook shelfBookExists = shelfBookRepository.findByShelfIdAndBookId(shelfId,bookId);
+        if (shelfBookExists == null){
+            //create and save the ShelfBook entry
+            ShelfBook shelfBook = new ShelfBook();
+            shelfBook.setShelfId(shelfId);
+            shelfBook.setBook(book);
+            shelfBookService.save(shelfBook);
 
-        //return a success response
-        return ResponseEntity.ok("Book added to the shelf successfully!");
+            //return a success response
+            return ResponseEntity.ok("Book added to the shelf successfully!");
+        }
+        else{
+            return ResponseEntity.ok("Book already exists in the shelf!");
+        }
     }
 
     // bookshelf search method

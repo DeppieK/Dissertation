@@ -611,9 +611,9 @@
 
     const saveBtn = document.getElementById('saveBtn');
     saveBtn.addEventListener('click', () => {
-        const newDesc = ratingEdit.value; // Get the new description from the input
-        const newStars = starsEdit.value; // Get the new stars from the input
-        selectedRatingId = editBtn.getAttribute('rating-id'); // Get the rating ID
+        const newDesc = ratingEdit.value;
+        const newStars = starsEdit.value;
+        selectedRatingId = editBtn.getAttribute('rating-id');
 
         //AJAX request
         console.log(`Editing Rating ID: ${selectedRatingId}, New Description: ${newDesc}, New Stars: ${newStars}`);
@@ -639,11 +639,11 @@
         editPopup.style.display = 'none'; //hide edit popup
     });
 
-    const deleteBtns = document.querySelectorAll('.deleteBtn'); // Select all delete buttons
-    deleteBtns.forEach(deleteBtn => { // Iterate over each button
+    const deleteBtns = document.querySelectorAll('.deleteBtn'); //select all delete buttons
+    deleteBtns.forEach(deleteBtn => {
         deleteBtn.addEventListener('click', () => {
-            selectedRatingId = deleteBtn.getAttribute('rating-id'); // Get the rating ID
-            deletePopup.style.display = 'block'; // Show the popup
+            selectedRatingId = deleteBtn.getAttribute('rating-id');
+            deletePopup.style.display = 'block';
         });
     });
 
@@ -684,7 +684,6 @@
             dropdownMenu.style.display = 'none';
         }
     });
-
 </script>
 </body>
 </html>

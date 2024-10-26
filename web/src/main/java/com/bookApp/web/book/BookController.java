@@ -8,6 +8,7 @@ import com.bookApp.web.ratings.Ratings;
 import com.bookApp.web.ratings.RatingsRepository;
 import com.bookApp.web.ratings.RatingsService;
 import com.bookApp.web.shelf_book.ShelfBook;
+import com.bookApp.web.shelf_book.ShelfBookRepository;
 import com.bookApp.web.shelf_book.ShelfBookService;
 import com.bookApp.web.user.User;
 import com.bookApp.web.user.UserService;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.*;
@@ -37,10 +39,11 @@ public class BookController {
     private final GenreRepository genreRepository;
     private final BookshelfService bookshelfService;
     private final ShelfBookService shelfBookService;
+    private final ShelfBookRepository shelfBookRepository;
 
     //constructor
     @Autowired
-    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService, GenreRepository genreRepository, BookshelfService bookshelfService, ShelfBookService shelfBookService) {
+    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService, GenreRepository genreRepository, BookshelfService bookshelfService, ShelfBookService shelfBookService, ShelfBookRepository shelfBookRepository) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookSearchService = bookSearchService;
@@ -50,6 +53,7 @@ public class BookController {
         this.genreRepository = genreRepository;
         this.bookshelfService = bookshelfService;
         this.shelfBookService = shelfBookService;
+        this.shelfBookRepository = shelfBookRepository;
     }
 
     //main page
@@ -183,7 +187,7 @@ public class BookController {
 
     //do we like this path name?
     @PostMapping("/{label}")
-    public String addToLabel(@PathVariable String label, @RequestParam("bookId") long bookId, Model model) {
+    public String addToLabel(@PathVariable String label, @RequestParam("bookId") long bookId, Model model, RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
@@ -192,10 +196,14 @@ public class BookController {
 
         Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,label);
 
-        ShelfBook shelfBook = new ShelfBook();
-        shelfBook.setShelfId(shelfId);
-        shelfBook.setBook(book);
-        shelfBookService.save(shelfBook);
+        ShelfBook shelfBookExists = shelfBookRepository.findByShelfIdAndBookId(shelfId,bookId);
+        if (shelfBookExists == null){
+            ShelfBook shelfBook = new ShelfBook();
+            shelfBook.setShelfId(shelfId);
+            shelfBook.setBook(book);
+            shelfBookService.save(shelfBook);
+        }
+
 
         return "redirect:/books/" + bookId;
     }
