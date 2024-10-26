@@ -597,32 +597,34 @@
 
             if (newLabel !== currentLabel) {
                 //AJAX request
-                fetch(`/bookshelf/rename/${currentLabel}?newLabel=${encodeURIComponent(newLabel)}`, {
+                fetch(`/bookshelf/rename/${encodeURIComponent(currentLabel)}?newLabel=${encodeURIComponent(newLabel)}`, {
                     method: 'GET',
                 })
                     .then(response => {
                         if (response.ok) {
-                            //update UI
-                            shelfLabel.innerText = newLabel;
-
-                            //update the URL path in the browser without reloading the page
-                            const newUrl = `/myBookshelf/${encodeURIComponent(newLabel)}`;
-                            window.history.pushState({}, '', newUrl);
-                            location.reload(); //refresh the page
-
-                            editPopup.style.display = 'none'
+                            return response.text(); //retrieve the updated label from the response
+                        } else {
+                            throw new Error('Error renaming the bookshelf');
                         }
-                        else {
-                            alert('Error renaming the bookshelf');
-                        }
+                    })
+                    .then(updatedLabel => {
+                        //update UI with the returned updated label
+                        shelfLabel.innerText = updatedLabel;
+
+                        const newUrl = `/myBookshelf/${encodeURIComponent(updatedLabel)}`;
+                        window.history.pushState({}, '', newUrl);
+                        location.reload(); //refresh  page
+
+                        editPopup.style.display = 'none';
                     })
                     .catch(error => {
                         console.error('Error:', error);
+                        alert('Error renaming the bookshelf');
                     });
-            }
-            else {
+            } else {
                 alert('Please enter a new label');
             }
+
         });
 
         bookSearchInput.addEventListener('keyup', function (){

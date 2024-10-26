@@ -305,7 +305,120 @@
 
         .username{
             font-weight: bold;
+            margin-top: 5px;
+
         }
+
+        .deleteBtn img {
+            width: 50px;
+            height: 50px;
+            margin-left: 5px;
+            display: inline-block;
+            transition: opacity 0.3s ease;
+            border-radius: 30px;
+            background-color: #cbd3ff;
+        }
+
+        .deleteBtn img:hover {
+            background-color: #8c9cef;
+            cursor: pointer;
+        }
+
+        .deleteBtn {
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+            outline: none;
+        }
+
+        #deletePopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            max-height: 90%;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+            border: 2px solid #6f81e4;
+            text-align: center;
+        }
+
+        #saveBtn, #cancelBtn, #yesBtn, #noBtn {
+            margin: 10px;
+            padding: 10px 15px;
+            border: none;
+            background-color: #6f81e4;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #saveBtn:hover, #cancelBtn:hover, #yesBtn:hover, #noBtn:hover  {
+            display: inline-block;
+            background-color: #4d5cda;
+        }
+
+        #editPopup{
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            max-height: 90%;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+            border: 2px solid #6f81e4;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        #editPopup input[type="text"],
+        #editPopup input[type="number"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .editBtn {
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .editBtn img {
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            cursor:pointer;
+            transition: opacity 0.3s ease;
+            opacity: 0.5;
+        }
+
+        .editBtn:hover img {
+            opacity: 0.9;
+        }
+
     </style>
 </head>
 <body>
@@ -416,26 +529,57 @@
 
         <br><br>
 
-        <div class="container margin">
+        <div class="container margin" th:if="${hasRatings}">
             <div th:each="rating : ${ratings}" class="rating-container comment">
-                <p><span class="username" th:text="${rating.user.username}"></span></p>
-                <p th:utext="${rating.getStarsAsEmoji()}"></p>
-                <p th:text="${rating.description}"></p>
+                <p>
+                    <span class="username" th:text="${rating.user.username}"></span>
+                </p>
+                <button class="editBtn" th:if="${rating.user.username == user.username}" th:rating-id="${rating.id}">
+                    <img th:src="@{/images/pencil.png}"/>
+                </button>
+                <div id="editPopup">
+                    <div>
+                        <label for="rating">Tell us your Thoughts!:</label>
+                        <input type="text" id="ratingEdit" name="rating" required/>
+                    </div>
+                    <div>
+                        <label for="stars">Give this Book some ⭐!:</label>
+                        <input type="number" id="starsEdit" name="stars" min="1" max="5" step="0.5" required/>
+                    </div>
+                    <button id="saveBtn">Save</button>
+                    <button id="cancelBtn">Cancel</button>
+                </div>
+
+                <p id="ratingStars" th:utext="${rating.getStarsAsEmoji()}"></p>
+                <p id="ratingDesc" th:text="${rating.description}"></p>
+
+                <div th:if="${rating.user.username == user.username}">
+                    <button class="deleteBtn" th:rating-id="${rating.id}">
+                        <img th:src="@{/images/test2.png}"/>
+                    </button>
+                </div>
+
+                <div id="deletePopup">
+                    <label>Are you sure you want to delete your rating?</label></br>
+                    <button id="yesBtn">Yes</button>
+                    <button id="noBtn">No</button>
+                </div>
+
             </div>
         </div>
 
         <br><br>
-        <div class="container margin">
+        <div class="container margin" th:if="${!userRatingExists}">
             <div class="rating-form">
                 <form th:action="@{/addRating}" method="post">
                     <input type="hidden" name="bookId" th:value="${book.id}" />
                     <div>
                         <label for="rating">Tell us your Thoughts!:</label>
-                        <input type="text" id="rating" name="rating" />
+                        <input type="text" id="rating" name="rating" required/>
                     </div>
                     <div>
                         <label for="stars">Give this Book some ⭐!:</label>
-                        <input type="number" id="stars" name="stars" min="1" max="5" step="0.5" />
+                        <input type="number" id="stars" name="stars" min="1" max="5" step="0.5" required/>
                     </div>
                     <br>
                     <button type="submit" class="rating-submit">Submit Rating</button>
@@ -446,9 +590,88 @@
     </div>
 </div>
 <script>
+
+    let selectedRatingId = null;
     //get the button and the dropdown menu
     const dropdownButton = document.getElementById('dropdownButton');
     const dropdownMenu = document.getElementById('dropdownMenu');
+    const deletePopup = document.getElementById('deletePopup');
+    const editPopup = document.getElementById('editPopup');
+    const ratingEdit = document.getElementById('ratingEdit');
+    const starsEdit = document.getElementById('starsEdit');
+    const ratingDesc = document.getElementById('ratingDesc');
+    const ratingStars = document.getElementById('ratingStars');
+
+    const editBtn = document.querySelector('.editBtn');
+    editBtn.addEventListener('click', () => {
+       editPopup.style.display = 'block'; //show edit popup
+        ratingEdit.value = ratingDesc.innerText;
+        starsEdit.value = ratingStars.innerText.length;
+    });
+
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.addEventListener('click', () => {
+        const newDesc = ratingEdit.value; // Get the new description from the input
+        const newStars = starsEdit.value; // Get the new stars from the input
+        selectedRatingId = editBtn.getAttribute('rating-id'); // Get the rating ID
+
+        //AJAX request
+        console.log(`Editing Rating ID: ${selectedRatingId}, New Description: ${newDesc}, New Stars: ${newStars}`);
+
+        fetch(`/books/edit/${selectedRatingId}?newDesc=${encodeURIComponent(newDesc)}&newStars=${newStars}`, {
+            method: 'GET',
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Rating changed!');
+                    location.reload(); //refresh the page
+                } else {
+                    alert('Error changing the rating');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+    const cancelBtn = document.getElementById('cancelBtn');
+    cancelBtn.addEventListener('click', () => {
+        editPopup.style.display = 'none'; //hide edit popup
+    });
+
+    const deleteBtns = document.querySelectorAll('.deleteBtn'); // Select all delete buttons
+    deleteBtns.forEach(deleteBtn => { // Iterate over each button
+        deleteBtn.addEventListener('click', () => {
+            selectedRatingId = deleteBtn.getAttribute('rating-id'); // Get the rating ID
+            deletePopup.style.display = 'block'; // Show the popup
+        });
+    });
+
+    const yesBtn = document.getElementById('yesBtn');
+    yesBtn.addEventListener('click', () =>{
+        if (selectedRatingId) {
+            //AJAX request
+            fetch(`/books/delete-rating/${selectedRatingId}`, {
+                method: 'GET',
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Rating deleted!');
+                        location.reload(); //refresh the page
+                    } else {
+                        alert('Error deleting the rating');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    });
+
+    const noBtn = document.getElementById('noBtn');
+    noBtn.addEventListener('click', () =>{
+        deletePopup.style.display = 'none';
+    });
 
     //toggle dropdown visibility when the button is clicked
     dropdownButton.addEventListener('click', function() {
@@ -461,6 +684,7 @@
             dropdownMenu.style.display = 'none';
         }
     });
+
 </script>
 </body>
 </html>

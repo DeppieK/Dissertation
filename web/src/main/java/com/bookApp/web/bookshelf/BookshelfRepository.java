@@ -29,6 +29,9 @@ public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
     @Query("SELECT COUNT(b) FROM Bookshelf b WHERE b.label LIKE 'untitled%'")
     Long countUntitledLabels();
 
+    @Query("SELECT COUNT(b) FROM Bookshelf b WHERE b.label LIKE CONCAT(:labelName, '%')")
+    Long countSimilarLabels(@Param("labelName") String labelName);
+
     Bookshelf findByUserAndLabel(User user, String label);
 
     @Query("SELECT COALESCE(b.shelfId, 0) FROM Bookshelf b WHERE b.user = :user AND b.label = :label")

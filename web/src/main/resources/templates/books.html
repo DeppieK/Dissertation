@@ -211,7 +211,7 @@
     <div class="content">
         <div class="image-container">
             <ul class="books">
-                <li th:each="book : ${books}" th:if="${book.id le 60}" id="books">
+                <li th:each="book : ${books}" th:if="${book.id le 75}" id="books">
                     <a th:href="@{/books/{bookId}(bookId = ${book.id})}">
                         <img th:src="${book.photoUrl}" />
                     </a>

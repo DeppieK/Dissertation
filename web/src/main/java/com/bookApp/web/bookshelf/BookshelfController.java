@@ -156,9 +156,6 @@ public class BookshelfController {
 
         Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user, label);
 
-        System.out.println("Search query: " + query);
-        System.out.println("Shelf ID: " + shelfId);
-
         List<ShelfBook> shelfBooks = shelfBookRepository.searchBooksInBookshelf(shelfId, query);
 
         model.addAttribute("shelfBooks", shelfBooks);
@@ -168,17 +165,26 @@ public class BookshelfController {
 
     @GetMapping("/bookshelf/rename/{label}")
     @ResponseBody
-    public ResponseEntity<Void> renameBookshelfJson(@PathVariable("label") String label, @RequestParam("newLabel") String newLabel,Principal principal) {
+    public ResponseEntity<String> renameBookshelfJson(@PathVariable("label") String label, @RequestParam("newLabel") String newLabel, Principal principal) {
+
         User user = userService.findByUsername(principal.getName());
-
         Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user, label);
-
         Bookshelf bookshelf = bookshelfRepository.findByShelfId(shelfId);
+        Bookshelf labelNameExists = bookshelfRepository.findByUserAndLabel(user, newLabel);
 
-        if (bookshelf != null){
-            bookshelf.setLabel(newLabel);
+        if (bookshelf != null) {
+            String finalLabel;
+            if (labelNameExists == null) {
+                finalLabel = newLabel;
+            } else {
+                Long labelNumber = bookshelfRepository.countSimilarLabels(newLabel) + 1L;
+                finalLabel = newLabel + " (" + labelNumber + ")";
+            }
+            bookshelf.setLabel(finalLabel);
             bookshelfService.save(bookshelf);
-            return ResponseEntity.ok().build(); //success
+
+            //return the final label after renaming
+            return ResponseEntity.ok(finalLabel);
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
@@ -191,9 +197,6 @@ public class BookshelfController {
         Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user, label);
 
         ShelfBook shelfBook = shelfBookRepository.findByShelfIdAndBookId(shelfId,bookId);
-
-        System.out.println("shelfbook: " + shelfBook);
-
 
         if (shelfBook != null){
            shelfBookRepository.delete(shelfBook);
