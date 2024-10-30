@@ -27,7 +27,7 @@ public class Genre {
 
     private Long id;
 
-    private String genre;
+    private String genre; //enum?
 
     @ManyToOne
     @JoinColumn(name = "book_id")
