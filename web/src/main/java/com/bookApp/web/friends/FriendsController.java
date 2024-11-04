@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class FriendsController {
 
-    @Autowired
     private UserService userService;
 
     public FriendsController(UserService userService) {
