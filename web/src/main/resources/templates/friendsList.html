@@ -217,6 +217,10 @@
             background-color: #f0f4ff;
         }
 
+        li{
+            list-style-type: none;
+        }
+
     </style>
 </head>
 
@@ -262,75 +266,30 @@
         <div class="left-container">
             <div class="content-header">Friends List</div>
             <div class="friendsList-container">
-                <div class="friend-item">Friend 1</div>
-                <div class="friend-item">Friend 2</div>
-                <div class="friend-item">Friend 3</div>
-                <div class="friend-item">Friend 1</div>
-                <div class="friend-item">Friend 2</div>
-                <div class="friend-item">Friend 3</div>
-                <div class="friend-item">Friend 1</div>
-                <div class="friend-item">Friend 2</div>
-                <div class="friend-item">Friend 3</div>
-                <div class="friend-item">Friend 1</div>
-                <div class="friend-item">Friend 2</div>
-                <div class="friend-item">Friend 3</div>
-                <div class="friend-item">Friend 1</div>
-                <div class="friend-item">Friend 2</div>
-                <div class="friend-item">Friend 3</div>
-                <div class="friend-item">Friend 1</div>
-                <div class="friend-item">Friend 2</div>
-                <div class="friend-item">Friend 3</div>
-                <div class="friend-item">Friend 1</div>
-                <div class="friend-item">Friend 2</div>
-                <div class="friend-item">Friend 3</div>
+                <li th:each="friend : ${friends}" id="friends">
+                    <div class="friend-item" th:text="${friend.sender.id == currentUser.id} ? ${friend.receiver.username} : ${friend.sender.username}"></div>
+                </li>
             </div>
             <div class="content-header">Pending requests</div>
             <div class="sentRequests-container">
-                <div class="sentRequest-item">Friend 1</div>
-                <div class="sentRequest-item">Friend 2</div>
-                <div class="sentRequest-item">Friend 3</div>
-                <div class="sentRequest-item">Friend 1</div>
-                <div class="sentRequest-item">Friend 2</div>
-                <div class="sentRequest-item">Friend 3</div>
-                <div class="sentRequest-item">Friend 1</div>
-                <div class="sentRequest-item">Friend 2</div>
-                <div class="sentRequest-item">Friend 3</div>
-                <div class="sentRequest-item">Friend 1</div>
-                <div class="sentRequest-item">Friend 2</div>
-                <div class="sentRequest-item">Friend 3</div>
-                <div class="sentRequest-item">Friend 1</div>
-                <div class="sentRequest-item">Friend 2</div>
-                <div class="sentRequest-item">Friend 3</div>
-                <div class="sentRequest-item">Friend 1</div>
-
+                <li th:each="sentRequest : ${sentRequests}" id="sentRequests">
+                    <div class="sentRequest-item" th:text="${sentRequest.receiver.username}"></div>
+                </li>
             </div>
         </div>
-
         <div class="right-container">
             <div class="content-header">Friend Requests</div>
             <div class="requests-container">
-                <div class="request-item">Request from User A</div>
-                <div class="request-item">Request from User B</div>
-                <div class="request-item">Request from User A</div>
-                <div class="request-item">Request from User B</div>
-                <div class="request-item">Request from User A</div>
-                <div class="request-item">Request from User B</div>
-                <div class="request-item">Request from User A</div>
-                <div class="request-item">Request from User B</div>
-                <div class="request-item">Request from User A</div>
-                <div class="request-item">Request from User B</div>
+                <li th:each="friendRequests : ${friendRequests}" id="friendRequests">
+                    <div class="request-item" th:text="${friendRequests.sender.username}"></div>
+                </li>
             </div>
 
             <div class="content-header">Declined Friend Requests</div>
             <div class="declined-requests-container">
-                <div class="declined-item">Declined request from User C</div>
-                <div class="declined-item">Declined request from User D</div>
-                <div class="declined-item">Declined request from User D</div>
-                <div class="declined-item">Declined request from User D</div>
-                <div class="declined-item">Declined request from User D</div>
-                <div class="declined-item">Declined request from User D</div>
-                <div class="declined-item">Declined request from User D</div>
-
+                <li th:each="declinedRequests : ${declinedRequests}" id="declinedRequests">
+                    <div class="declined-item" th:text="${declinedRequests.sender.username}"></div>
+                </li>
             </div>
         </div>
     </div>
