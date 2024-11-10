@@ -138,10 +138,11 @@
         }
 
         .content-header {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
             color: #4d5cda;
-            margin-bottom: 15px;
+            margin-top: 10px;
+            margin-bottom: 10px;
             position: sticky;
             top: 0;
             background-color: #f0f4ff;
@@ -157,13 +158,31 @@
             border-radius: 6px;
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
             font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .friend-item, .request-item {
+            border: 1px solid #4d5cda;
         }
 
         .declined-item {
             background-color: #ffe0e0;
+            border: 1px solid #ff8080;
         }
 
-        .friend-item:hover, .request-item:hover, .sentRequest-item:hover {
+        .sentRequest-item {
+            background-color: rgba(185, 197, 253, 0.46);
+            border: 1px solid rgba(125, 145, 235, 0.8);
+        }
+
+        .sentRequest-item:hover {
+            background-color: rgba(89, 113, 251, 0.48);
+        }
+
+        .friend-item:hover, .request-item:hover {
             background-color: #d0d9ff;
         }
 
@@ -217,8 +236,95 @@
             background-color: #f0f4ff;
         }
 
-        li{
+        li {
             list-style-type: none;
+        }
+
+        .deleteBtn img, .deleteFriendBtn img, .acceptBtn img, .declineBtn img, .cancelBtn img {
+            width: 40px;
+            height: 40px;
+            margin-left: 5px;
+            transition: opacity 0.3s ease;
+            border-radius: 30px;
+        }
+
+        .deleteBtn img, .deleteFriendBtn img {
+            background-color: rgba(188, 32, 62, 0.63);
+        }
+
+        .declineBtn img, .cancelBtn img {
+            background-color: #ffb0b0;
+        }
+
+        .acceptBtn img {
+            background-color: rgba(157, 253, 158, 0.83);
+        }
+
+        .declineBtn img:hover, .cancelBtn img:hover {
+            background-color: #ff6060;
+            cursor: pointer;
+        }
+
+        .acceptBtn img:hover {
+            background-color: rgb(73, 250, 75);
+            cursor: pointer;
+        }
+
+        .deleteBtn img:hover, .deleteFriendBtn img:hover{
+            background-color: rgb(188, 32, 62);
+            cursor: pointer;
+        }
+
+        .deleteBtn, .deleteFriendBtn, .declineBtn, .acceptBtn, .cancelBtn {
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        #deleteFriendPopup, #cancelRequestPopup, #declineRequestPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            max-height: 90%;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+            border: 2px solid #6f81e4;
+            text-align: center;
+        }
+
+        #declineYesBtn, #declineNoBtn, #cancelNoBtn, #cancelYesBtn, #removeYesBtn, #removeNoBtn {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            background-color: #6f81e4;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #declineYesBtn:hover, #declineNoBtn:hover, #cancelNoBtn:hover, #cancelYesBtn:hover, #removeYesBtn:hover, #removeNoBtn:hover  {
+            background-color: #4d5cda;
+        }
+
+        .username {
+            color: #4d5cda;
+            font-weight: bold;
         }
 
     </style>
@@ -267,13 +373,33 @@
             <div class="content-header">Friends List</div>
             <div class="friendsList-container">
                 <li th:each="friend : ${friends}" id="friends">
-                    <div class="friend-item" th:text="${friend.sender.id == currentUser.id} ? ${friend.receiver.username} : ${friend.sender.username}"></div>
+                    <div class="friend-item">
+                        <div  th:text="${friend.sender.id == currentUser.id} ? ${friend.receiver.username} : ${friend.sender.username}"></div>
+                        <button class="deleteFriendBtn" th:friend-id="${friend.id}">
+                            <img th:src="@{/images/test2.png}"/>
+                        </button>
+                    </div>
                 </li>
+                <div id="deleteFriendPopup">
+                    <label id="deleteFriendLabel"></label></br>
+                    <button id="removeYesBtn">Yes</button>
+                    <button id="removeNoBtn">No</button>
+                </div>
             </div>
             <div class="content-header">Pending requests</div>
             <div class="sentRequests-container">
                 <li th:each="sentRequest : ${sentRequests}" id="sentRequests">
-                    <div class="sentRequest-item" th:text="${sentRequest.receiver.username}"></div>
+                    <div class="sentRequest-item">
+                        <div th:text="${sentRequest.receiver.username}"></div>
+                        <button class="cancelBtn" th:friend-id="${sentRequest.id}">
+                            <img th:src="@{/images/12.webp}"/>
+                        </button>
+                    </div>
+                    <div id="cancelRequestPopup">
+                        <label id="cancelRequestLabel"></label></br>
+                        <button id="cancelYesBtn">Yes</button>
+                        <button id="cancelNoBtn">No</button>
+                    </div>
                 </li>
             </div>
         </div>
@@ -281,17 +407,207 @@
             <div class="content-header">Friend Requests</div>
             <div class="requests-container">
                 <li th:each="friendRequests : ${friendRequests}" id="friendRequests">
-                    <div class="request-item" th:text="${friendRequests.sender.username}"></div>
+                    <div class="request-item">
+                        <div th:text="${friendRequests.sender.username}"></div>
+                        <div class="button-group">
+                            <button class="acceptBtn" th:friend-id="${friendRequests.id}">
+                                <img th:src="@{/images/check-mark-icon-21.png}"/>
+                            </button>
+                            <button class="declineBtn" th:friend-id="${friendRequests.id}">
+                                <img th:src="@{/images/12.webp}"/>
+                            </button>
+                        </div>
+                        <div id="declineRequestPopup">
+                            <label id="declineRequestLabel"></label></br>
+                            <button id="declineYesBtn">Yes</button>
+                            <button id="declineNoBtn">No</button>
+                        </div>
+                    </div>
                 </li>
             </div>
 
             <div class="content-header">Declined Friend Requests</div>
             <div class="declined-requests-container">
                 <li th:each="declinedRequests : ${declinedRequests}" id="declinedRequests">
-                    <div class="declined-item" th:text="${declinedRequests.sender.username}"></div>
+                    <div class="declined-item">
+                        <div  th:text="${declinedRequests.sender.username}"></div>
+                        <button class="deleteBtn" th:friend-id="${declinedRequests.id}">
+                            <img th:src="@{/images/test2.png}"/>
+                        </button>
+                    </div>
                 </li>
             </div>
         </div>
     </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        let selectedRecord = null;
+        let answer = '';
+
+        const deleteFriendPopup = document.getElementById('deleteFriendPopup');
+        const cancelRequestPopup = document.getElementById('cancelRequestPopup');
+        const declineRequestPopup = document.getElementById('declineRequestPopup');
+
+        document.querySelectorAll('.deleteFriendBtn').forEach((deleteFriendBtn) => {
+            deleteFriendBtn.addEventListener('click', () => {
+                //get the selected record's id
+                selectedRecord = deleteFriendBtn.getAttribute('friend-id');
+
+                const username = deleteFriendBtn.closest('.friend-item').querySelector('div').innerText;
+                document.getElementById('deleteFriendLabel').innerHTML = `Are you sure you want to remove user <span class="username">${username}</span> from your friends?`;
+                deleteFriendPopup.style.display = 'block'; //display popup
+                deleteFriendPopup.style.opacity = '1';
+            });
+        });
+
+        const removeYesBtn = document.getElementById("removeYesBtn");
+        removeYesBtn.addEventListener('click', () => {
+            if (selectedRecord){
+                fetch(`/deleteRecord/${selectedRecord}`, {
+                    method: 'GET',
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Friend removed 😔');
+                            location.reload(); //refresh the page
+                        } else {
+                            alert('Error in deleting a friend.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        });
+
+        const removeNoBtn = document.getElementById("removeNoBtn");
+        removeNoBtn.addEventListener('click', () => {
+            deleteFriendPopup.style.display = 'none'; //hide popup
+        });
+
+        document.querySelectorAll('.cancelBtn').forEach((cancelBtn) => {
+            cancelBtn.addEventListener('click', () => {
+                //get the selected record's id
+                selectedRecord = cancelBtn.getAttribute('friend-id');
+
+                const username = cancelBtn.closest('.sentRequest-item').querySelector('div').innerText;
+                document.getElementById('cancelRequestLabel').innerHTML = `Are you sure you want to cancel your friend request to the user <span class="username">${username}</span>?`;
+                cancelRequestPopup.style.display = 'block'; //display popup
+                cancelRequestPopup.style.opacity = '1';
+            });
+        });
+
+        const cancelYesBtn = document.getElementById("cancelYesBtn");
+        cancelYesBtn.addEventListener('click', () => {
+            if (selectedRecord){
+                fetch(`/deleteRecord/${selectedRecord}`, {
+                    method: 'GET',
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Request canceled 😔');
+                            location.reload(); //refresh the page
+                        } else {
+                            alert('Error canceling a request.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        });
+
+        const cancelNoBtn = document.getElementById("cancelNoBtn");
+        cancelNoBtn.addEventListener('click', () => {
+            cancelRequestPopup.style.display = 'none'; //hide popup
+        });
+
+        document.querySelectorAll('.declineBtn').forEach((declineBtn) => {
+            declineBtn.addEventListener('click', () => {
+                //get the selected record's id
+                selectedRecord = declineBtn.getAttribute('friend-id');
+
+                const username = declineBtn.closest('.request-item').querySelector('div').innerText;
+                document.getElementById('declineRequestLabel').innerHTML = `Are you sure you want to decline user's <span class="username">${username}</span> friend request?`;
+                declineRequestPopup.style.display = 'block'; //display popup
+                declineRequestPopup.style.opacity = '1';
+            });
+        });
+
+        const declineYesBtn = document.getElementById("declineYesBtn");
+        declineYesBtn.addEventListener('click', () => {
+            if (selectedRecord){
+                answer = 'No';
+                fetch(`/answerRequest/${selectedRecord}/${answer}`, {
+                    method: 'GET',
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Request declined 😔');
+                            location.reload(); //refresh the page
+                        } else {
+                            alert('Error declining a request.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        });
+
+        const declineNoBtn = document.getElementById("declineNoBtn");
+        declineNoBtn.addEventListener('click', () => {
+            declineRequestPopup.style.display = 'none'; //hide popup
+        });
+
+        document.querySelectorAll('.acceptBtn').forEach((acceptBtn) => {
+            acceptBtn.addEventListener('click', () => {
+                selectedRecord = acceptBtn.getAttribute('friend-id');
+                if (selectedRecord){
+                    answer = 'Yes';
+                    fetch(`/answerRequest/${selectedRecord}/${answer}`, {
+                        method: 'GET',
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Request accepted successfully 🥳!');
+                                location.reload(); //refresh the page
+                            } else {
+                                alert('Error accepting a request.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+            });
+        });
+
+        document.querySelectorAll('.deleteBtn').forEach((deleteBtn) => {
+            deleteBtn.addEventListener('click', () => {
+                selectedRecord = deleteBtn.getAttribute('friend-id');
+                if (selectedRecord){
+                    fetch(`/deleteRecord/${selectedRecord}`, {
+                        method: 'GET',
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Declined request removed from list.');
+                                location.reload(); //refresh the page
+                            } else {
+                                alert('Error removing a request.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+            });
+        });
+    });
+
+</script>
 </body>
 </html>
