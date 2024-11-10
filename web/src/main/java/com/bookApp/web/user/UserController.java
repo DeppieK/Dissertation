@@ -4,6 +4,8 @@ package com.bookApp.web.user;
 import com.bookApp.web.book.Book;
 import com.bookApp.web.bookshelf.Bookshelf;
 import com.bookApp.web.bookshelf.BookshelfService;
+import com.bookApp.web.friends.Friends;
+import com.bookApp.web.friends.FriendsRepository;
 import com.bookApp.web.shelf_book.ShelfBookRepository;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ public class UserController {
     private ShelfBookRepository shelfBookRepository;
     @Autowired
     private Book book;
+    @Autowired
+    private FriendsRepository friendsRepository;
 
     public UserController(UserService userService, BookshelfService bookshelfService, ShelfBookRepository shelfBookRepository) {
         this.userService = userService;
@@ -106,17 +110,24 @@ public class UserController {
     //profile page
     @GetMapping("/profile")
     public String profile(Model model) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
         User user = userService.findByUsername(username);
+
         long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"Read");
+
         long readCount = bookshelfService.countByShelfId(shelfId);
+
         Long booksInBookshelf = shelfBookRepository.countBooksByUser(user);
+
+        List<Friends> friends = friendsRepository.findAllBySenderOrReceiverAndStatus(user, Friends.Status.ACCEPTED);
+        int friendsCount = friends.size();
 
         model.addAttribute("user", user);
         model.addAttribute("readCount", readCount);
         model.addAttribute("booksInBookshelf", booksInBookshelf);
+        model.addAttribute("friendsCount", friendsCount);
 
 
         return "profile";
