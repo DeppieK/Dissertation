@@ -485,7 +485,6 @@
     <div class="content">
         <div class="image-container">
             <div class="bookshelfContainer">
-
                 <h2 class="bookshelfLabel">
                     <div id="label">
                         📚
@@ -496,13 +495,11 @@
                         <img th:src="@{/images/pencil.png}"/>
                     </button>
                 </h2>
-
                 <div id="editLabelPopup">
                     <input type="text" id="editInput" placeholder="Rename the label of your bookshelf" style="width: 100%; padding: 5px;">
                     <button id="saveBtn">Save</button>
                     <button id="cancelBtn">Cancel</button>
                 </div>
-
                 <div class="BookshelfButtons">
                     <button class="plusBtn">
                         <img th:src="@{/images/2.png}" />
@@ -511,15 +508,12 @@
                         <img th:src="@{/images/1.png}" />
                     </button>
                 </div>
-
                 <div id="searchPopup">
                     <input type="text" id="bookSearchInput" placeholder="Search books..." style="width: 100%; padding: 5px;">
                     <ul class="search-results" id="searchResults"></ul>
                     <button id="closeBtn">Close</button>
                 </div>
-
             </div>
-
             <div class="BookshelfSearchBar">
                 <form th:action="@{'/books/myBookshelf/' + ${label} + '/bookshelf-search'}" method="get" class="BookshelfSearchForm">
                     <input class="BookshelfSearch" placeholder="Search books in bookshelf 💫" name="query">
@@ -528,17 +522,15 @@
                     </a>
                 </form>
             </div>
-
             <ul class="books">
                 <li th:each="shelfBook : ${shelfBooks}" id="books">
                     <a th:href="@{/books/{bookId}(bookId = ${shelfBook.book.id})}">
                         <img th:src="${shelfBook.book.photoUrl}" alt="Book Cover"/>
                     </a>
-                        <p id="book-title" th:text="${shelfBook.book.title}"></p>
-                        <button class="deleteBtn" th:data-book-id="${shelfBook.book.id}">
-                            <img th:src="@{/images/test2.png}"/>
-                        </button>
-
+                    <p id="book-title" th:text="${shelfBook.book.title}"></p>
+                    <button class="deleteBtn" th:data-book-id="${shelfBook.book.id}">
+                        <img th:src="@{/images/test2.png}"/>
+                    </button>
                     <div id="deletePopup">
                         <label>Are you sure you want to remove this book from your bookshelf?</label></br>
                         <button id="yesBtn">Yes</button>
