@@ -129,9 +129,10 @@
         }
 
         .left-container, .right-container {
+            position: relative;
+            margin: 90px 10px 10px 10px;
             flex: 1;
             padding: 20px;
-            margin: 10px;
             background-color: #f0f4ff;
             border-radius: 8px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -288,7 +289,7 @@
             gap: 10px;
         }
 
-        #deleteFriendPopup, #cancelRequestPopup, #declineRequestPopup {
+        #addFriendPopup, #deleteFriendPopup, #cancelRequestPopup, #declineRequestPopup {
             display: none;
             position: fixed;
             top: 50%;
@@ -298,7 +299,7 @@
             max-height: 90%;
             overflow-y: auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255, 255, 255, 0.74);
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             z-index: 1000;
@@ -307,7 +308,7 @@
             text-align: center;
         }
 
-        #declineYesBtn, #declineNoBtn, #cancelNoBtn, #cancelYesBtn, #removeYesBtn, #removeNoBtn {
+        #declineYesBtn, #declineNoBtn, #cancelNoBtn, #cancelYesBtn, #removeYesBtn, #removeNoBtn, #closeBtn {
             margin-top: 10px;
             padding: 10px 15px;
             border: none;
@@ -318,13 +319,74 @@
             transition: background-color 0.3s ease;
         }
 
-        #declineYesBtn:hover, #declineNoBtn:hover, #cancelNoBtn:hover, #cancelYesBtn:hover, #removeYesBtn:hover, #removeNoBtn:hover  {
+        #declineYesBtn:hover, #declineNoBtn:hover, #cancelNoBtn:hover, #cancelYesBtn:hover, #removeYesBtn:hover, #removeNoBtn:hover, #closeBtn:hover  {
             background-color: #4d5cda;
         }
 
         .username {
             color: #4d5cda;
             font-weight: bold;
+        }
+
+        .plusButton {
+            position: absolute;
+            right: 20px;
+            top: 105px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            background-color: #ffffff;
+            border-radius: 6px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            justify-content: space-between;
+            border: 1px solid #4d5cda;
+        }
+
+        .plusBtn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(204, 210, 253);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .plusBtn img {
+            width: 35px;
+            height: 35px;
+        }
+
+        .buttonHeader{
+            font-size: 18px;
+            font-weight: bold;
+            color: #4d5cda;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        #friendSearchInput {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #6f81e4;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        #friendSearchInput:focus {
+            border-color: #4d5cda;
+            outline: none;
         }
 
     </style>
@@ -366,6 +428,17 @@
                     <a class="href2" th:href="@{/myFriends}"> My Friends </a>
                 </li>
             </ul>
+        </div>
+        <div class="plusButton">
+            <div class="buttonHeader">Add friends 🤩</div>
+            <button class="plusBtn">
+                <img th:src="@{/images/2.png}" />
+            </button>
+        </div>
+        <div id="addFriendPopup">
+            <label id="addFriendLabel">Send a friend request 👀</label></br>
+            <input type="text" id="friendSearchInput" placeholder="Type a username" style="width: 100%; padding: 5px;">
+            <button id="closeBtn">Close</button>
         </div>
         <div class="left-container">
             <div class="content-header">Friends List</div>
@@ -444,9 +517,23 @@
         let selectedRecord = null;
         let answer = '';
 
+        const addFriendPopup = document.getElementById('addFriendPopup');
         const deleteFriendPopup = document.getElementById('deleteFriendPopup');
         const cancelRequestPopup = document.getElementById('cancelRequestPopup');
         const declineRequestPopup = document.getElementById('declineRequestPopup');
+        const friendSearchInput = document.getElementById('friendSearchInput');
+
+
+        const addFriendBtn = document.querySelector('.plusBtn')
+        addFriendBtn.addEventListener('click', () => {
+           addFriendPopup.style.display = 'block';
+           addFriendPopup.style.opacity = '1';
+        });
+
+        const closeBtn = document.getElementById('closeBtn');
+        closeBtn.addEventListener('click', () => {
+            addFriendPopup.style.display = 'none';
+        });
 
         document.querySelectorAll('.deleteFriendBtn').forEach((deleteFriendBtn) => {
             deleteFriendBtn.addEventListener('click', () => {
@@ -457,6 +544,7 @@
                 document.getElementById('deleteFriendLabel').innerHTML = `Are you sure you want to remove user <span class="username">${username}</span> from your friends?`;
                 deleteFriendPopup.style.display = 'block'; //display popup
                 deleteFriendPopup.style.opacity = '1';
+                friendSearchInput.focus(); //focus the search bar
             });
         });
 
