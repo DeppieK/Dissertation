@@ -679,7 +679,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ bookId: book.id }) //send the book ID in the request body
+                body: JSON.stringify({ bookId: book.id }) //send the book id in the request body
             })
                 .then(response => {
                     return response.text();

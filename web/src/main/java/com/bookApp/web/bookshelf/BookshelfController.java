@@ -155,6 +155,7 @@ public class BookshelfController {
         }
     }
 
+    //change mapping? why books/....
     // bookshelf search method
     @GetMapping("books/myBookshelf/{label}/bookshelf-search")
     public String bookshelfSearchBooks(@PathVariable("label") String label, @RequestParam(value = "query") String query, Model model, Principal principal){

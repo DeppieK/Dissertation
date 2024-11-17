@@ -1,6 +1,7 @@
 package com.bookApp.web.friends;
 
 import com.bookApp.web.user.User;
+import com.bookApp.web.user.UserRepository;
 import com.bookApp.web.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,22 +9,29 @@ import org.springframework.ui.Model;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
 public class FriendsController {
 
     private final FriendsRepository friendsRepository;
+    private final UserRepository userRepository;
+    private final User user;
     private UserService userService;
 
-    public FriendsController(UserService userService, FriendsRepository friendsRepository) {
+    public FriendsController(UserService userService, FriendsRepository friendsRepository, UserRepository userRepository, User user) {
         this.userService = userService;
         this.friendsRepository = friendsRepository;
+        this.userRepository = userRepository;
+        this.user = user;
     }
 
     @GetMapping("/myFriends")
@@ -77,6 +85,48 @@ public class FriendsController {
                 friendsRepository.save(friend);
                 return ResponseEntity.ok().build();
             }
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    //change e.g. aSearch to a-search
+    @GetMapping("/friends/search-json")
+    @ResponseBody
+    public List<Map<String, Object>> searchBooksJson(@RequestParam(value = "query") String query, Principal principal) {
+        User currentUser = userService.findByUsername(principal.getName());
+
+        List<User> users = friendsRepository.searchUsersForFriendRequest(currentUser.getId());
+
+        //create a response with a list of maps containing only the necessary fields
+        return users.stream()
+                .map(user -> {
+                    Map<String, Object> userData = new HashMap<>();
+                    userData.put("id", user.getId());
+                    userData.put("username", user.getUsername());
+                    return userData;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @PostMapping("/{userId}/send-request")
+    public ResponseEntity<String> sendRequest(@PathVariable Long userId, Principal principal) {
+        User sender = userService.findByUsername(principal.getName());
+        User receiver = userRepository.findById(userId).orElse(null);
+
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        if (receiver != null) {
+            Friends friend = new Friends();
+            friend.setSender(sender);
+            friend.setReceiver(receiver);
+            friend.setStatus(Friends.Status.PENDING);
+            friend.setDateCreated(currentDate);
+            friend.setDateUpdated(currentDate);
+
+            friendsRepository.save(friend);
+            return ResponseEntity.ok("Friend Request sent \uD83E\uDD73");
         }
         else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

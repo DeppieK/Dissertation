@@ -389,6 +389,47 @@
             outline: none;
         }
 
+        #searchResults {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+
+        #searchResults::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #searchResults::-webkit-scrollbar-thumb {
+            background: #6f81e4;
+            border-radius: 4px;
+        }
+
+        #searchResults::-webkit-scrollbar-track {
+            background: rgba(204, 210, 253, 0.3);
+        }
+
+        #searchResults li {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #searchResults li:hover {
+            background-color: #f0f4ff;
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
     </style>
 </head>
 <body>
@@ -438,6 +479,7 @@
         <div id="addFriendPopup">
             <label id="addFriendLabel">Send a friend request 👀</label></br>
             <input type="text" id="friendSearchInput" placeholder="Type a username" style="width: 100%; padding: 5px;">
+            <ul class="search-results" id="searchResults"></ul>
             <button id="closeBtn">Close</button>
         </div>
         <div class="left-container">
@@ -522,6 +564,7 @@
         const cancelRequestPopup = document.getElementById('cancelRequestPopup');
         const declineRequestPopup = document.getElementById('declineRequestPopup');
         const friendSearchInput = document.getElementById('friendSearchInput');
+        const searchResults = document.getElementById('searchResults');
 
 
         const addFriendBtn = document.querySelector('.plusBtn')
@@ -530,9 +573,66 @@
            addFriendPopup.style.opacity = '1';
         });
 
+        friendSearchInput.addEventListener('keyup', () => {
+            const query = friendSearchInput.value;
+
+            //check if input not empty
+            if (query.length > 1) {
+                //send AJAX request to search books
+                fetch(`/friends/search-json?query=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        displaySearchResults(data);
+                    })
+                    .catch(error => console.error('Error fetching search results:', error));
+            } else {
+                searchResults.innerHTML = '';
+            }
+        });
+
+        function displaySearchResults(friends) {
+            searchResults.innerHTML = ''; //clear previous data
+
+            if(friends.length > 0) {
+                friends.forEach(friend => {
+                    const li = document.createElement('li');
+                    li.classList.add('search-result-item');
+
+                    const username = document.createElement('span');
+                    username.textContent = friend.username;
+
+                    li.appendChild(username);
+                    li.addEventListener('click', () => sendFriendRequest(friend));
+                    searchResults.appendChild(li);
+                });
+            }
+            else {
+                searchResults.innerHTML = '<li>No results found</li>';
+            }
+        }
+
+        function sendFriendRequest (user) {
+
+            fetch(`/${user.id}/send-request`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ friendId: user.id }) //send the user id in the request body
+            })
+                .then(response => {
+                    return response.text();
+                })
+                .then(message => {
+                    alert(message);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
         const closeBtn = document.getElementById('closeBtn');
         closeBtn.addEventListener('click', () => {
             addFriendPopup.style.display = 'none';
+            location.reload(); //refresh the page
         });
 
         document.querySelectorAll('.deleteFriendBtn').forEach((deleteFriendBtn) => {

@@ -1,8 +1,12 @@
 package com.bookApp.web.user;
 
+import com.bookApp.web.friends.Friends;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
@@ -19,5 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
         }
         return user;
     }
+
 }
 
