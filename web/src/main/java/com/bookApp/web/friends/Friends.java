@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @SpringBootApplication
 @ComponentScan("com.bookApp.web")
 @Entity
-@Table(name = "friends")
+@Table(name = "friends", uniqueConstraints = @UniqueConstraint(columnNames = {"sender_id", "receiver_id"}))
 public class Friends {
     @Id
     @SequenceGenerator(
