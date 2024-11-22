@@ -485,6 +485,9 @@
         <div class="left-container">
             <div class="content-header">Friends List</div>
             <div class="friendsList-container">
+                <div th:if="${#lists.isEmpty(friends)}">
+                    <p>No friends yet.</p>
+                </div>
                 <li th:each="friend : ${friends}" id="friends">
                     <div class="friend-item">
                         <div  th:text="${friend.sender.id == currentUser.id} ? ${friend.receiver.username} : ${friend.sender.username}"></div>
@@ -501,6 +504,9 @@
             </div>
             <div class="content-header">Pending requests</div>
             <div class="sentRequests-container">
+                <div th:if="${#lists.isEmpty(sentRequests)}">
+                    <p>No pending requests yet.</p>
+                </div>
                 <li th:each="sentRequest : ${sentRequests}" id="sentRequests">
                     <div class="sentRequest-item">
                         <div th:text="${sentRequest.receiver.username}"></div>
@@ -519,6 +525,9 @@
         <div class="right-container">
             <div class="content-header">Friend Requests</div>
             <div class="requests-container">
+                <div th:if="${#lists.isEmpty(friendRequests)}">
+                    <p>No friend requests yet.</p>
+                </div>
                 <li th:each="friendRequests : ${friendRequests}" id="friendRequests">
                     <div class="request-item">
                         <div th:text="${friendRequests.sender.username}"></div>
@@ -541,6 +550,9 @@
 
             <div class="content-header">Declined Friend Requests</div>
             <div class="declined-requests-container">
+                <div th:if="${#lists.isEmpty(declinedRequests)}">
+                    <p>No declined requests yet.</p>
+                </div>
                 <li th:each="declinedRequests : ${declinedRequests}" id="declinedRequests">
                     <div class="declined-item">
                         <div  th:text="${declinedRequests.sender.username}"></div>

@@ -74,17 +74,18 @@ public class FriendsController {
 
         Friends friend = friendsRepository.findById(friendId).orElse(null);
 
+        LocalDateTime currentDate = LocalDateTime.now();
+
         if (friend != null) {
             if (answer.equals("Yes")) {
                 friend.setStatus(Friends.Status.ACCEPTED);
-                friendsRepository.save(friend);
-                return ResponseEntity.ok().build();
             }
             else {
                 friend.setStatus(Friends.Status.DECLINED);
-                friendsRepository.save(friend);
-                return ResponseEntity.ok().build();
             }
+            friend.setDateUpdated(currentDate);
+            friendsRepository.save(friend);
+            return ResponseEntity.ok().build();
         }
         else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -97,7 +98,7 @@ public class FriendsController {
     public List<Map<String, Object>> searchBooksJson(@RequestParam(value = "query") String query, Principal principal) {
         User currentUser = userService.findByUsername(principal.getName());
 
-        List<User> users = friendsRepository.searchUsersForFriendRequest(currentUser.getId());
+        List<User> users = friendsRepository.searchUsersForFriendRequest(currentUser.getId(), query);
 
         //create a response with a list of maps containing only the necessary fields
         return users.stream()
