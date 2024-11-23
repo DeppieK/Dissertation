@@ -1,18 +1,27 @@
 package com.bookApp.web.user;
 
+import com.bookApp.web.friends.Friends;
+import com.bookApp.web.friends.FriendsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+    private FriendsRepository friendsRepository;
+
+    public CustomUserDetailsService(FriendsRepository friendsRepository) {
+        this.friendsRepository = friendsRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -24,7 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         System.out.println("User found: " + user.getUsername());
 
-        // Update last login time
+        //update last login time
         user.setLastLogIn(LocalDateTime.now());
         userRepository.save(user);
 
