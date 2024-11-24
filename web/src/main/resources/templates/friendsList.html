@@ -505,7 +505,7 @@
             <div class="content-header">Pending requests</div>
             <div class="sentRequests-container">
                 <div class="sentRequest-item" th:if="${#lists.isEmpty(sentRequests)}">
-                    <div>No pending requests yet.</div>
+                    <div>No pending requests.</div>
                 </div>
                 <li th:each="sentRequest : ${sentRequests}" id="sentRequests">
                     <div class="sentRequest-item">
@@ -526,7 +526,7 @@
             <div class="content-header">Friend Requests</div>
             <div class="requests-container">
                 <div class="request-item" th:if="${#lists.isEmpty(friendRequests)}">
-                    <div>No friend requests yet.</div>
+                    <div>No friend requests.</div>
                 </div>
                 <li th:each="friendRequests : ${friendRequests}" id="friendRequests">
                     <div class="request-item">
@@ -551,7 +551,7 @@
             <div class="content-header">Declined Friend Requests</div>
             <div class="declined-requests-container">
                 <div class="declined-item" th:if="${#lists.isEmpty(declinedRequests)}">
-                    <div>No declined requests yet.</div>
+                    <div>No declined requests.</div>
                 </div>
                 <li th:each="declinedRequests : ${declinedRequests}" id="declinedRequests">
                     <div class="declined-item">
