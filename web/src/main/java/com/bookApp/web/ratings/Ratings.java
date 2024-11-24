@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @SpringBootApplication
@@ -42,6 +44,12 @@ public class Ratings {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(nullable = false)
+    private LocalDateTime dateCreated;
+
+    @Column(nullable = false)
+    private LocalDateTime dateUpdated;
+
     public Ratings() {
     }
 
@@ -49,12 +57,14 @@ public class Ratings {
         this.id = id;
     }
 
-    public Ratings(Long id, User user, Book book, double stars, String description) {
+    public Ratings(Long id, User user, Book book, double stars, String description, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
         this.id = id;
         this.user = user;
         this.book = book;
         this.stars = stars;
         this.description = description;
+        this.dateCreated = dateCreated;
+        this.dateUpdated = dateUpdated;
     }
 
     @Override
@@ -64,11 +74,12 @@ public class Ratings {
                 ", user=" + user +
                 ", book=" + book +
                 ", stars=" + stars +
-                ", description=" + description +
+                ", description='" + description + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", dateUpdated=" + dateUpdated +
                 '}';
     }
 
-    // Modified to support half stars
     public String getStarsAsEmoji() {
         StringBuilder starBuilder = new StringBuilder();
         int fullStars = (int) stars;
@@ -76,12 +87,12 @@ public class Ratings {
         String fullStar = "⭐";
         String halfStarImg =  ".5";
 
-        // Append full stars
+        //append full stars
         for (int i = 0; i < fullStars; i++) {
             starBuilder.append(fullStar);
         }
 
-        // Append a half star if needed
+        //append a half star if needed
         if (remainder >= 0.5) {
             starBuilder.append(halfStarImg);
         }

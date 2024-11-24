@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @SpringBootApplication
@@ -33,13 +35,22 @@ public class ShelfBook{
     @JoinColumn(name = "book_id")
     private Book book;
 
+    @Column(nullable = false)
+    private LocalDateTime dateCreated;
+
+    @Column(nullable = false)
+    private LocalDateTime dateUpdated;
+
     public ShelfBook() {
+
     }
 
-    public ShelfBook(Long id, Long shelfId, Book book) {
+    public ShelfBook(Long id, Long shelfId, Book book, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
         this.id = id;
         this.shelfId = shelfId;
         this.book = book;
+        this.dateCreated = dateCreated;
+        this.dateUpdated = dateUpdated;
     }
 
     @Override
@@ -48,6 +59,8 @@ public class ShelfBook{
                 "id=" + id +
                 ", shelfId=" + shelfId +
                 ", book=" + book +
+                ", dateCreated=" + dateCreated +
+                ", dateUpdated=" + dateUpdated +
                 '}';
     }
 }
