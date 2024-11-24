@@ -485,8 +485,8 @@
         <div class="left-container">
             <div class="content-header">Friends List</div>
             <div class="friendsList-container">
-                <div th:if="${#lists.isEmpty(friends)}">
-                    <p>No friends yet.</p>
+                <div class="friend-item" th:if="${#lists.isEmpty(friends)}">
+                    <div>No friends yet.</div>
                 </div>
                 <li th:each="friend : ${friends}" id="friends">
                     <div class="friend-item">
@@ -504,8 +504,8 @@
             </div>
             <div class="content-header">Pending requests</div>
             <div class="sentRequests-container">
-                <div th:if="${#lists.isEmpty(sentRequests)}">
-                    <p>No pending requests yet.</p>
+                <div class="sentRequest-item" th:if="${#lists.isEmpty(sentRequests)}">
+                    <div>No pending requests yet.</div>
                 </div>
                 <li th:each="sentRequest : ${sentRequests}" id="sentRequests">
                     <div class="sentRequest-item">
@@ -525,8 +525,8 @@
         <div class="right-container">
             <div class="content-header">Friend Requests</div>
             <div class="requests-container">
-                <div th:if="${#lists.isEmpty(friendRequests)}">
-                    <p>No friend requests yet.</p>
+                <div class="request-item" th:if="${#lists.isEmpty(friendRequests)}">
+                    <div>No friend requests yet.</div>
                 </div>
                 <li th:each="friendRequests : ${friendRequests}" id="friendRequests">
                     <div class="request-item">
@@ -550,8 +550,8 @@
 
             <div class="content-header">Declined Friend Requests</div>
             <div class="declined-requests-container">
-                <div th:if="${#lists.isEmpty(declinedRequests)}">
-                    <p>No declined requests yet.</p>
+                <div class="declined-item" th:if="${#lists.isEmpty(declinedRequests)}">
+                    <div>No declined requests yet.</div>
                 </div>
                 <li th:each="declinedRequests : ${declinedRequests}" id="declinedRequests">
                     <div class="declined-item">
@@ -577,7 +577,6 @@
         const declineRequestPopup = document.getElementById('declineRequestPopup');
         const friendSearchInput = document.getElementById('friendSearchInput');
         const searchResults = document.getElementById('searchResults');
-
 
         const addFriendBtn = document.querySelector('.plusBtn')
         addFriendBtn.addEventListener('click', () => {
@@ -647,93 +646,6 @@
             location.reload(); //refresh the page
         });
 
-        document.querySelectorAll('.deleteFriendBtn').forEach((deleteFriendBtn) => {
-            deleteFriendBtn.addEventListener('click', () => {
-                //get the selected record's id
-                selectedRecord = deleteFriendBtn.getAttribute('friend-id');
-
-                const username = deleteFriendBtn.closest('.friend-item').querySelector('div').innerText;
-                document.getElementById('deleteFriendLabel').innerHTML = `Are you sure you want to remove user <span class="username">${username}</span> from your friends?`;
-                deleteFriendPopup.style.display = 'block'; //display popup
-                deleteFriendPopup.style.opacity = '1';
-                friendSearchInput.focus(); //focus the search bar
-            });
-        });
-
-        const removeYesBtn = document.getElementById("removeYesBtn");
-        removeYesBtn.addEventListener('click', () => {
-            if (selectedRecord){
-                fetch(`/deleteRecord/${selectedRecord}`, {
-                    method: 'GET',
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            alert('Friend removed 😔');
-                            location.reload(); //refresh the page
-                        } else {
-                            alert('Error in deleting a friend.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            }
-        });
-
-        const removeNoBtn = document.getElementById("removeNoBtn");
-        removeNoBtn.addEventListener('click', () => {
-            deleteFriendPopup.style.display = 'none'; //hide popup
-        });
-
-        document.querySelectorAll('.cancelBtn').forEach((cancelBtn) => {
-            cancelBtn.addEventListener('click', () => {
-                //get the selected record's id
-                selectedRecord = cancelBtn.getAttribute('friend-id');
-
-                const username = cancelBtn.closest('.sentRequest-item').querySelector('div').innerText;
-                document.getElementById('cancelRequestLabel').innerHTML = `Are you sure you want to cancel your friend request to the user <span class="username">${username}</span>?`;
-                cancelRequestPopup.style.display = 'block'; //display popup
-                cancelRequestPopup.style.opacity = '1';
-            });
-        });
-
-        const cancelYesBtn = document.getElementById("cancelYesBtn");
-        cancelYesBtn.addEventListener('click', () => {
-            if (selectedRecord){
-                fetch(`/deleteRecord/${selectedRecord}`, {
-                    method: 'GET',
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            alert('Request canceled 😔');
-                            location.reload(); //refresh the page
-                        } else {
-                            alert('Error canceling a request.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            }
-        });
-
-        const cancelNoBtn = document.getElementById("cancelNoBtn");
-        cancelNoBtn.addEventListener('click', () => {
-            cancelRequestPopup.style.display = 'none'; //hide popup
-        });
-
-        document.querySelectorAll('.declineBtn').forEach((declineBtn) => {
-            declineBtn.addEventListener('click', () => {
-                //get the selected record's id
-                selectedRecord = declineBtn.getAttribute('friend-id');
-
-                const username = declineBtn.closest('.request-item').querySelector('div').innerText;
-                document.getElementById('declineRequestLabel').innerHTML = `Are you sure you want to decline user's <span class="username">${username}</span> friend request?`;
-                declineRequestPopup.style.display = 'block'; //display popup
-                declineRequestPopup.style.opacity = '1';
-            });
-        });
-
         const declineYesBtn = document.getElementById("declineYesBtn");
         declineYesBtn.addEventListener('click', () => {
             if (selectedRecord){
@@ -760,8 +672,36 @@
             declineRequestPopup.style.display = 'none'; //hide popup
         });
 
-        document.querySelectorAll('.acceptBtn').forEach((acceptBtn) => {
-            acceptBtn.addEventListener('click', () => {
+        document.querySelector('.main-container').addEventListener('click', (event) => {
+            if (event.target.closest('.deleteFriendBtn')) {
+                const deleteFriendBtn = event.target.closest('.deleteFriendBtn');
+                selectedRecord = deleteFriendBtn.getAttribute('friend-id');
+                const username = deleteFriendBtn.closest('.friend-item').querySelector('div').innerText;
+                document.getElementById('deleteFriendLabel').innerHTML = `Are you sure you want to remove user <span class="username">${username}</span> from your friends?`;
+                deleteFriendPopup.style.display = 'block'; //display popup
+                deleteFriendPopup.style.opacity = '1';
+            }
+
+            if (event.target.closest('.cancelBtn')) {
+                const cancelBtn = event.target.closest('.cancelBtn');
+                selectedRecord = cancelBtn.getAttribute('friend-id');
+                const username = cancelBtn.closest('.sentRequest-item').querySelector('div').innerText;
+                document.getElementById('cancelRequestLabel').innerHTML = `Are you sure you want to cancel your friend request to the user <span class="username">${username}</span>?`;
+                cancelRequestPopup.style.display = 'block'; //display popup
+                cancelRequestPopup.style.opacity = '1';
+            }
+
+            if (event.target.closest('.declineBtn')) {
+                const declineBtn = event.target.closest('.declineBtn');
+                selectedRecord = declineBtn.getAttribute('friend-id');
+                const username = declineBtn.closest('.request-item').querySelector('div').innerText;
+                document.getElementById('declineRequestLabel').innerHTML = `Are you sure you want to decline user's <span class="username">${username}</span> friend request?`;
+                declineRequestPopup.style.display = 'block'; //display popup
+                declineRequestPopup.style.opacity = '1';
+            }
+
+            if (event.target.closest('.acceptBtn')) {
+                const acceptBtn = event.target.closest('.acceptBtn');
                 selectedRecord = acceptBtn.getAttribute('friend-id');
                 if (selectedRecord){
                     answer = 'Yes';
@@ -780,11 +720,10 @@
                             console.error('Error:', error);
                         });
                 }
-            });
-        });
+            }
 
-        document.querySelectorAll('.deleteBtn').forEach((deleteBtn) => {
-            deleteBtn.addEventListener('click', () => {
+            if (event.target.closest('.deleteBtn')) {
+                const deleteBtn = event.target.closest('.deleteBtn');
                 selectedRecord = deleteBtn.getAttribute('friend-id');
                 if (selectedRecord){
                     fetch(`/deleteRecord/${selectedRecord}`, {
@@ -802,7 +741,58 @@
                             console.error('Error:', error);
                         });
                 }
-            });
+            }
+        });
+
+        //remove the popup when 'Yes' or 'No' is clicked
+        const removeYesBtn = document.getElementById("removeYesBtn");
+        removeYesBtn.addEventListener('click', () => {
+            if (selectedRecord){
+                fetch(`/deleteRecord/${selectedRecord}`, {
+                    method: 'GET',
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Friend removed 😔');
+                            location.reload(); //refresh the page
+                        } else {
+                            alert('Error in deleting a friend.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        });
+
+        const removeNoBtn = document.getElementById("removeNoBtn");
+        removeNoBtn.addEventListener('click', () => {
+            deleteFriendPopup.style.display = 'none'; //hide popup
+        });
+
+        const cancelYesBtn = document.getElementById("cancelYesBtn");
+        cancelYesBtn.addEventListener('click', () => {
+            if (selectedRecord){
+                fetch(`/deleteRecord/${selectedRecord}`, {
+                    method: 'GET',
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Request canceled 😔');
+                            location.reload(); //refresh the page
+                        } else {
+                            alert('Error canceling a request.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        });
+
+        const cancelNoBtn = document.getElementById("cancelNoBtn");
+        cancelNoBtn.addEventListener('click', () => {
+            cancelRequestPopup.style.display = 'none'; //hide popup
         });
     });
 
