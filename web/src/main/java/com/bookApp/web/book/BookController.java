@@ -1,6 +1,5 @@
 package com.bookApp.web.book;
 
-import com.bookApp.web.bookshelf.Bookshelf;
 import com.bookApp.web.bookshelf.BookshelfService;
 import com.bookApp.web.genre.Genre;
 import com.bookApp.web.genre.GenreRepository;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,7 +59,7 @@ public class BookController {
     public String listBooks(Model model){
         List<Book> books = bookService.getBook();
         model.addAttribute("books", books);
-        return "books";
+        return "index";
     }
 
     //details page
@@ -175,7 +173,7 @@ public class BookController {
     public String findBooksByAuthor(@PathVariable("author") String author, Model model) {
         List<Book> books = bookRepository.findByAuthor(author);
         model.addAttribute("books", books);
-        return "books";
+        return "index";
     }
 
     //genres page

@@ -63,11 +63,12 @@
         }
 
         .content {
-            margin-top: 30px;
             flex-grow: 1;
             overflow: auto;
             justify-content: center;
             align-items: center;
+            display: flex;
+            position: relative;
         }
 
         .searchBar {
@@ -86,17 +87,6 @@
             padding: 0;
         }
 
-        #books {
-            text-align: left;
-        }
-
-        .books {
-            margin: 0px 30px 0px 0px;
-            text-align: center;
-            flex-wrap: wrap;
-            justify-content: flex-start;
-        }
-
         .books li {
             margin: 10px;
             text-align: center;
@@ -113,18 +103,6 @@
         .books li:hover img {
             transform: scale(1.03);
             box-shadow: 0 0 50px #5168ef;
-        }
-
-        #book-title {
-            text-align: center;
-        }
-
-        .image-container {
-            display: flex;
-            justify-content: center;
-            align-content: center;
-            width: 100%;
-            flex-wrap: wrap;
         }
 
         input[type=search] {
@@ -161,8 +139,60 @@
         .profileIcon{
             text-decoration: none;
         }
+
         .menu{
             font-size: 20px;
+        }
+
+        .container {
+            margin-left: 70px;
+            margin-right: 70px;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 30%;
+            transform: translateY(-10%);
+        }
+
+        .container table {
+            width: 100%;
+        }
+
+        .container table td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .container table td p {
+            margin: 0;
+        }
+
+        .container table b {
+            font-weight: bold;
+        }
+
+        .container img {
+            max-width: 100%;
+            width: 200px;
+            height: auto;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .container:hover img {
+            transform: scale(1.03);
+            box-shadow: 0 0 25px #5168ef;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .username {
+            color: #4d5cda;
+            font-weight: bold;
         }
 
     </style>
@@ -209,15 +239,18 @@
     </div>
 
     <div class="content">
-        <div class="image-container">
-            <ul class="books">
-                <li th:each="book : ${books}" id="books">
-                    <a th:href="@{/books/{bookId}(bookId = ${book.id})}">
-                        <img th:src="${book.photoUrl}" />
-                    </a>
-                    <p id="book-title" th:text="${book.title}"></p>
-                </li>
-            </ul>
+        <div class="container">
+            <table>
+                <tr>
+                    <td>
+                        <p><span class="username">Christina</span> gave this book 5 stars ⭐️</p><br>
+                        <p><img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1564783201i/44492286.jpg" class="book"></p>
+                        <p class="center"> Children of Dune</p>
+                        <br>
+                        <p class="center">⭐️⭐️⭐️⭐️⭐️</p>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
