@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,8 +58,18 @@ public class BookController {
     //main page
     @GetMapping("/books")
     public String listBooks(Model model){
-        List<Book> books = bookService.getBook();
-        model.addAttribute("books", books);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userService.findByUsername(username);
+
+        LocalDateTime currentDate = LocalDateTime.now();
+        LocalDateTime thresholdDate = currentDate.minusDays(10);
+
+        List<Ratings> friendsRatings = ratingsRepository.getFriendsRatingsInASpecificTimestamp(user,thresholdDate);
+
+        model.addAttribute("friendsRatings", friendsRatings);
+
         return "index";
     }
 
@@ -119,11 +130,15 @@ public class BookController {
         boolean userRatingExists = false;
 
         if (userRating == null) {
+            LocalDateTime currentDate = LocalDateTime.now();
+
             Ratings newRating = new Ratings();
             newRating.setUser(user);
             newRating.setBook(book);
             newRating.setDescription(rating);
             newRating.setStars(stars);
+            newRating.setDateCreated(currentDate);
+            newRating.setDateUpdated(currentDate);
 
             ratingsService.save(newRating);
         }
@@ -196,9 +211,14 @@ public class BookController {
 
         ShelfBook shelfBookExists = shelfBookRepository.findByShelfIdAndBookId(shelfId,bookId);
         if (shelfBookExists == null){
+            LocalDateTime currentDate = LocalDateTime.now();
+
             ShelfBook shelfBook = new ShelfBook();
             shelfBook.setShelfId(shelfId);
             shelfBook.setBook(book);
+            shelfBook.setDateCreated(currentDate);
+            shelfBook.setDateUpdated(currentDate);
+
             shelfBookService.save(shelfBook);
         }
 
@@ -226,8 +246,12 @@ public class BookController {
         Ratings rating =  ratingsRepository.findById(ratingId);
 
         if (rating != null){
+            LocalDateTime currentDate = LocalDateTime.now();
+
             rating.setDescription(newDesc);
             rating.setStars(newStars);
+            rating.setDateUpdated(currentDate);
+
             ratingsService.save(rating);
             return ResponseEntity.ok().build(); //success
         }

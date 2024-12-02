@@ -141,10 +141,13 @@ public class BookshelfController {
 
         ShelfBook shelfBookExists = shelfBookRepository.findByShelfIdAndBookId(shelfId,bookId);
         if (shelfBookExists == null){
+            LocalDateTime currentDate = LocalDateTime.now();
             //create and save the ShelfBook entry
             ShelfBook shelfBook = new ShelfBook();
             shelfBook.setShelfId(shelfId);
             shelfBook.setBook(book);
+            shelfBook.setDateCreated(currentDate);
+            shelfBook.setDateUpdated(currentDate);
             shelfBookService.save(shelfBook);
 
             //return a success response

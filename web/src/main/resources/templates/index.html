@@ -145,32 +145,19 @@
         }
 
         .container {
+            margin-top: 20px;
             margin-left: 70px;
             margin-right: 70px;
-            padding: 20px;
             background-color: white;
             border: 1px solid #ddd;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            width: 30%;
-            transform: translateY(-10%);
+            width: 70%;
         }
 
-        .container table {
-            width: 100%;
-        }
-
-        .container table td {
-            padding: 10px;
+        .container {
+            padding: 40px;
             text-align: left;
-        }
-
-        .container table td p {
-            margin: 0;
-        }
-
-        .container table b {
-            font-weight: bold;
         }
 
         .container img {
@@ -239,18 +226,18 @@
     </div>
 
     <div class="content">
-        <div class="container">
-            <table>
-                <tr>
-                    <td>
-                        <p><span class="username">Christina</span> gave this book 5 stars ⭐️</p><br>
-                        <p><img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1564783201i/44492286.jpg" class="book"></p>
-                        <p class="center"> Children of Dune</p>
-                        <br>
-                        <p class="center">⭐️⭐️⭐️⭐️⭐️</p>
-                    </td>
-                </tr>
-            </table>
+        <div class="friends-ratings">
+            <div th:each="friendsRatings : ${friendsRatings}" class="container">
+                <p>
+                    <span th:text="${friendsRatings.user.username}" class="username"></span> gave this book <span th:text="${friendsRatings.stars}"></span> stars ⭐️
+                </p><br>
+                <a th:href="@{/books/{bookId}(bookId = ${friendsRatings.book.id})}">
+                    <img th:src="${friendsRatings.book.photoUrl}" />
+                </a>
+                <p th:text="${friendsRatings.book.title}" class="center"></p>
+                <br>
+                <p th:utext="${friendsRatings.getStarsAsEmoji()}" class="center"></p>
+            </div>
         </div>
     </div>
 </div>

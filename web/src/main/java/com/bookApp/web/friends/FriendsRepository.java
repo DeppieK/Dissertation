@@ -46,5 +46,4 @@ public interface FriendsRepository extends JpaRepository<Friends, Long> {
 
 
 
-
 }
