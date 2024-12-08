@@ -465,14 +465,19 @@
         <table class="book-table">
             <tr>
                 <td>
-                    <img th:src ="${book.photoUrl}"/>
+                    <img th:src ="${book.photoUrl}"/></br>
+                    <p th:if="${hasRatings and userRating != null}">
+                        Your rating: <span th:text="${userRating.getStarsAsEmoji()}"></span>
+                    </p>
                 </td>
                 <td>
                     <div class="container">
                         <table>
                             <tr>
                                 <td>
-                                    <p th:text="${book.title}" style="font-weight: bold;  white-space: nowrap; font-size: 21px;"></p><br><br>
+                                    <p th:text="${book.title}" style="font-weight: bold;  white-space: nowrap; font-size: 21px;"></p><br>
+                                    <p> Average Rating: <span style="color: #4d5cda; font-weight: bold;" th:text="${averageRating}"></span>⭐</p>
+                                    <br>
                                     <p>✨ Genres:
                                     <ul>
                                         <li class="genres" th:each="genre : ${genres}">
@@ -539,7 +544,7 @@
                 <div id="editPopup">
                     <div>
                         <label for="rating">Tell us your Thoughts!:</label>
-                        <input type="text" id="ratingEdit" name="rating" required/>
+                        <input type="text" id="ratingEdit" name="rating"/>
                     </div>
                     <div>
                         <label for="stars">Give this Book some ⭐!:</label>
@@ -574,7 +579,7 @@
                     <input type="hidden" name="bookId" th:value="${book.id}" />
                     <div>
                         <label for="rating">Tell us your Thoughts!:</label>
-                        <input type="text" id="rating" name="rating" required/>
+                        <input type="text" id="rating" name="rating"/>
                     </div>
                     <div>
                         <label for="stars">Give this Book some ⭐!:</label>
@@ -605,7 +610,16 @@
     editBtn.addEventListener('click', () => {
        editPopup.style.display = 'block'; //show edit popup
         ratingEdit.value = ratingDesc.innerText;
-        starsEdit.value = ratingStars.innerText.length;
+
+        //parse stars from the emoji representation
+        const starsText = ratingStars.innerText;
+        let starCount = starsText.split('⭐').length - 1; // Count full stars (⭐)
+
+        //check for a half-star (✨) at the end
+        if (starsText.endsWith('✨')) {
+            starCount += 0.5; //add 0.5 if a half-star exists
+        }
+        starsEdit.value = starCount;
     });
 
     const saveBtn = document.getElementById('saveBtn');

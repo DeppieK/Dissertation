@@ -26,5 +26,4 @@ public interface RatingsRepository extends JpaRepository<Ratings, Long> {
             "AND r.user <> :currentUser")
     List<Ratings> getFriendsRatingsInASpecificTimestamp(@Param("currentUser") User currentUser, @Param("thresholdDate") LocalDateTime thresholdDate);
 
-
 }

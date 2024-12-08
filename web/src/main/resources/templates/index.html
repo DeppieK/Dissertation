@@ -239,6 +239,18 @@
                 <p th:utext="${friendsRatings.getStarsAsEmoji()}" class="center"></p>
             </div>
         </div>
+
+        <div class="friends-friendsCurrentlyRead">
+            <div th:each="friendsCurrentlyReading : ${friendsCurrentlyReading}" class="container">
+                <p>
+                    <span th:text="${friendsCurrentlyReading.user.username}" class="username"></span> is currently reading <span th:text="${friendsCurrentlyReading.book.title}"></span> 📖️💜
+                </p><br>
+                <a th:href="@{/books/{bookId}(bookId = ${friendsCurrentlyReading.book.id})}">
+                    <img th:src="${friendsCurrentlyReading.book.photoUrl}" />
+                </a>
+                <p th:text="${friendsCurrentlyReading.book.title}" class="center"></p>
+            </div>
+        </div>
     </div>
 </div>
 

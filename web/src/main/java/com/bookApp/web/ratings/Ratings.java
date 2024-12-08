@@ -85,7 +85,7 @@ public class Ratings {
         int fullStars = (int) stars;
         double remainder = stars - fullStars;
         String fullStar = "⭐";
-        String halfStarImg =  ".5";
+        String halfStarImg =  "✨";
 
         //append full stars
         for (int i = 0; i < fullStars; i++) {
