@@ -3,7 +3,9 @@ package com.bookApp.web.ratings;
 import com.bookApp.web.book.Book;
 import com.bookApp.web.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @SpringBootApplication
 @ComponentScan("com.bookApp.web")
 @Entity
@@ -49,23 +53,6 @@ public class Ratings {
 
     @Column(nullable = false)
     private LocalDateTime dateUpdated;
-
-    public Ratings() {
-    }
-
-    public Ratings(Long id) {
-        this.id = id;
-    }
-
-    public Ratings(Long id, User user, Book book, double stars, String description, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
-        this.id = id;
-        this.user = user;
-        this.book = book;
-        this.stars = stars;
-        this.description = description;
-        this.dateCreated = dateCreated;
-        this.dateUpdated = dateUpdated;
-    }
 
     @Override
     public String toString() {

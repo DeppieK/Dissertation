@@ -3,13 +3,17 @@ package com.bookApp.web.bookshelf;
 import com.bookApp.web.book.Book;
 import com.bookApp.web.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @SpringBootApplication
 @ComponentScan("com.bookApp.web")
 @Entity
@@ -38,19 +42,10 @@ public class Bookshelf {
     @Column(name = "label")
     private String label;
 
-    // Constructors
-    public Bookshelf() {
-    }
+    @Getter
+    @Transient
+    private Book book;
 
-    public Bookshelf(Long id) {
-        this.id = id;
-    }
-
-    public Bookshelf(User user, Book book, Long shelfId, String label) {
-        this.user = user;
-        this.shelfId = shelfId;
-        this.label = label;
-    }
 
     // toString
     @Override

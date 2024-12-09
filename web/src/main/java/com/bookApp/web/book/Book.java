@@ -1,13 +1,17 @@
 package com.bookApp.web.book;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @SpringBootApplication
 @ComponentScan("com.bookApp.web")
 @Entity
@@ -32,31 +36,6 @@ public class Book {
     private int pages;
     private String author;
     private String photoUrl;
-
-    //Constructors
-    public Book() {
-
-    }
-
-    public Book(Long id, String title, String description,Long ISBN, int pages, String author, String photoUrl) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.ISBN = ISBN;
-        this.pages = pages;
-        this.author = author;
-        this.photoUrl = photoUrl;
-    }
-
-    public Book(String title, String description, Long ISBN, int pages, String author, String photoUrl) {
-        this.title = title;
-        this.description = description;
-        this.ISBN = ISBN;
-        this.pages = pages;
-        this.author = author;
-        this.photoUrl = photoUrl;
-
-    }
 
     //ToString
     @Override

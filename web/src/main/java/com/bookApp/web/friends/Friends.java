@@ -4,7 +4,9 @@ package com.bookApp.web.friends;
 import ch.qos.logback.core.status.Status;
 import com.bookApp.web.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,6 +15,8 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @SpringBootApplication
 @ComponentScan("com.bookApp.web")
 @Entity

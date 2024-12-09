@@ -1,7 +1,9 @@
 package com.bookApp.web.user;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @SpringBootApplication
 @ComponentScan("com.bookApp.web")
 @Entity
@@ -35,27 +39,6 @@ public class User {
     private String email;
     private LocalDateTime dateOfRegistration;
     private LocalDateTime lastLogIn;
-
-    //Constructors
-    public User() {
-
-    }
-
-
-    public User(Long id) {
-        this.id = id;
-    }
-
-    public User(Long id, String firstname, String lastname, String username, String password, String email, LocalDateTime dateOfRegistration, LocalDateTime lastLogIn) {
-        this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.dateOfRegistration = dateOfRegistration;
-        this.lastLogIn = lastLogIn;
-    }
 
     //ToString
 
