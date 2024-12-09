@@ -65,10 +65,11 @@
         .content {
             flex-grow: 1;
             overflow: auto;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             display: flex;
             position: relative;
+            flex-direction: column;
         }
 
         .searchBar {
@@ -240,15 +241,39 @@
             </div>
         </div>
 
-        <div class="friends-friendsCurrentlyRead">
+        <div class="friendsCurrentlyRead">
             <div th:each="friendsCurrentlyReading : ${friendsCurrentlyReading}" class="container">
                 <p>
-                    <span th:text="${friendsCurrentlyReading.user.username}" class="username"></span> is currently reading <span th:text="${friendsCurrentlyReading.book.title}"></span> 📖️💜
+                    <span th:text="${friendsCurrentlyReading.bookshelf.user.username}" class="username"></span> is currently reading <span th:text="${friendsCurrentlyReading.book.title}"></span> 📖️💜
                 </p><br>
                 <a th:href="@{/books/{bookId}(bookId = ${friendsCurrentlyReading.book.id})}">
                     <img th:src="${friendsCurrentlyReading.book.photoUrl}" />
                 </a>
                 <p th:text="${friendsCurrentlyReading.book.title}" class="center"></p>
+            </div>
+        </div>
+
+        <div class="friendsWantToRead">
+            <div th:each="friendsWantToRead : ${friendsWantToRead}" class="container">
+                <p>
+                    <span th:text="${friendsWantToRead.bookshelf.user.username}" class="username"></span> wants to read <span th:text="${friendsWantToRead.book.title}"></span> 💭
+                </p><br>
+                <a th:href="@{/books/{bookId}(bookId = ${friendsWantToRead.book.id})}">
+                    <img th:src="${friendsWantToRead.book.photoUrl}" />
+                </a>
+                <p th:text="${friendsWantToRead.book.title}" class="center"></p>
+            </div>
+        </div>
+
+        <div class="friendsRead">
+            <div th:each="friendsRead : ${friendsRead}" class="container">
+                <p>
+                    <span th:text="${friendsRead.bookshelf.user.username}" class="username"></span> read <span th:text="${friendsRead.book.title}"></span> 🤓
+                </p><br>
+                <a th:href="@{/books/{bookId}(bookId = ${friendsRead.book.id})}">
+                    <img th:src="${friendsRead.book.photoUrl}" />
+                </a>
+                <p th:text="${friendsRead.book.title}" class="center"></p>
             </div>
         </div>
     </div>

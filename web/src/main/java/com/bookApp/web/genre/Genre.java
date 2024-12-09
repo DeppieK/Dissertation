@@ -2,13 +2,17 @@ package com.bookApp.web.genre;
 
 import com.bookApp.web.book.Book;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @SpringBootApplication
 @ComponentScan("com.bookApp.web")
 @Entity
@@ -32,16 +36,6 @@ public class Genre {
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
-
-    public Genre() {
-
-    }
-
-    public Genre(Long id, String genre, Book book) {
-        this.id = id;
-        this.genre = genre;
-        this.book = book;
-    }
 
     @Override
     public String toString() {

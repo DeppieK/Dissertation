@@ -1,6 +1,9 @@
 package com.bookApp.web.book;
 
+import com.bookApp.web.bookshelf.Bookshelf;
+import com.bookApp.web.bookshelf.BookshelfRepository;
 import com.bookApp.web.bookshelf.BookshelfService;
+import com.bookApp.web.friends.FriendsReadingDto;
 import com.bookApp.web.genre.Genre;
 import com.bookApp.web.genre.GenreRepository;
 import com.bookApp.web.ratings.Ratings;
@@ -39,10 +42,11 @@ public class BookController {
     private final BookshelfService bookshelfService;
     private final ShelfBookService shelfBookService;
     private final ShelfBookRepository shelfBookRepository;
+    private final BookshelfRepository bookshelfRepository;
 
     //constructor
     @Autowired
-    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService, GenreRepository genreRepository, BookshelfService bookshelfService, ShelfBookService shelfBookService, ShelfBookRepository shelfBookRepository) {
+    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService, GenreRepository genreRepository, BookshelfService bookshelfService, ShelfBookService shelfBookService, ShelfBookRepository shelfBookRepository, BookshelfRepository bookshelfRepository) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookSearchService = bookSearchService;
@@ -53,6 +57,7 @@ public class BookController {
         this.bookshelfService = bookshelfService;
         this.shelfBookService = shelfBookService;
         this.shelfBookRepository = shelfBookRepository;
+        this.bookshelfRepository = bookshelfRepository;
     }
 
     //main page
@@ -64,11 +69,21 @@ public class BookController {
         User user = userService.findByUsername(username);
 
         LocalDateTime currentDate = LocalDateTime.now();
-        LocalDateTime thresholdDate = currentDate.minusDays(10);
+        LocalDateTime thresholdDate = currentDate.minusDays(20);
 
         List<Ratings> friendsRatings = ratingsRepository.getFriendsRatingsInASpecificTimestamp(user,thresholdDate);
 
+        //extract in a method?
+        List<FriendsReadingDto> friendsCurrentlyReading = bookshelfRepository.getFriendsBooksWithSpecifiedLabels(user,thresholdDate,"Currently Reading");
+        List<FriendsReadingDto> friendsRead = bookshelfRepository.getFriendsBooksWithSpecifiedLabels(user,thresholdDate,"Read");
+        List<FriendsReadingDto> friendsWantToRead = bookshelfRepository.getFriendsBooksWithSpecifiedLabels(user,thresholdDate,"Want to Read");
+
+        System.out.println(friendsCurrentlyReading);
+
         model.addAttribute("friendsRatings", friendsRatings);
+        model.addAttribute("friendsCurrentlyReading", friendsCurrentlyReading);
+        model.addAttribute("friendsRead", friendsRead);
+        model.addAttribute("friendsWantToRead", friendsWantToRead);
 
         return "index";
     }
@@ -87,6 +102,15 @@ public class BookController {
 
         //check if there are any ratings
         boolean hasRatings = !ratings.isEmpty();
+
+        double averageRating = 0.0;
+        if (hasRatings) {
+            double totalRating = 0;
+            for (Ratings rating : ratings) {
+                totalRating += rating.getStars();
+            }
+            averageRating = totalRating / ratings.size();
+        }
 
         Ratings userRating = null;
         boolean userRatingExists = false;
@@ -112,7 +136,9 @@ public class BookController {
         model.addAttribute("ratings", orderedRatings);
         model.addAttribute("genres", genres);
         model.addAttribute("userRatingExists", userRatingExists);
+        model.addAttribute("userRating", userRating);
         model.addAttribute("hasRatings", hasRatings);
+        model.addAttribute("averageRating", averageRating);
 
         return "detailsPage";
     }
