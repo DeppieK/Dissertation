@@ -1,9 +1,9 @@
 package com.bookApp.web.book;
 
-import com.bookApp.web.bookshelf.Bookshelf;
 import com.bookApp.web.bookshelf.BookshelfRepository;
 import com.bookApp.web.bookshelf.BookshelfService;
 import com.bookApp.web.friends.FriendsReadingDto;
+import com.bookApp.web.friends.Dto.FriendsUpdateDto;
 import com.bookApp.web.genre.Genre;
 import com.bookApp.web.genre.GenreRepository;
 import com.bookApp.web.ratings.Ratings;
@@ -78,12 +78,72 @@ public class BookController {
         List<FriendsReadingDto> friendsRead = bookshelfRepository.getFriendsBooksWithSpecifiedLabels(user,thresholdDate,"Read");
         List<FriendsReadingDto> friendsWantToRead = bookshelfRepository.getFriendsBooksWithSpecifiedLabels(user,thresholdDate,"Want to Read");
 
-        System.out.println(friendsCurrentlyReading);
+        List<FriendsUpdateDto> allUpdates = new ArrayList<>();
 
-        model.addAttribute("friendsRatings", friendsRatings);
-        model.addAttribute("friendsCurrentlyReading", friendsCurrentlyReading);
-        model.addAttribute("friendsRead", friendsRead);
-        model.addAttribute("friendsWantToRead", friendsWantToRead);
+        //ratings
+        for (Ratings rating : friendsRatings) {
+            System.out.println("Rating dateUpdated: " + rating.getDateUpdated());
+            allUpdates.add(new FriendsUpdateDto(
+                    "rating",
+                    rating.getUser().getUsername(),
+                    rating.getBook().getId(),
+                    rating.getBook().getTitle(),
+                    rating.getBook().getPhotoUrl(),
+                    rating.getDateUpdated(),
+                    rating.getStars()
+            ));
+        }
+
+        //currently reading
+        for (FriendsReadingDto reading : friendsCurrentlyReading) {
+            System.out.println("Reading dateUpdated: " + reading.getDateUpdated());
+
+            allUpdates.add(new FriendsUpdateDto(
+                    "currentlyReading",
+                    reading.getBookshelf().getUser().getUsername(),
+                    reading.getBook().getId(),
+                    reading.getBook().getTitle(),
+                    reading.getBook().getPhotoUrl(),
+                    reading.getShelfBook().getDateUpdated(),
+                    0
+            ));
+        }
+
+        //books read
+        for (FriendsReadingDto read : friendsRead) {
+            System.out.println("read dateUpdated: " + read.getDateUpdated());
+
+            allUpdates.add(new FriendsUpdateDto(
+                    "read",
+                    read.getBookshelf().getUser().getUsername(),
+                    read.getBook().getId(),
+                    read.getBook().getTitle(),
+                    read.getBook().getPhotoUrl(),
+                    read.getShelfBook().getDateUpdated(),
+                    0
+            ));
+        }
+
+        //want to read
+        for (FriendsReadingDto wantToRead : friendsWantToRead) {
+            System.out.println("wantToRead dateUpdated: " + wantToRead.getDateUpdated());
+
+            allUpdates.add(new FriendsUpdateDto(
+                    "wantToRead",
+                    wantToRead.getBookshelf().getUser().getUsername(),
+                    wantToRead.getBook().getId(),
+                    wantToRead.getBook().getTitle(),
+                    wantToRead.getBook().getPhotoUrl(),
+                    wantToRead.getShelfBook().getDateUpdated(),
+                    0
+            ));
+        }
+
+        allUpdates.sort(Comparator.comparing(FriendsUpdateDto::getDateUpdated, Comparator.nullsLast(LocalDateTime::compareTo)).reversed());
+
+        System.out.println(allUpdates);
+
+        model.addAttribute("allUpdates", allUpdates);
 
         return "index";
     }

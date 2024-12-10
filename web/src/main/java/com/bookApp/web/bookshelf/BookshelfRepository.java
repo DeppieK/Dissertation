@@ -1,7 +1,6 @@
 package com.bookApp.web.bookshelf;
 
 import com.bookApp.web.friends.FriendsReadingDto;
-import com.bookApp.web.ratings.Ratings;
 import com.bookApp.web.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -40,7 +39,7 @@ public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
     @Query("SELECT COALESCE(b.shelfId, 0) FROM Bookshelf b WHERE b.user = :user AND b.label = :label")
     Long findShelfIdByUserAndLabel(@Param("user") User user, @Param("label") String label);
 
-    @Query("SELECT new com.bookApp.web.friends.FriendsReadingDto(b, book) " +
+    @Query("SELECT new com.bookApp.web.friends.FriendsReadingDto(b, book, s, s.dateUpdated) " +
             "FROM Bookshelf b " +
             "JOIN ShelfBook s ON b.shelfId = s.shelfId " +
             "JOIN s.book book " +

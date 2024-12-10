@@ -227,53 +227,21 @@
     </div>
 
     <div class="content">
-        <div class="friends-ratings">
-            <div th:each="friendsRatings : ${friendsRatings}" class="container">
+        <div class="friends-updates">
+            <div th:each="update : ${allUpdates}" class="container">
                 <p>
-                    <span th:text="${friendsRatings.user.username}" class="username"></span> gave this book <span th:text="${friendsRatings.stars}"></span> stars ⭐️
-                </p><br>
-                <a th:href="@{/books/{bookId}(bookId = ${friendsRatings.book.id})}">
-                    <img th:src="${friendsRatings.book.photoUrl}" />
+                    <span th:text="${update.username}" class="username"></span>
+                    <span th:switch="${update.type}">
+                        <span th:case="'rating'">gave this book <span th:text="${update.stars}"></span> stars ⭐️</span>
+                        <span th:case="'currentlyReading'">is currently reading <span th:text="${update.bookTitle}"></span> 📖💜</span>
+                        <span th:case="'read'">read <span th:text="${update.bookTitle}"></span> 🤓</span>
+                        <span th:case="'wantToRead'">wants to read <span th:text="${update.bookTitle}"></span> 💭</span>
+                    </span>
+                </p>
+                <a th:href="@{/books/{bookId}(bookId = ${update.bookId})}">
+                    <img th:src="${update.bookPhotoUrl}" />
                 </a>
-                <p th:text="${friendsRatings.book.title}" class="center"></p>
-                <br>
-                <p th:utext="${friendsRatings.getStarsAsEmoji()}" class="center"></p>
-            </div>
-        </div>
-
-        <div class="friendsCurrentlyRead">
-            <div th:each="friendsCurrentlyReading : ${friendsCurrentlyReading}" class="container">
-                <p>
-                    <span th:text="${friendsCurrentlyReading.bookshelf.user.username}" class="username"></span> is currently reading <span th:text="${friendsCurrentlyReading.book.title}"></span> 📖️💜
-                </p><br>
-                <a th:href="@{/books/{bookId}(bookId = ${friendsCurrentlyReading.book.id})}">
-                    <img th:src="${friendsCurrentlyReading.book.photoUrl}" />
-                </a>
-                <p th:text="${friendsCurrentlyReading.book.title}" class="center"></p>
-            </div>
-        </div>
-
-        <div class="friendsWantToRead">
-            <div th:each="friendsWantToRead : ${friendsWantToRead}" class="container">
-                <p>
-                    <span th:text="${friendsWantToRead.bookshelf.user.username}" class="username"></span> wants to read <span th:text="${friendsWantToRead.book.title}"></span> 💭
-                </p><br>
-                <a th:href="@{/books/{bookId}(bookId = ${friendsWantToRead.book.id})}">
-                    <img th:src="${friendsWantToRead.book.photoUrl}" />
-                </a>
-                <p th:text="${friendsWantToRead.book.title}" class="center"></p>
-            </div>
-        </div>
-
-        <div class="friendsRead">
-            <div th:each="friendsRead : ${friendsRead}" class="container">
-                <p>
-                    <span th:text="${friendsRead.bookshelf.user.username}" class="username"></span> read <span th:text="${friendsRead.book.title}"></span> 🤓
-                </p><br>
-                <a th:href="@{/books/{bookId}(bookId = ${friendsRead.book.id})}">
-                    <img th:src="${friendsRead.book.photoUrl}" />
-                </a>
-                <p th:text="${friendsRead.book.title}" class="center"></p>
+                <p th:text="${update.bookTitle}" class="center"></p>
             </div>
         </div>
     </div>
