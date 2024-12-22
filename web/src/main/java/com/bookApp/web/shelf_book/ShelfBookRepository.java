@@ -1,7 +1,9 @@
 package com.bookApp.web.shelf_book;
 
 import com.bookApp.web.user.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -32,19 +34,10 @@ public interface ShelfBookRepository extends JpaRepository<ShelfBook, Integer> {
             "CAST(b.ISBN AS STRING) LIKE CONCAT('%', LOWER(:query), '%'))")
     List<ShelfBook> searchBooksInBookshelf(@Param("shelfId") Long shelfId, @Param("query") String query);
 
-    /*@Query("SELECT s FROM ShelfBook s " +
-            "JOIN Book b ON s.book = b " +
-            "JOIN Bookshelf bs ON s.shelfId = bs.shelfId " +
-            "JOIN Friends f ON (bs.user = f.receiver OR bs.user = f.sender) " +
-            "WHERE s.dateUpdated >= :thresholdDate " +
-            "AND bs.label = :bookshelfLabel " +
-            "AND f.status = 'ACCEPTED' " +
-            "AND (f.receiver = :currentUser OR f.sender = :currentUser) " +
-            "AND bs.user <> :currentUser")
-    List<ShelfBook> getFriendsShelfBooksWithSpecifiedLabels(
-            @Param("currentUser") User currentUser,
-            @Param("thresholdDate") LocalDateTime thresholdDate,
-            @Param("bookshelfLabel") String bookshelfLabel);
-*/
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM ShelfBook sb WHERE sb.shelfId = :shelfId")
+    void deleteAllByShelfIdInBatch(@Param("shelfId") Long shelfId);
+
 
 }

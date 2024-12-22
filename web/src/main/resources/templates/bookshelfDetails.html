@@ -547,7 +547,7 @@
     </div>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', () =>{
+    document.addEventListener('DOMContentLoaded', () => {
 
         let selectedBookId = null; //to store the bookId for the clicked delete button
 
@@ -715,14 +715,15 @@
 
                 if (selectedBookId) {
                     //AJAX request
-                    fetch(`/bookshelf/delete/${selectedBookId}?label=${encodeURIComponent(label)}`, {
+                    fetch(`/bookshelf/delete/book/${selectedBookId}?label=${encodeURIComponent(label)}`, {
                         method: 'GET',
                     })
                         .then(response => {
                             if (response.ok) {
                                 alert('Book removed from bookshelf!');
                                 location.reload(); //refresh the page
-                            } else {
+                            }
+                            else {
                                 alert('Error removing book from bookshelf');
                             }
                         })

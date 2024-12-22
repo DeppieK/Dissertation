@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -37,11 +38,12 @@ public class BookshelfController {
     private final ShelfBookRepository shelfBookRepository;
     private final BookSearchService bookSearchService;
     private final ShelfBookService shelfBookService;
+    private final Book book;
 
     @Autowired
     public BookshelfController(BookRepository bookRepository, BookService bookService,
                                BookshelfRepository bookshelfRepository, BookshelfService bookshelfService,
-                               UserService userService, ShelfBookRepository shelfBookRepository, BookSearchService bookSearchService, ShelfBookService shelfBookService) {
+                               UserService userService, ShelfBookRepository shelfBookRepository, BookSearchService bookSearchService, ShelfBookService shelfBookService, Book book) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookshelfRepository = bookshelfRepository;
@@ -50,6 +52,7 @@ public class BookshelfController {
         this.shelfBookRepository = shelfBookRepository;
         this.bookSearchService = bookSearchService;
         this.shelfBookService = shelfBookService;
+        this.book = book;
     }
 
     //bookshelf page
@@ -161,7 +164,7 @@ public class BookshelfController {
     //change mapping? why books/....
     // bookshelf search method
     @GetMapping("books/myBookshelf/{label}/bookshelf-search")
-    public String bookshelfSearchBooks(@PathVariable("label") String label, @RequestParam(value = "query") String query, Model model, Principal principal){
+    public String bookshelfSearchBooks(@PathVariable("label") String label, @RequestParam(value = "query") String query, Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
         Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user, label);
@@ -199,7 +202,7 @@ public class BookshelfController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @GetMapping("/bookshelf/delete/{bookId}")
+    @GetMapping("/bookshelf/delete/book/{bookId}")
     @ResponseBody
     public ResponseEntity<Void> deleteBookFromBookshelf(@PathVariable("bookId") Long bookId, @RequestParam("label") String label, Principal principal) {
         User user = userService.findByUsername(principal.getName());
@@ -215,4 +218,20 @@ public class BookshelfController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
+    @DeleteMapping("/bookshelf/delete/{bookshelfLabel}")
+    @ResponseBody
+    public ResponseEntity<Void> deleteBookshelf(@PathVariable("bookshelfLabel") String bookshelfLabel, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+        Bookshelf bookshelf = bookshelfRepository.findByUserAndLabel(user, bookshelfLabel);
+        if (bookshelf != null) {
+            Long shelfId = bookshelf.getShelfId();
+            //batch delete associated books
+            shelfBookRepository.deleteAllByShelfIdInBatch(shelfId);
+            //delete the bookshelf
+            bookshelfRepository.delete(bookshelf);
+
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
 }
