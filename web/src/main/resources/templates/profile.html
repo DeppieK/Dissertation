@@ -231,16 +231,20 @@
                     <td th:text="${user.email}"></td>
                 </tr>
                 <tr>
-                    <th>Books read</th>
+                    <th>Books Read</th>
                     <td th:text="${readCount}"></td>
                 </tr>
                 <tr>
-                    <th>Books in bookshelf</th>
+                    <th>Books in Bookshelf</th>
                     <td th:text="${booksInBookshelf}"></td>
                 </tr>
                 <tr>
                     <th>Friends</th>
                     <td th:text="${friendsCount}"></td>
+                </tr>
+                <tr>
+                    <th>Average Rating</th>
+                    <td th:utext="${averageRating} + ' ⭐'"></td>
                 </tr>
                 <tr class="last-row">
                     <th>Account since</th>

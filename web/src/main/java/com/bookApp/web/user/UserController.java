@@ -6,6 +6,8 @@ import com.bookApp.web.bookshelf.Bookshelf;
 import com.bookApp.web.bookshelf.BookshelfService;
 import com.bookApp.web.friends.Friends;
 import com.bookApp.web.friends.FriendsRepository;
+import com.bookApp.web.ratings.Ratings;
+import com.bookApp.web.ratings.RatingsRepository;
 import com.bookApp.web.shelf_book.ShelfBookRepository;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +33,13 @@ public class UserController {
     private Book book;
     @Autowired
     private FriendsRepository friendsRepository;
+    private RatingsRepository ratingsRepository;
 
-    public UserController(UserService userService, BookshelfService bookshelfService, ShelfBookRepository shelfBookRepository) {
+    public UserController(UserService userService, BookshelfService bookshelfService, ShelfBookRepository shelfBookRepository, RatingsRepository ratingsRepository ) {
         this.userService = userService;
         this.bookshelfService = bookshelfService;
         this.shelfBookRepository = shelfBookRepository;
+        this.ratingsRepository = ratingsRepository;
     }
 
     //login page
@@ -115,7 +119,7 @@ public class UserController {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
 
-        long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"Read");
+        Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"Read");
 
         long readCount = bookshelfService.countByShelfId(shelfId);
 
@@ -124,10 +128,25 @@ public class UserController {
         List<Friends> friends = friendsRepository.findAllBySenderOrReceiverAndStatus(user, Friends.Status.ACCEPTED);
         int friendsCount = friends.size();
 
+        List<Ratings> ratings = ratingsRepository.findByUser(user);
+        double averageRating = 0.0;
+
+        boolean hasRatings = !ratings.isEmpty();
+        if(hasRatings){
+            double totalRating = 0;
+            for (Ratings rating : ratings) {
+                totalRating += rating.getStars();
+            }
+            averageRating = totalRating / ratings.size();
+            averageRating = Math.round(averageRating * 100.0) / 100.0;
+        }
+
+
         model.addAttribute("user", user);
         model.addAttribute("readCount", readCount);
         model.addAttribute("booksInBookshelf", booksInBookshelf);
         model.addAttribute("friendsCount", friendsCount);
+        model.addAttribute("averageRating", averageRating);
 
 
         return "profile";
