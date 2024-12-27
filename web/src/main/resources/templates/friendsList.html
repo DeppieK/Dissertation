@@ -578,100 +578,6 @@
         const friendSearchInput = document.getElementById('friendSearchInput');
         const searchResults = document.getElementById('searchResults');
 
-        const addFriendBtn = document.querySelector('.plusBtn')
-        addFriendBtn.addEventListener('click', () => {
-           addFriendPopup.style.display = 'block';
-           addFriendPopup.style.opacity = '1';
-        });
-
-        friendSearchInput.addEventListener('keyup', () => {
-            const query = friendSearchInput.value;
-
-            //check if input not empty
-            if (query.length > 1) {
-                //send AJAX request to search books
-                fetch(`/friends/search-json?query=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        displaySearchResults(data);
-                    })
-                    .catch(error => console.error('Error fetching search results:', error));
-            } else {
-                searchResults.innerHTML = '';
-            }
-        });
-
-        function displaySearchResults(friends) {
-            searchResults.innerHTML = ''; //clear previous data
-
-            if(friends.length > 0) {
-                friends.forEach(friend => {
-                    const li = document.createElement('li');
-                    li.classList.add('search-result-item');
-
-                    const username = document.createElement('span');
-                    username.textContent = friend.username;
-
-                    li.appendChild(username);
-                    li.addEventListener('click', () => sendFriendRequest(friend));
-                    searchResults.appendChild(li);
-                });
-            }
-            else {
-                searchResults.innerHTML = '<li>No results found</li>';
-            }
-        }
-
-        function sendFriendRequest (user) {
-
-            fetch(`/${user.id}/send-request`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ friendId: user.id }) //send the user id in the request body
-            })
-                .then(response => {
-                    return response.text();
-                })
-                .then(message => {
-                    alert(message);
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        const closeBtn = document.getElementById('closeBtn');
-        closeBtn.addEventListener('click', () => {
-            addFriendPopup.style.display = 'none';
-            location.reload(); //refresh the page
-        });
-
-        const declineYesBtn = document.getElementById("declineYesBtn");
-        declineYesBtn.addEventListener('click', () => {
-            if (selectedRecord){
-                answer = 'No';
-                fetch(`/answerRequest/${selectedRecord}/${answer}`, {
-                    method: 'GET',
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            alert('Request declined 😔');
-                            location.reload(); //refresh the page
-                        } else {
-                            alert('Error declining a request.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            }
-        });
-
-        const declineNoBtn = document.getElementById("declineNoBtn");
-        declineNoBtn.addEventListener('click', () => {
-            declineRequestPopup.style.display = 'none'; //hide popup
-        });
-
         document.querySelector('.main-container').addEventListener('click', (event) => {
             if (event.target.closest('.deleteFriendBtn')) {
                 const deleteFriendBtn = event.target.closest('.deleteFriendBtn');
@@ -744,55 +650,130 @@
             }
         });
 
-        //remove the popup when 'Yes' or 'No' is clicked
-        const removeYesBtn = document.getElementById("removeYesBtn");
-        removeYesBtn.addEventListener('click', () => {
-            if (selectedRecord){
-                fetch(`/deleteRecord/${selectedRecord}`, {
-                    method: 'GET',
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            alert('Friend removed 😔');
-                            location.reload(); //refresh the page
-                        } else {
-                            alert('Error in deleting a friend.');
-                        }
+        const addFriendBtn = document.querySelector('.plusBtn')
+        addFriendBtn.addEventListener('click', () => {
+           addFriendPopup.style.display = 'block';
+           addFriendPopup.style.opacity = '1';
+        });
+
+        friendSearchInput.addEventListener('keyup', () => {
+            const query = friendSearchInput.value;
+
+            //check if input not empty
+            if (query.length > 1) {
+                //send AJAX request to search books
+                fetch(`/friends/search-json?query=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        displaySearchResults(data);
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+                    .catch(error => console.error('Error fetching search results:', error));
+            } else {
+                searchResults.innerHTML = '';
             }
         });
 
-        const removeNoBtn = document.getElementById("removeNoBtn");
-        removeNoBtn.addEventListener('click', () => {
-            deleteFriendPopup.style.display = 'none'; //hide popup
-        });
+        function displaySearchResults(friends) {
+            searchResults.innerHTML = ''; //clear previous data
 
-        const cancelYesBtn = document.getElementById("cancelYesBtn");
-        cancelYesBtn.addEventListener('click', () => {
-            if (selectedRecord){
-                fetch(`/deleteRecord/${selectedRecord}`, {
-                    method: 'GET',
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            alert('Request canceled 😔');
-                            location.reload(); //refresh the page
-                        } else {
-                            alert('Error canceling a request.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+            if(friends.length > 0) {
+                friends.forEach(friend => {
+                    const li = document.createElement('li');
+                    li.classList.add('search-result-item');
+
+                    const username = document.createElement('span');
+                    username.textContent = friend.username;
+
+                    li.appendChild(username);
+                    li.addEventListener('click', () => sendFriendRequest(friend));
+                    searchResults.appendChild(li);
+                });
             }
+            else {
+                searchResults.innerHTML = '<li>No results found</li>';
+            }
+        }
+
+        function sendFriendRequest (user) {
+
+            fetch(`/${user.id}/send-request`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ friendId: user.id }) //send the user id in the request body
+            })
+                .then(response => {
+                    return response.text();
+                })
+                .then(message => {
+                    alert(message);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+
+
+        const closeBtn = document.getElementById('closeBtn');
+        closeBtn.addEventListener('click', () => {
+            addFriendPopup.style.display = 'none';
+            location.reload(); //refresh the page
         });
 
-        const cancelNoBtn = document.getElementById("cancelNoBtn");
-        cancelNoBtn.addEventListener('click', () => {
-            cancelRequestPopup.style.display = 'none'; //hide popup
+        document.body.addEventListener('click', (event) => {
+            const target = event.target;
+
+            //handle Yes buttons
+            if (target.id === 'declineYesBtn') {
+                if (selectedRecord) {
+                    answer = 'No';
+                    fetch(`/answerRequest/${selectedRecord}/${answer}`, { method: 'GET' })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Request declined 😔');
+                                location.reload();
+                            } else {
+                                alert('Error declining request.');
+                            }
+                        })
+                        .catch(console.error);
+                }
+            } else if (target.id === 'removeYesBtn') {
+                if (selectedRecord) {
+                    fetch(`/deleteRecord/${selectedRecord}`, { method: 'GET' })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Friend removed 😔');
+                                location.reload();
+                            } else {
+                                alert('Error deleting friend.');
+                            }
+                        })
+                        .catch(console.error);
+                }
+            } else if (target.id === 'cancelYesBtn') {
+                if (selectedRecord) {
+                    fetch(`/deleteRecord/${selectedRecord}`, { method: 'GET' })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Request canceled 😔');
+                                location.reload();
+                            } else {
+                                alert('Error canceling request.');
+                            }
+                        })
+                        .catch(console.error);
+                }
+            }
+
+            //handle No buttons
+            if (target.id === 'declineNoBtn') {
+                declineRequestPopup.style.display = 'none';
+            } else if (target.id === 'removeNoBtn') {
+                deleteFriendPopup.style.display = 'none';
+            } else if (target.id === 'cancelNoBtn') {
+                cancelRequestPopup.style.display = 'none';
+            }
         });
     });
 

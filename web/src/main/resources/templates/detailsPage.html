@@ -606,6 +606,18 @@
     const ratingDesc = document.getElementById('ratingDesc');
     const ratingStars = document.getElementById('ratingStars');
 
+    //toggle dropdown visibility when the button is clicked
+    dropdownButton.addEventListener('click', function() {
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    //close dropdown if clicked outside
+    window.addEventListener('click', function(e) {
+        if (!dropdownButton.contains(e.target)) {
+            dropdownMenu.style.display = 'none';
+        }
+    });
+
     const editBtn = document.querySelector('.editBtn');
     editBtn.addEventListener('click', () => {
        editPopup.style.display = 'block'; //show edit popup
@@ -613,7 +625,7 @@
 
         //parse stars from the emoji representation
         const starsText = ratingStars.innerText;
-        let starCount = starsText.split('⭐').length - 1; // Count full stars (⭐)
+        let starCount = starsText.split('⭐').length - 1; //count full stars (⭐)
 
         //check for a half-star (✨) at the end
         if (starsText.endsWith('✨')) {
@@ -686,17 +698,6 @@
         deletePopup.style.display = 'none';
     });
 
-    //toggle dropdown visibility when the button is clicked
-    dropdownButton.addEventListener('click', function() {
-        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    //close dropdown if clicked outside
-    window.addEventListener('click', function(e) {
-        if (!dropdownButton.contains(e.target)) {
-            dropdownMenu.style.display = 'none';
-        }
-    });
 </script>
 </body>
 </html>
