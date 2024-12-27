@@ -274,7 +274,7 @@ public class BookController {
     public String findBooksByAuthor(@PathVariable("author") String author, Model model) {
         List<Book> books = bookRepository.findByAuthor(author);
         model.addAttribute("books", books);
-        return "index";
+        return "books";
     }
 
     //genres page
