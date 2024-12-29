@@ -14,7 +14,7 @@
             margin: 0px;
             background-color: #8c9cef;
             padding: 1.5%;
-            width: 100%;
+            width: auto;
             font-size: 25px;
             font-family: geneva;
         }
@@ -62,12 +62,6 @@
             margin-bottom: 10px;
         }
 
-        .content {
-            margin-top: 30px;
-            flex-grow: 1;
-            overflow: auto;
-        }
-
         .searchBar {
             align-items: center;
             margin: auto;
@@ -88,7 +82,7 @@
             width: 121%;
             box-sizing: border-box;
             border: 2px solid #ccc;
-            border-radius: 4px;
+            border-radius: 10px;
             font-size: 16px;
             background-color: white;
             background-image: url("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/search-512.png");
@@ -123,28 +117,37 @@
         }
 
         .content {
-            margin-top: 20px;
-            margin-bottom: 20px;
             flex-grow: 1;
+            margin: 20px 50px;
             overflow: auto;
-            padding: 20px;
+            display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            align-items: flex-start;
-            display: block;
+            align-items: center;
+            padding: 25px;
+            gap: 20px;
+            box-sizing: border-box;
+            text-align: center;
         }
 
         .genre-button {
-            margin: 20px 30px;
-            font-size: 25px;
-            padding: 25px;
+            width: 210px;
+            margin: 20px;
+            height: 50px;
+            font-size: 19px;
+            padding: 20px;
             background-color: white;
-            border: 1px solid #ddd;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             display: inline-block;
+            justify-content: center;
+            align-items: center;
             text-align: center;
+            white-space: normal;
+            word-wrap: break-word;
+            border: 1px solid #4d5cda;
         }
+
 
         .books {
             margin: 0 auto;
@@ -219,29 +222,29 @@
 
         <div class="content">
 
-            <a class="genre-button href2" th:href="@{/books/genre/Fantasy}">Fantasy</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Science Fiction}">Science Fiction</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Dystopian}">Dystopian</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Action Adventure}">Action & Adventure</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Mystery}">Mystery</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Horror}">Horror</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Thriller}">Thriller</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Historical Fiction}">Historical Fiction</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Romance}">Romance</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Fiction}">Fiction</a>
-            <a class="genre-button href2" th:href="@{/books/genre/LGBTQ}">LGBTQ+</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Literary Fiction}">Literary Fiction</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Magical Realism}">Magical Realism</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Graphic Novel}">Graphic Novel</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Short Story}">Short Story</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Young Adult}">Young Adult</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Memoir Autobiography}">Memoir & Autobiography</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Self-help}">Self-help</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Comedy}">Comedy</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Drama}">Drama</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Dark}">Dark</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Contemporary}">Contemporary</a>
-            <a class="genre-button href2" th:href="@{/books/genre/Classic Literature}">Classic Literature</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Fantasy}">Fantasy 🦄</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Science Fiction}">Science Fiction 🔬</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Dystopian}">Dystopian 🏹</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Action Adventure}">Action & Adventure 🏃</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Mystery}">Mystery 🕵🏽‍</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Horror}">Horror 👻</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Thriller}">Thriller 💀</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Historical Fiction}">Historical Fiction 📜</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Romance}">Romance 🥀</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Fiction}">Fiction 📖</a>
+            <a class="genre-button href2" th:href="@{/books/genre/LGBTQ}">LGBTQ+ 🏳️‍🌈</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Literary Fiction}">Literary Fiction 📚</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Magical Realism}">Magical Realism 🧚🏼‍</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Graphic Novel}">Graphic Novel 🦸‍</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Short Story}">Short Story 🚀</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Young Adult}">Young Adult 🧑</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Memoir Autobiography}">Memoir & Autobiography 📝</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Self-help}">Self-help 🤲</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Comedy}">Comedy 😹</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Drama}">Drama 💔</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Dark}">Dark 🖤</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Contemporary}">Contemporary ⭐️</a>
+            <a class="genre-button href2" th:href="@{/books/genre/Classic Literature}">Classic Literature 🕯️</a>
 
             <div class="image-container">
                 <ul class="books">
