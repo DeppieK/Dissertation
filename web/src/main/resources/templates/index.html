@@ -183,6 +183,11 @@
             font-weight: bold;
         }
 
+        .review-text {
+            color: purple;
+            font-style: italic;
+        }
+
     </style>
 </head>
 
@@ -233,6 +238,11 @@
                     <span th:text="${update.username}" class="username"></span>
                     <span th:switch="${update.type}">
                         <span th:case="'rating'">gave this book <span th:text="${update.stars}"></span> stars ⭐️</span>
+                        <span th:case="'review'">
+                            wrote a review for this book <span th:text="${update.bookTitle}"></span> 🖋
+                            <br/>
+                            <span th:text="|&quot;${update.description}&quot;|" class="review-text"></span>
+                        </span>
                         <span th:case="'currentlyReading'">is currently reading <span th:text="${update.bookTitle}"></span> 📖💜</span>
                         <span th:case="'read'">read <span th:text="${update.bookTitle}"></span> 🤓</span>
                         <span th:case="'wantToRead'">wants to read <span th:text="${update.bookTitle}"></span> 💭</span>

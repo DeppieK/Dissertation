@@ -90,8 +90,25 @@ public class BookController {
                     rating.getBook().getTitle(),
                     rating.getBook().getPhotoUrl(),
                     rating.getDateUpdated(),
-                    rating.getStars()
+                    rating.getStars(),
+                    null
             ));
+        }
+
+        //reviews
+        for (Ratings rating : friendsRatings) {
+            if (rating.getDescription() != null && !rating.getDescription().trim().isEmpty()) {
+                allUpdates.add(new FriendsUpdateDto(
+                        "review",
+                        rating.getUser().getUsername(),
+                        rating.getBook().getId(),
+                        rating.getBook().getTitle(),
+                        rating.getBook().getPhotoUrl(),
+                        rating.getDateUpdated(),
+                        0,
+                        rating.getDescription()
+                ));
+            }
         }
 
         //currently reading
@@ -105,7 +122,8 @@ public class BookController {
                     reading.getBook().getTitle(),
                     reading.getBook().getPhotoUrl(),
                     reading.getShelfBook().getDateUpdated(),
-                    0
+                    0,
+                    null
             ));
         }
 
@@ -120,7 +138,8 @@ public class BookController {
                     read.getBook().getTitle(),
                     read.getBook().getPhotoUrl(),
                     read.getShelfBook().getDateUpdated(),
-                    0
+                    0,
+                    null
             ));
         }
 
@@ -135,7 +154,8 @@ public class BookController {
                     wantToRead.getBook().getTitle(),
                     wantToRead.getBook().getPhotoUrl(),
                     wantToRead.getShelfBook().getDateUpdated(),
-                    0
+                    0,
+                    null
             ));
         }
 
@@ -160,17 +180,7 @@ public class BookController {
         List<Ratings> ratings = ratingsRepository.findByBookId(bookId);
         List<Genre> genres = genreRepository.findByBookId(bookId);
 
-        //check if there are any ratings
-        boolean hasRatings = !ratings.isEmpty();
-
-        double averageRating = 0.0;
-        if (hasRatings) {
-            double totalRating = 0;
-            for (Ratings rating : ratings) {
-                totalRating += rating.getStars();
-            }
-            averageRating = totalRating / ratings.size();
-        }
+        AverageRating averageRating = getAverageRating(ratings);
 
         Ratings userRating = null;
         boolean userRatingExists = false;
@@ -197,10 +207,28 @@ public class BookController {
         model.addAttribute("genres", genres);
         model.addAttribute("userRatingExists", userRatingExists);
         model.addAttribute("userRating", userRating);
-        model.addAttribute("hasRatings", hasRatings);
-        model.addAttribute("averageRating", averageRating);
+        model.addAttribute("hasRatings", averageRating.hasRatings());
+        model.addAttribute("averageRating", averageRating.averageRating());
 
         return "detailsPage";
+    }
+
+    private static AverageRating getAverageRating(List<Ratings> ratings) {
+        //check if there are any ratings
+        boolean hasRatings = !ratings.isEmpty();
+
+        double average = 0.0;
+        if (hasRatings) {
+            double totalRating = 0;
+            for (Ratings rating : ratings) {
+                totalRating += rating.getStars();
+            }
+            average = totalRating / ratings.size();
+        }
+        return new AverageRating(hasRatings, average);
+    }
+
+    private record AverageRating(boolean hasRatings, double averageRating) {
     }
 
 

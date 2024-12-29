@@ -19,4 +19,5 @@ public class FriendsUpdateDto {
     private String bookPhotoUrl;
     private LocalDateTime dateUpdated;
     private double stars;
+    private String description;
 }
