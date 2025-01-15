@@ -4,12 +4,14 @@ import com.bookApp.web.book.Book;
 import com.bookApp.web.book.BookRepository;
 import com.bookApp.web.book.BookSearchService;
 import com.bookApp.web.book.BookService;
+import com.bookApp.web.ratings.RatingsRepository;
 import com.bookApp.web.shelf_book.ShelfBook;
 import com.bookApp.web.shelf_book.ShelfBookRepository;
 import com.bookApp.web.shelf_book.ShelfBookService;
 import com.bookApp.web.user.User;
 import com.bookApp.web.user.UserService;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,11 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Controller
 public class BookshelfController {
@@ -39,11 +37,12 @@ public class BookshelfController {
     private final BookSearchService bookSearchService;
     private final ShelfBookService shelfBookService;
     private final Book book;
+    private final RatingsRepository ratingsRepository;
 
     @Autowired
     public BookshelfController(BookRepository bookRepository, BookService bookService,
                                BookshelfRepository bookshelfRepository, BookshelfService bookshelfService,
-                               UserService userService, ShelfBookRepository shelfBookRepository, BookSearchService bookSearchService, ShelfBookService shelfBookService, Book book) {
+                               UserService userService, ShelfBookRepository shelfBookRepository, BookSearchService bookSearchService, ShelfBookService shelfBookService, Book book, RatingsRepository ratingsRepository) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookshelfRepository = bookshelfRepository;
@@ -53,6 +52,7 @@ public class BookshelfController {
         this.bookSearchService = bookSearchService;
         this.shelfBookService = shelfBookService;
         this.book = book;
+        this.ratingsRepository = ratingsRepository;
     }
 
     //bookshelf page
@@ -234,4 +234,76 @@ public class BookshelfController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
+
+    @PostMapping("/sortByDateAsc")
+    public String sortByDateAsc(@RequestParam String label, Model model, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+
+        Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
+        List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfIdAndSort(shelfId, Sort.by(Sort.Direction.ASC,"dateCreated"));
+        model.addAttribute("shelfBooks", sortedShelfBooks);
+        model.addAttribute("label", label);
+
+        return "bookshelfDetails";
+    }
+
+    @PostMapping("/sortByDateDesc")
+    public String sortByDateDesc(@RequestParam String label, Model model, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+
+        Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
+        List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfIdAndSort(shelfId, Sort.by(Sort.Direction.DESC,"dateCreated"));
+        model.addAttribute("shelfBooks", sortedShelfBooks);
+        model.addAttribute("label", label);
+
+        return "bookshelfDetails";
+    }
+
+    @PostMapping("/sortByRatingAsc")
+    public String sortByRatingAsc(@RequestParam String label, Model model, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+
+        Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
+        List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfId(shelfId);
+        Map<Book, Double> bookRatings = new HashMap<>();
+
+        for (ShelfBook shelfBook : sortedShelfBooks) {
+            Book book = shelfBook.getBook();
+            Double averageRating = ratingsRepository.findAverageRatingForBook(book);
+            bookRatings.put(book, (averageRating != null) ? averageRating : 0.0);
+        }
+
+        sortedShelfBooks.sort(Comparator.comparing(shelfBook -> bookRatings.get(shelfBook.getBook())));
+
+        model.addAttribute("shelfBooks", sortedShelfBooks);
+        model.addAttribute("label", label);
+        model.addAttribute("bookRatings", bookRatings);
+
+        return "bookshelfDetails";
+    }
+
+    @PostMapping("/sortByRatingDesc")
+    public String sortByRatingDesc(@RequestParam String label, Model model, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+
+        Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
+        List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfId(shelfId);
+        Map<Book, Double> bookRatings = new HashMap<>();
+
+        for (ShelfBook shelfBook : sortedShelfBooks) {
+            Book book = shelfBook.getBook();
+            Double averageRating = ratingsRepository.findAverageRatingForBook(book);
+            bookRatings.put(book, (averageRating != null) ? averageRating : 0.0);
+        }
+
+        sortedShelfBooks.sort(Comparator.comparing(shelfBook -> bookRatings.get(shelfBook.getBook()), Comparator.reverseOrder()));
+
+        model.addAttribute("shelfBooks", sortedShelfBooks);
+        model.addAttribute("label", label);
+        model.addAttribute("bookRatings", bookRatings);
+
+        return "bookshelfDetails";
+    }
+
+
 }

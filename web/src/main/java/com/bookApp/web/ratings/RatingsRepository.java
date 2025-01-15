@@ -1,5 +1,6 @@
 package com.bookApp.web.ratings;
 
+import com.bookApp.web.book.Book;
 import com.bookApp.web.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,5 +28,8 @@ public interface RatingsRepository extends JpaRepository<Ratings, Long> {
             "AND (f.receiver = :currentUser OR f.sender = :currentUser) " +
             "AND r.user <> :currentUser")
     List<Ratings> getFriendsRatingsInASpecificTimestamp(@Param("currentUser") User currentUser, @Param("thresholdDate") LocalDateTime thresholdDate);
+
+    @Query("SELECT AVG(r.stars) FROM Ratings r WHERE r.book = :book")
+    Double findAverageRatingForBook(@Param("book") Book book);
 
 }

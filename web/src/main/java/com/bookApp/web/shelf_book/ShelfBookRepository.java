@@ -2,6 +2,7 @@ package com.bookApp.web.shelf_book;
 
 import com.bookApp.web.user.User;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +17,12 @@ public interface ShelfBookRepository extends JpaRepository<ShelfBook, Integer> {
 
     List<ShelfBook> findByShelfId(Long shelfId);
 
+    @Query("SELECT sb FROM ShelfBook sb WHERE sb.shelfId = :shelfId")
+    List<ShelfBook> findByShelfIdAndSort(@Param("shelfId") Long shelfId, Sort sort);
+
+    /*@Query("SELECT sb.book FROM ShelfBook sb WHERE sb.shelfId = :shelfId")
+    List<Long> findBookIdsByShelfId(@Param("shelfId") Long shelfId);*/
+
     ShelfBook findByShelfIdAndBookId(Long shelfId, Long bookId);
 
 
@@ -27,6 +34,11 @@ public interface ShelfBookRepository extends JpaRepository<ShelfBook, Integer> {
     // Custom query to count books by user
     @Query("SELECT COUNT(sb) FROM ShelfBook sb JOIN Bookshelf b ON sb.shelfId = b.shelfId WHERE b.user = :user")
     long countBooksByUser(@Param("user") User user);
+
+    //List <ShelfBook> findByOrderByDateCreatedAsc();
+
+    //List <ShelfBook> findByOrderByDateCreatedDesc();
+
 
     @Query("SELECT sb FROM ShelfBook sb JOIN Book b ON sb.book.id = b.id WHERE sb.shelfId = :shelfId AND " +
             "(LOWER(b.title) LIKE CONCAT('%', LOWER(:query), '%') OR " +

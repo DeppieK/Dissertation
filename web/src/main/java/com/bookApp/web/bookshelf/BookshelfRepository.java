@@ -53,4 +53,5 @@ public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
             @Param("currentUser") User currentUser,
             @Param("thresholdDate") LocalDateTime thresholdDate,
             @Param("bookshelfLabel") String bookshelfLabel);
+
 }

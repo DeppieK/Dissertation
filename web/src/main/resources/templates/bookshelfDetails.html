@@ -445,6 +445,59 @@
             font-size: 18px;
         }
 
+        .hover {
+            background-color: #4d5cda;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .hover:hover {
+            background-color: #3a48b1;
+        }
+
+        .dropdown-menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            display: none;
+            background-color: #f8f9ff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            width: 200px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .dropdown-menu li {
+            padding: 0;
+        }
+
+        .dropdown-menu li button {
+            background-color: #f8f9ff;
+            border: none;
+            padding: 12px 15px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            font-size: 13px;
+            color: #333;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-menu li button:hover {
+            background-color: #e0e4ff;
+        }
+
+        .dropdown-menu {
+            right: 0;
+            top: 40px;
+        }
     </style>
 
 <body>
@@ -509,8 +562,26 @@
                         <img th:src="@{/images/2.png}" />
                     </button>
                     <button class="sortBtn">
-                        <img th:src="@{/images/1.png}" />
+                        <img th:src="@{/images/test.png}" />
                     </button>
+                    <ul class="dropdown-menu" id="dropdownMenu">
+                        <form th:action="@{/sortByDateAsc}" method="post">
+                            <li class="hover"><button type="submit">Sort by date added ⬆️</button></li>
+                            <input type="hidden" name="label" th:value="${label}" />
+                        </form>
+                        <form th:action="@{/sortByDateDesc}" method="post">
+                            <li class="hover"><button type="submit">Sort by date added ⬇️</button></li>
+                            <input type="hidden" name="label" th:value="${label}" />
+                        </form>
+                        <form th:action="@{/sortByRatingAsc}" method="post">
+                            <li class="hover"><button type="submit">Sort by average rating ⬆️</button></li>
+                            <input type="hidden" name="label" th:value="${label}" />
+                        </form>
+                        <form th:action="@{/sortByRatingDesc}" method="post">
+                            <li class="hover"><button type="submit">Sort by average rating ⬇️</button></li>
+                            <input type="hidden" name="label" th:value="${label}" />
+                        </form>
+                    </ul>
                 </div>
                 <div id="searchPopup">
                     <label class="popupLabel">Add books in your bookshelf</label>
@@ -536,6 +607,10 @@
                     <button class="deleteBtn" th:data-book-id="${shelfBook.book.id}">
                         <img th:src="@{/images/test2.png}"/>
                     </button>
+                    <!--<p>
+                        Average Rating:
+                        <span th:text="${${bookRatings}[shelfBook.book] != null ? ${bookRatings}[shelfBook.book] : 0.0}">0.0</span>
+                    </p>-->
                     <div id="deletePopup">
                         <label>Are you sure you want to remove this book from your bookshelf?</label></br>
                         <button id="yesBtn">Yes</button>
@@ -551,6 +626,7 @@
 
         let selectedBookId = null; //to store the bookId for the clicked delete button
 
+        const dropdownMenu = document.getElementById('dropdownMenu');
         const searchPopup = document.getElementById('searchPopup');
         const bookSearchInput = document.getElementById('bookSearchInput');
         const searchResults = document.getElementById('searchResults');
@@ -558,6 +634,19 @@
         const editInput = document.getElementById('editInput');
         const shelfLabel = document.getElementById('shelfLabelText');
         const deletePopup = document.getElementById('deletePopup');
+
+        //toggle dropdown visibility when the sort button is clicked
+        const sortButton = document.querySelector('.BookshelfButtons .sortBtn');
+        sortButton.addEventListener('click', function() {
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        //close dropdown if clicked outside
+        window.addEventListener('click', function (e) {
+            if (!sortButton.contains(e.target)) {
+                dropdownMenu.style.display = 'none';
+            }
+        });
 
         //show add books popup on click of plus button
         const plusBtn = document.querySelector('.BookshelfButtons .plusBtn');

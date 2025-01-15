@@ -1,5 +1,6 @@
 package com.bookApp.web.book;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +25,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findByISBN(Long isbn);
     List<Book> findByAuthor(String author);
+
+    /*@Query("SELECT b FROM Book b WHERE b.id IN :bookIds")
+    List<Book> findByBookAndSort (@Param("book") List<Book> books, Sort sort);*/
 }
