@@ -69,7 +69,7 @@ public class BookController {
         User user = userService.findByUsername(username);
 
         LocalDateTime currentDate = LocalDateTime.now();
-        LocalDateTime thresholdDate = currentDate.minusDays(20);
+        LocalDateTime thresholdDate = currentDate.minusDays(30);
 
         List<Ratings> friendsRatings = ratingsRepository.getFriendsRatingsInASpecificTimestamp(user,thresholdDate);
 
