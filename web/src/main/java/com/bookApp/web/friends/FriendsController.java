@@ -119,15 +119,20 @@ public class FriendsController {
         LocalDateTime currentDate = LocalDateTime.now();
 
         if (receiver != null) {
-            Friends friend = new Friends();
-            friend.setSender(sender);
-            friend.setReceiver(receiver);
-            friend.setStatus(Friends.Status.PENDING);
-            friend.setDateCreated(currentDate);
-            friend.setDateUpdated(currentDate);
+            if (friendsRepository.findAllBySenderAndReceiverAndStatus(sender, receiver, Friends.Status.PENDING).isEmpty()) {
+                Friends friend = new Friends();
+                friend.setSender(sender);
+                friend.setReceiver(receiver);
+                friend.setStatus(Friends.Status.PENDING);
+                friend.setDateCreated(currentDate);
+                friend.setDateUpdated(currentDate);
 
-            friendsRepository.save(friend);
-            return ResponseEntity.ok("Friend Request sent \uD83E\uDD73");
+                friendsRepository.save(friend);
+                return ResponseEntity.ok("Friend Request sent \uD83E\uDD73");
+            }
+            else{
+                return ResponseEntity.ok("Friend Request already sent.");
+            }
         }
         else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
