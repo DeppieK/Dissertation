@@ -565,19 +565,19 @@
                         <img th:src="@{/images/test.png}" />
                     </button>
                     <ul class="dropdown-menu" id="dropdownMenu">
-                        <form th:action="@{/sortByDateAsc}" method="post">
+                        <form th:action="@{/sortByDateAsc}" method="get">
                             <li class="hover"><button type="submit">Sort by date added ⬆️</button></li>
                             <input type="hidden" name="label" th:value="${label}" />
                         </form>
-                        <form th:action="@{/sortByDateDesc}" method="post">
+                        <form th:action="@{/sortByDateDesc}" method="get">
                             <li class="hover"><button type="submit">Sort by date added ⬇️</button></li>
                             <input type="hidden" name="label" th:value="${label}" />
                         </form>
-                        <form th:action="@{/sortByRatingAsc}" method="post">
+                        <form th:action="@{/sortByRatingAsc}" method="get">
                             <li class="hover"><button type="submit">Sort by average rating ⬆️</button></li>
                             <input type="hidden" name="label" th:value="${label}" />
                         </form>
-                        <form th:action="@{/sortByRatingDesc}" method="post">
+                        <form th:action="@{/sortByRatingDesc}" method="get">
                             <li class="hover"><button type="submit">Sort by average rating ⬇️</button></li>
                             <input type="hidden" name="label" th:value="${label}" />
                         </form>
@@ -603,14 +603,14 @@
                     <a th:href="@{/books/{bookId}(bookId = ${shelfBook.book.id})}">
                         <img th:src="${shelfBook.book.photoUrl}" alt="Book Cover"/>
                     </a>
-                    <p id="book-title" th:text="${shelfBook.book.title}"></p>
+                    <div>
+                        <p id="book-title" th:text="${shelfBook.book.title}"></p>
+                        <span th:text="${bookRatings[shelfBook.book] != null ? bookRatings[shelfBook.book] : 0.0} + '⭐'"></span>
+                    </div>
+
                     <button class="deleteBtn" th:data-book-id="${shelfBook.book.id}">
                         <img th:src="@{/images/test2.png}"/>
                     </button>
-                    <!--<p>
-                        Average Rating:
-                        <span th:text="${${bookRatings}[shelfBook.book] != null ? ${bookRatings}[shelfBook.book] : 0.0}">0.0</span>
-                    </p>-->
                     <div id="deletePopup">
                         <label>Are you sure you want to remove this book from your bookshelf?</label></br>
                         <button id="yesBtn">Yes</button>

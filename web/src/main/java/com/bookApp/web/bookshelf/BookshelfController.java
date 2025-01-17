@@ -122,6 +122,16 @@ public class BookshelfController {
         Long shelfId = bookshelves.getShelfId();
 
         List<ShelfBook> shelfBooks = shelfBookRepository.findByShelfId(shelfId);
+
+        Map<Book, Double> bookRatings = new HashMap<>();
+
+        for (ShelfBook shelfBook : shelfBooks) {
+            Book book = shelfBook.getBook();
+            Double averageRating = ratingsRepository.findAverageRatingForBook(book);
+            bookRatings.put(book, (averageRating != null) ? averageRating : 0.0);
+        }
+
+        model.addAttribute("bookRatings", bookRatings);
         model.addAttribute("shelfBooks", shelfBooks);
 
         return "bookshelfDetails";
@@ -235,31 +245,53 @@ public class BookshelfController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @PostMapping("/sortByDateAsc")
+    @GetMapping("/sortByDateAsc")
     public String sortByDateAsc(@RequestParam String label, Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
         Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
         List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfIdAndSort(shelfId, Sort.by(Sort.Direction.ASC,"dateCreated"));
+
+        //extract in a  method?
+        Map<Book, Double> bookRatings = new HashMap<>();
+
+        for (ShelfBook shelfBook : sortedShelfBooks) {
+            Book book = shelfBook.getBook();
+            Double averageRating = ratingsRepository.findAverageRatingForBook(book);
+            bookRatings.put(book, (averageRating != null) ? averageRating : 0.0);
+        }
+
         model.addAttribute("shelfBooks", sortedShelfBooks);
         model.addAttribute("label", label);
+        model.addAttribute("bookRatings", bookRatings);
 
         return "bookshelfDetails";
     }
 
-    @PostMapping("/sortByDateDesc")
+    @GetMapping("/sortByDateDesc")
     public String sortByDateDesc(@RequestParam String label, Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
         Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
         List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfIdAndSort(shelfId, Sort.by(Sort.Direction.DESC,"dateCreated"));
+
+        Map<Book, Double> bookRatings = new HashMap<>();
+
+        for (ShelfBook shelfBook : sortedShelfBooks) {
+            Book book = shelfBook.getBook();
+            Double averageRating = ratingsRepository.findAverageRatingForBook(book);
+            bookRatings.put(book, (averageRating != null) ? averageRating : 0.0);
+        }
+
         model.addAttribute("shelfBooks", sortedShelfBooks);
         model.addAttribute("label", label);
+        model.addAttribute("bookRatings", bookRatings);
+
 
         return "bookshelfDetails";
     }
 
-    @PostMapping("/sortByRatingAsc")
+    @GetMapping("/sortByRatingAsc")
     public String sortByRatingAsc(@RequestParam String label, Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
@@ -282,7 +314,7 @@ public class BookshelfController {
         return "bookshelfDetails";
     }
 
-    @PostMapping("/sortByRatingDesc")
+    @GetMapping("/sortByRatingDesc")
     public String sortByRatingDesc(@RequestParam String label, Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
