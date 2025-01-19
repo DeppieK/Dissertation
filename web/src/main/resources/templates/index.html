@@ -70,6 +70,7 @@
             display: flex;
             position: relative;
             flex-direction: column;
+            width: 100%;
         }
 
         .searchBar {
@@ -188,6 +189,20 @@
             font-style: italic;
         }
 
+        .avgRating {
+            color: #4d5cda;
+            font-weight: bold;
+        }
+
+        .userRating{
+            margin-top: 10px;
+        }
+
+        .userRatingStars{
+            color: #4d5cda;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 
@@ -251,7 +266,17 @@
                 <a th:href="@{/books/{bookId}(bookId = ${update.bookId})}">
                     <img th:src="${update.bookPhotoUrl}" />
                 </a>
-                <p th:text="${update.bookTitle}" class="center"></p>
+                <div class="center">
+                    <div class="averageRating">
+                        <p th:text="${update.bookTitle}"></p>
+                        Average Rating:
+                        <span class = "avgRating" th:text="${bookRatings[update.bookId] != null ? bookRatings[update.bookId] : 0.0} + '⭐'"></span>
+                    </div>
+                    <div class="userRating">
+                        Your Rating:
+                        <span class = "userRatingStars" th:text="${currentUserRatings[update.bookId] != null ? currentUserRatings[update.bookId] : 0.0} + '⭐'"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

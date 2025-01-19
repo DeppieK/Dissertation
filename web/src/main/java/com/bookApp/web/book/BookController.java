@@ -43,10 +43,11 @@ public class BookController {
     private final ShelfBookService shelfBookService;
     private final ShelfBookRepository shelfBookRepository;
     private final BookshelfRepository bookshelfRepository;
+    private final Book book;
 
     //constructor
     @Autowired
-    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService, GenreRepository genreRepository, BookshelfService bookshelfService, ShelfBookService shelfBookService, ShelfBookRepository shelfBookRepository, BookshelfRepository bookshelfRepository) {
+    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService, GenreRepository genreRepository, BookshelfService bookshelfService, ShelfBookService shelfBookService, ShelfBookRepository shelfBookRepository, BookshelfRepository bookshelfRepository, Book book) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookSearchService = bookSearchService;
@@ -58,6 +59,7 @@ public class BookController {
         this.shelfBookService = shelfBookService;
         this.shelfBookRepository = shelfBookRepository;
         this.bookshelfRepository = bookshelfRepository;
+        this.book = book;
     }
 
     //main page
@@ -163,7 +165,29 @@ public class BookController {
 
         System.out.println(allUpdates);
 
+        Map<Long, Double> bookRatings = new HashMap<>();
+
+        for (FriendsUpdateDto update : allUpdates) {
+            long bookId = update.getBookId();
+            Double averageRating = ratingsRepository.findAverageRatingForBookId(bookId);
+            bookRatings.put(bookId, (averageRating != null) ? averageRating : 0.0);
+        }
+
+        Map<Long, Double> currentUserRatings = new HashMap<>();
+        Double userRating = 0.0;
+        for (FriendsUpdateDto update : allUpdates) {
+            long bookId = update.getBookId();
+            Ratings rating = ratingsRepository.findByBookIdAndUserId(bookId, user.getId());
+            if (rating != null) {
+                System.out.println("Hi!!");
+                userRating = rating.getStars();
+            }
+            currentUserRatings.put(bookId, userRating);
+        }
+
+        model.addAttribute("bookRatings", bookRatings);
         model.addAttribute("allUpdates", allUpdates);
+        model.addAttribute("currentUserRatings", currentUserRatings);
 
         return "index";
     }
@@ -182,6 +206,7 @@ public class BookController {
 
         AverageRating averageRating = getAverageRating(ratings);
 
+        //change average rating to use the repository method
         Ratings userRating = null;
         boolean userRatingExists = false;
         List<Ratings> otherRatings = new ArrayList<>();
