@@ -212,6 +212,106 @@
             background-color: #4d5cda;
         }
 
+        .currently-reading {
+            margin-top: 20px;
+        }
+
+        .currently-reading h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #4d5cda;
+        }
+
+        .books-container {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .book-item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 400px;
+            background-color: #f8f9ff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        .book-image {
+            width: 100px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .book-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            text-align: left;
+            margin-right: 30px;
+        }
+
+        .book-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .book-author {
+            font-size: 14px;
+            color: rgba(89, 89, 89, 0.85);
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        .progress-bar {
+            background-color: #ddd;
+            height: 10px;
+            border-radius: 5px;
+            flex-grow: 1;
+            margin-right: 10px;
+            position: relative;
+        }
+
+        .progress {
+            background-color: #4d5cda;
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #333;
+        }
+
+        .update-progress-btn {
+            background-color: #5e72e4;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .update-progress-btn:hover {
+            background-color: #4d5cda;
+        }
     </style>
 </head>
 
@@ -255,6 +355,26 @@
         </ul>
     </div>
     <div class="content">
+        <div class="currently-reading">
+            <h3>📖 Currently Reading... 📖</h3>
+            <div class="books-container">
+                <div class="book-item">
+                    <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1571423190i/41057294.jpg" alt="Book Cover" class="book-image">
+                    <div class="book-details">
+                        <p class="book-title">Normal People</p>
+                        <p class="book-author">by Sally Rooney</p>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 60%;"></div>
+                            </div>
+                            <span class="progress-text">60%</span>
+                        </div>
+                        <button class="update-progress-btn">Update Progress</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
         <table>
             <tbody>
             <tr>
