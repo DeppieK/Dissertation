@@ -14,7 +14,7 @@
             margin: 0px;
             background-color: #8c9cef;
             padding: 1.5%;
-            width: 100%;
+            width: auto;
             font-size: 25px;
             font-family: geneva;
         }
@@ -430,6 +430,11 @@
             border-bottom: 1px solid #ddd;
         }
 
+        .amountOfDays {
+            font-size: 10px;
+            opacity: 0.5;
+        }
+
     </style>
 </head>
 <body>
@@ -490,7 +495,12 @@
                 </div>
                 <li th:each="friend : ${friends}" id="friends">
                     <div class="friend-item">
-                        <div  th:text="${friend.sender.id == currentUser.id} ? ${friend.receiver.username} : ${friend.sender.username}"></div>
+                        <div>
+                            <span th:text="${friend.sender.id == currentUser.id} ? ${friend.receiver.username} : ${friend.sender.username}"></span>
+                            <div class="amountOfDays">
+                                <span th:text="${friend.getAmountOfTime()}"></span>
+                            </div>
+                        </div>
                         <button class="deleteFriendBtn" th:friend-id="${friend.id}">
                             <img th:src="@{/images/test2.png}"/>
                         </button>
@@ -509,7 +519,12 @@
                 </div>
                 <li th:each="sentRequest : ${sentRequests}" id="sentRequests">
                     <div class="sentRequest-item">
-                        <div th:text="${sentRequest.receiver.username}"></div>
+                        <div>
+                            <span th:text="${sentRequest.receiver.username}"></span>
+                            <div class="amountOfDays">
+                                <span th:text="${sentRequest.getAmountOfTime()}"></span>
+                            </div>
+                        </div>
                         <button class="cancelBtn" th:friend-id="${sentRequest.id}">
                             <img th:src="@{/images/12.webp}"/>
                         </button>
@@ -530,7 +545,12 @@
                 </div>
                 <li th:each="friendRequests : ${friendRequests}" id="friendRequests">
                     <div class="request-item">
-                        <div th:text="${friendRequests.sender.username}"></div>
+                        <div>
+                            <span th:text="${friendRequests.sender.username}"></span>
+                            <div class="amountOfDays">
+                                <span th:text="${friendRequests.getAmountOfTime()}"></span>
+                            </div>
+                        </div>
                         <div class="button-group">
                             <button class="acceptBtn" th:friend-id="${friendRequests.id}">
                                 <img th:src="@{/images/check-mark-icon-21.png}"/>
@@ -555,7 +575,12 @@
                 </div>
                 <li th:each="declinedRequests : ${declinedRequests}" id="declinedRequests">
                     <div class="declined-item">
-                        <div  th:text="${declinedRequests.sender.username}"></div>
+                        <div>
+                            <span th:text="${declinedRequests.sender.username}"></span>
+                            <div class="amountOfDays">
+                                <span th:text="${declinedRequests.getAmountOfTime()}"></span>
+                            </div>
+                        </div>
                         <button class="deleteBtn" th:friend-id="${declinedRequests.id}">
                             <img th:src="@{/images/test2.png}"/>
                         </button>
@@ -582,7 +607,7 @@
             if (event.target.closest('.deleteFriendBtn')) {
                 const deleteFriendBtn = event.target.closest('.deleteFriendBtn');
                 selectedRecord = deleteFriendBtn.getAttribute('friend-id');
-                const username = deleteFriendBtn.closest('.friend-item').querySelector('div').innerText;
+                const username = deleteFriendBtn.closest('.friend-item').querySelector('span').innerText;
                 document.getElementById('deleteFriendLabel').innerHTML = `Are you sure you want to remove user <span class="username">${username}</span> from your friends?`;
                 deleteFriendPopup.style.display = 'block'; //display popup
                 deleteFriendPopup.style.opacity = '1';
@@ -591,7 +616,7 @@
             if (event.target.closest('.cancelBtn')) {
                 const cancelBtn = event.target.closest('.cancelBtn');
                 selectedRecord = cancelBtn.getAttribute('friend-id');
-                const username = cancelBtn.closest('.sentRequest-item').querySelector('div').innerText;
+                const username = cancelBtn.closest('.sentRequest-item').querySelector('span').innerText;
                 document.getElementById('cancelRequestLabel').innerHTML = `Are you sure you want to cancel your friend request to the user <span class="username">${username}</span>?`;
                 cancelRequestPopup.style.display = 'block'; //display popup
                 cancelRequestPopup.style.opacity = '1';
@@ -600,7 +625,7 @@
             if (event.target.closest('.declineBtn')) {
                 const declineBtn = event.target.closest('.declineBtn');
                 selectedRecord = declineBtn.getAttribute('friend-id');
-                const username = declineBtn.closest('.request-item').querySelector('div').innerText;
+                const username = declineBtn.closest('.request-item').querySelector('span').innerText;
                 document.getElementById('declineRequestLabel').innerHTML = `Are you sure you want to decline user's <span class="username">${username}</span> friend request?`;
                 declineRequestPopup.style.display = 'block'; //display popup
                 declineRequestPopup.style.opacity = '1';

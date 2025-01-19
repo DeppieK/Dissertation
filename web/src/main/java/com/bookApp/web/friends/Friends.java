@@ -69,4 +69,31 @@ public class Friends {
         PENDING, ACCEPTED, DECLINED
     }
 
+    public String getAmountOfTime(){
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime timeSent = dateUpdated;
+
+        long years = java.time.temporal.ChronoUnit.YEARS.between(timeSent, now);
+        if (years > 0){
+            return years + (years == 1 ? " year ago" : " years ago");
+        }
+
+        long months = java.time.temporal.ChronoUnit.MONTHS.between(timeSent, now);
+        if (months > 0){
+            return months + (months == 1 ? " month ago" : " months ago");
+        }
+
+        long days = java.time.temporal.ChronoUnit.DAYS.between(timeSent, now);
+        if (days > 0){
+            return days + (days == 1 ? " day ago" : " days ago");
+        }
+
+        long hours = java.time.temporal.ChronoUnit.HOURS.between(timeSent, now);
+        if (hours > 0){
+            return hours + (hours == 1 ? " hour ago" : " hours ago");
+        }
+
+        return "Just now";
+    }
+
 }
