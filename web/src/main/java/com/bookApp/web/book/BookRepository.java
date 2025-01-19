@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
+    Book findById(long id);
 
     //the query for the search method
     @Query("SELECT b FROM Book b WHERE " +

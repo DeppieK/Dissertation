@@ -29,7 +29,7 @@ public interface RatingsRepository extends JpaRepository<Ratings, Long> {
             "AND r.user <> :currentUser")
     List<Ratings> getFriendsRatingsInASpecificTimestamp(@Param("currentUser") User currentUser, @Param("thresholdDate") LocalDateTime thresholdDate);
 
-    @Query("SELECT AVG(r.stars) FROM Ratings r WHERE r.book = :book")
-    Double findAverageRatingForBook(@Param("book") Book book);
+    @Query("SELECT AVG(r.stars) FROM Ratings r WHERE r.book.id = :bookId")
+    Double findAverageRatingForBookId(@Param("bookId") long bookId);
 
 }

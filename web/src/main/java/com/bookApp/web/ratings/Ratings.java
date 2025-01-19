@@ -83,7 +83,6 @@ public class Ratings {
         if (remainder >= 0.5) {
             starBuilder.append(halfStarImg);
         }
-
         return starBuilder.toString();
     }
 }

@@ -123,12 +123,12 @@ public class BookshelfController {
 
         List<ShelfBook> shelfBooks = shelfBookRepository.findByShelfId(shelfId);
 
-        Map<Book, Double> bookRatings = new HashMap<>();
+        Map<Long, Double> bookRatings = new HashMap<>();
 
         for (ShelfBook shelfBook : shelfBooks) {
-            Book book = shelfBook.getBook();
-            Double averageRating = ratingsRepository.findAverageRatingForBook(book);
-            bookRatings.put(book, (averageRating != null) ? averageRating : 0.0);
+            Long bookId = shelfBook.getBook().getId();
+            Double averageRating = ratingsRepository.findAverageRatingForBookId(bookId);
+            bookRatings.put(bookId, (averageRating != null) ? averageRating : 0.0);
         }
 
         model.addAttribute("bookRatings", bookRatings);
@@ -253,12 +253,12 @@ public class BookshelfController {
         List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfIdAndSort(shelfId, Sort.by(Sort.Direction.ASC,"dateCreated"));
 
         //extract in a  method?
-        Map<Book, Double> bookRatings = new HashMap<>();
+        Map<Long, Double> bookRatings = new HashMap<>();
 
         for (ShelfBook shelfBook : sortedShelfBooks) {
-            Book book = shelfBook.getBook();
-            Double averageRating = ratingsRepository.findAverageRatingForBook(book);
-            bookRatings.put(book, (averageRating != null) ? averageRating : 0.0);
+            Long bookId = shelfBook.getBook().getId();
+            Double averageRating = ratingsRepository.findAverageRatingForBookId(bookId);
+            bookRatings.put(bookId, (averageRating != null) ? averageRating : 0.0);
         }
 
         model.addAttribute("shelfBooks", sortedShelfBooks);
@@ -275,12 +275,12 @@ public class BookshelfController {
         Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
         List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfIdAndSort(shelfId, Sort.by(Sort.Direction.DESC,"dateCreated"));
 
-        Map<Book, Double> bookRatings = new HashMap<>();
+        Map<Long, Double> bookRatings = new HashMap<>();
 
         for (ShelfBook shelfBook : sortedShelfBooks) {
-            Book book = shelfBook.getBook();
-            Double averageRating = ratingsRepository.findAverageRatingForBook(book);
-            bookRatings.put(book, (averageRating != null) ? averageRating : 0.0);
+            Long bookId = shelfBook.getBook().getId();
+            Double averageRating = ratingsRepository.findAverageRatingForBookId(bookId);
+            bookRatings.put(bookId, (averageRating != null) ? averageRating : 0.0);
         }
 
         model.addAttribute("shelfBooks", sortedShelfBooks);
@@ -297,12 +297,12 @@ public class BookshelfController {
 
         Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
         List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfId(shelfId);
-        Map<Book, Double> bookRatings = new HashMap<>();
+        Map<Long, Double> bookRatings = new HashMap<>();
 
         for (ShelfBook shelfBook : sortedShelfBooks) {
-            Book book = shelfBook.getBook();
-            Double averageRating = ratingsRepository.findAverageRatingForBook(book);
-            bookRatings.put(book, (averageRating != null) ? averageRating : 0.0);
+            Long bookId = shelfBook.getBook().getId();
+            Double averageRating = ratingsRepository.findAverageRatingForBookId(bookId);
+            bookRatings.put(bookId, (averageRating != null) ? averageRating : 0.0);
         }
 
         sortedShelfBooks.sort(Comparator.comparing(shelfBook -> bookRatings.get(shelfBook.getBook())));
@@ -320,12 +320,12 @@ public class BookshelfController {
 
         Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
         List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfId(shelfId);
-        Map<Book, Double> bookRatings = new HashMap<>();
+        Map<Long, Double> bookRatings = new HashMap<>();
 
         for (ShelfBook shelfBook : sortedShelfBooks) {
-            Book book = shelfBook.getBook();
-            Double averageRating = ratingsRepository.findAverageRatingForBook(book);
-            bookRatings.put(book, (averageRating != null) ? averageRating : 0.0);
+            Long bookId = shelfBook.getBook().getId();
+            Double averageRating = ratingsRepository.findAverageRatingForBookId(bookId);
+            bookRatings.put(bookId, (averageRating != null) ? averageRating : 0.0);
         }
 
         sortedShelfBooks.sort(Comparator.comparing(shelfBook -> bookRatings.get(shelfBook.getBook()), Comparator.reverseOrder()));

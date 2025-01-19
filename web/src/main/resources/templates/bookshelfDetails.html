@@ -498,6 +498,11 @@
             right: 0;
             top: 40px;
         }
+
+        .avgRating {
+            color: #4d5cda;
+            font-weight: bold;
+        }
     </style>
 
 <body>
@@ -605,7 +610,8 @@
                     </a>
                     <div>
                         <p id="book-title" th:text="${shelfBook.book.title}"></p>
-                        <span th:text="${bookRatings[shelfBook.book] != null ? bookRatings[shelfBook.book] : 0.0} + '⭐'"></span>
+                        Average Rating:
+                        <span class="avgRating" th:text="${bookRatings[shelfBook.book.id] != null ? bookRatings[shelfBook.book.id] : 0.0} + '⭐'"></span>
                     </div>
 
                     <button class="deleteBtn" th:data-book-id="${shelfBook.book.id}">
