@@ -254,7 +254,7 @@
                     <span th:switch="${update.type}">
                         <span th:case="'rating'">gave this book <span th:text="${update.stars}"></span> stars ⭐️</span>
                         <span th:case="'review'">
-                            wrote a review for this book <span th:text="${update.bookTitle}"></span> 🖋
+                            wrote a review for this book 🖋
                             <br/>
                             <span th:text="|&quot;${update.description}&quot;|" class="review-text"></span>
                         </span>
