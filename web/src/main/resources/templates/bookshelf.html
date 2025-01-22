@@ -81,7 +81,6 @@
             padding: 0;
         }
 
-
         input[type=search] {
             width: 121%;
             box-sizing: border-box;
@@ -233,19 +232,21 @@
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            width: 400px;
+            width: 350px;
             background-color: #f8f9ff;
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             border: 1px solid #ddd;
+            flex-shrink: 0;
         }
 
-        .book-image {
+        .book-item img {
             width: 100px;
             height: 150px;
             object-fit: cover;
             border-radius: 4px;
+            margin: 15px;
         }
 
         .book-details {
@@ -253,7 +254,7 @@
             flex-direction: column;
             justify-content: flex-start;
             text-align: left;
-            margin-right: 30px;
+            margin-left: 40px;
         }
 
         .book-title {
@@ -275,7 +276,7 @@
             align-items: center;
             justify-content: space-between;
             margin: 10px 0;
-            width: 100%;
+            width: 150px;
         }
 
         .progress-bar {
@@ -296,9 +297,10 @@
         .progress-text {
             font-size: 12px;
             color: #333;
+            margin-right: 4px;
         }
 
-        .update-progress-btn {
+        .updateBtn {
             background-color: #5e72e4;
             color: white;
             border: none;
@@ -307,11 +309,60 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s;
+            width: 120px;
         }
 
-        .update-progress-btn:hover {
+        .updateBtn:hover {
             background-color: #4d5cda;
         }
+
+        #updateProgressPopup{
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            max-height: 90%;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+            border: 2px solid #6f81e4;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        #pageInput {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+        }
+
+        #saveBtn, #cancelBtn {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            background-color: #6f81e4;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #saveBtn:hover, #cancelBtn:hover {
+            background-color: #4d5cda;
+        }
+
     </style>
 </head>
 
@@ -358,21 +409,27 @@
         <div class="currently-reading">
             <h3>📖 Currently Reading... 📖</h3>
             <div class="books-container">
-                <div class="book-item">
-                    <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1571423190i/41057294.jpg" alt="Book Cover" class="book-image">
+                <div class="book-item" th:each="shelfbook : ${currentlyReadingBooks}">
+                    <a th:href="@{/books/{bookId}(bookId = ${shelfbook.book.id})}">
+                        <img th:src="${shelfbook.book.photoUrl}" alt="Book Cover"/>
+                    </a>
                     <div class="book-details">
-                        <p class="book-title">Normal People</p>
-                        <p class="book-author">by Sally Rooney</p>
+                        <p class="book-title" th:text="${shelfbook.book.title}"></p>
+                        <p class="book-author" th:text="'by ' + ${shelfbook.book.author}"></p>
                         <div class="progress-bar-container">
+                            <span class="progress-text" th:text="${shelfbook.getProgressPercentage()} + '%'"></span>
                             <div class="progress-bar">
-                                <div class="progress" style="width: 60%;"></div>
+                                <div class="progress" th:style="'width: ' + ${shelfbook.getProgressPercentage()} + '%'"></div>
                             </div>
-                            <span class="progress-text">60%</span>
                         </div>
-                        <button class="update-progress-btn">Update Progress</button>
+                        <button class="updateBtn" th:data-book-id="${shelfbook.book.id}">Update Progress</button>
                     </div>
                 </div>
-
+            </div>
+            <div id="updateProgressPopup">
+                <input type="number" id="pageInput" placeholder="You are on page:" style="width: 100%; padding: 5px;">
+                <button id="saveBtn">Save</button>
+                <button id="cancelBtn">Cancel</button>
             </div>
         </div>
         <table>
@@ -432,7 +489,7 @@
                     </a>
                 </td>
                 <td>
-                    <button class="deleteBtn" th:data-book-id="${entry.key}">
+                    <button class="deleteBtn" th:data-bookshelf-id="${entry.key}">
                         <img th:src="@{/images/test2.png}"/>
                     </button>
                     <div id="deletePopup">
@@ -456,13 +513,16 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         let selectedBookshelf = null; //to store the shelf id for the clicked delete button
+        let selectedBookId = null;
 
         const deletePopup = document.getElementById('deletePopup');
+        const updateProgressPopup = document.getElementById('updateProgressPopup');
+        const pageInput = document.getElementById('pageInput');
 
         const deleteBtns = document.querySelectorAll('.deleteBtn');
         deleteBtns.forEach((btn) => {
             btn.addEventListener('click', () => {
-                selectedBookshelf = btn.getAttribute('data-book-id');
+                selectedBookshelf = btn.getAttribute('data-bookshelf-id');
                 deletePopup.style.display = 'block'; //show popup
             });
         });
@@ -493,6 +553,45 @@
             deletePopup.style.display = 'none';
         });
 
+        const updateBtns = document.querySelectorAll('.updateBtn');
+        updateBtns.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                selectedBookId = btn.getAttribute('data-book-id');
+                updateProgressPopup.style.display = 'block';
+                updateProgressPopup.style.opacity = '1';
+                pageInput.focus();
+            });
+        });
+
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.addEventListener('click', () => {
+            const currentPage = pageInput.value;
+            if (currentPage) {
+                fetch(`/updateProgress/${selectedBookId}?page=${encodeURIComponent(currentPage)}`, {
+                    method: 'GET',
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Progress updated 🤓');
+                            location.reload();
+                        }
+                        else {
+                            alert('Error updating the progress.')
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+            else {
+                alert('Please enter a valid page number.');
+            }
+        });
+
+        const cancelBtn = document.getElementById('cancelBtn');
+        cancelBtn.addEventListener('click', () => {
+            updateProgressPopup.style.display = 'none'; //hide popup
+        });
     });
 </script>
 </body>

@@ -504,7 +504,6 @@
             font-weight: bold;
         }
     </style>
-
 <body>
 <header>
     <div class="title">
@@ -523,7 +522,6 @@
         <a th:href="@{/logout}" class="logoutIcon"> <img th:src="@{/images/logoutIcon.png}" style="width: 30px;height: 30px;"></a>
     </div>
 </header>
-
 <div class="main-container">
     <div class="sidebar">
         <div class="menu">
@@ -641,12 +639,14 @@
         const shelfLabel = document.getElementById('shelfLabelText');
         const deletePopup = document.getElementById('deletePopup');
 
+        //button or btn?
         //toggle dropdown visibility when the sort button is clicked
         const sortButton = document.querySelector('.BookshelfButtons .sortBtn');
         sortButton.addEventListener('click', function() {
             dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         });
 
+        //() =>
         //close dropdown if clicked outside
         window.addEventListener('click', function (e) {
             if (!sortButton.contains(e.target)) {
@@ -817,9 +817,9 @@
                             if (response.ok) {
                                 alert('Book removed from bookshelf!');
                                 location.reload(); //refresh the page
-                            }
+                            }//consistent spaces at else
                             else {
-                                alert('Error removing book from bookshelf');
+                                alert('Error removing book from bookshelf.');
                             }
                         })
                         .catch(error => {

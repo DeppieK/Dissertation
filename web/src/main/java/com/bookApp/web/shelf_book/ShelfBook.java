@@ -46,6 +46,9 @@ public class ShelfBook{
     @Column(nullable = false)
     private LocalDateTime dateUpdated;
 
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
+    private int pageNumber = 0;
+
     @Override
     public String toString() {
         return "ShelfBook{" +
@@ -54,6 +57,14 @@ public class ShelfBook{
                 ", book=" + book +
                 ", dateCreated=" + dateCreated +
                 ", dateUpdated=" + dateUpdated +
+                ", pageNumber=" + pageNumber +
                 '}';
+    }
+
+    public int getProgressPercentage() {
+        if (book != null && book.getPages() > 0) {
+            return (int) ((pageNumber * 100.0) / book.getPages());
+        }
+        return 0;
     }
 }

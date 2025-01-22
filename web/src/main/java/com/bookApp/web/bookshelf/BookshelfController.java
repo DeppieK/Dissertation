@@ -91,6 +91,11 @@ public class BookshelfController {
         model.addAttribute("readCount", readCount);
         model.addAttribute("wantToReadCount", wantToReadCount);
 
+        Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,"Currently Reading");
+        List<ShelfBook> currentlyReadingBooks = shelfBookRepository.findByShelfId(shelfId);
+
+        model.addAttribute("currentlyReadingBooks", currentlyReadingBooks);
+
         return "bookshelf";
     }
 
@@ -154,9 +159,15 @@ public class BookshelfController {
 
         ShelfBook shelfBookExists = shelfBookRepository.findByShelfIdAndBookId(shelfId,bookId);
         if (shelfBookExists == null){
-            LocalDateTime currentDate = LocalDateTime.now();
-            //create and save the ShelfBook entry
+            //create the ShelfBook entry
             ShelfBook shelfBook = new ShelfBook();
+
+            if (label.equals("Currently Reading")){
+                shelfBook.setPageNumber(0);
+            }
+
+            LocalDateTime currentDate = LocalDateTime.now();
+            //save the ShelfBook entry
             shelfBook.setShelfId(shelfId);
             shelfBook.setBook(book);
             shelfBook.setDateCreated(currentDate);
@@ -305,7 +316,9 @@ public class BookshelfController {
             bookRatings.put(bookId, (averageRating != null) ? averageRating : 0.0);
         }
 
-        sortedShelfBooks.sort(Comparator.comparing(shelfBook -> bookRatings.get(shelfBook.getBook())));
+        sortedShelfBooks.sort(Comparator.comparing(shelfBook ->
+                bookRatings.getOrDefault(shelfBook.getBook().getId(), 0.0)
+        ));
 
         model.addAttribute("shelfBooks", sortedShelfBooks);
         model.addAttribute("label", label);
@@ -328,7 +341,12 @@ public class BookshelfController {
             bookRatings.put(bookId, (averageRating != null) ? averageRating : 0.0);
         }
 
-        sortedShelfBooks.sort(Comparator.comparing(shelfBook -> bookRatings.get(shelfBook.getBook()), Comparator.reverseOrder()));
+        sortedShelfBooks.sort(
+                Comparator.comparing(
+                        shelfBook -> bookRatings.getOrDefault(shelfBook.getBook().getId(), 0.0),
+                        Comparator.reverseOrder()
+                )
+        );
 
         model.addAttribute("shelfBooks", sortedShelfBooks);
         model.addAttribute("label", label);
@@ -337,5 +355,27 @@ public class BookshelfController {
         return "bookshelfDetails";
     }
 
+    @GetMapping("/updateProgress/{bookId}")
+    public ResponseEntity<Void> updateProgress (@PathVariable Long bookId, @RequestParam int page, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+        Book book = bookService.findBookById(bookId);
+        Long currentlyReadingShelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,"Currently Reading");
+        ShelfBook shelfBook = shelfBookRepository.findByShelfIdAndBookId(currentlyReadingShelfId,bookId);
 
+        if(page >= book.getPages()){
+            Long ReadShelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,"Read");
+            shelfBook.setShelfId(ReadShelfId);
+            shelfBook.setPageNumber(page);
+            shelfBookRepository.save(shelfBook);
+            return ResponseEntity.ok().build();
+        }
+        else{
+            if (currentlyReadingShelfId != null) {
+                shelfBook.setPageNumber(page);
+                shelfBookRepository.save(shelfBook);
+                return ResponseEntity.ok().build();
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

@@ -339,7 +339,7 @@ public class BookController {
 
     //do we like this path name?
     @PostMapping("/{label}")
-    public String addToLabel(@PathVariable String label, @RequestParam("bookId") long bookId, Model model, RedirectAttributes redirectAttributes) {
+    public String addToLabel(@PathVariable String label, @RequestParam("bookId") long bookId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
@@ -350,9 +350,14 @@ public class BookController {
 
         ShelfBook shelfBookExists = shelfBookRepository.findByShelfIdAndBookId(shelfId,bookId);
         if (shelfBookExists == null){
+            ShelfBook shelfBook = new ShelfBook();
+
+            if (label.equals("Currently Reading")){
+                shelfBook.setPageNumber(0);
+            }
+
             LocalDateTime currentDate = LocalDateTime.now();
 
-            ShelfBook shelfBook = new ShelfBook();
             shelfBook.setShelfId(shelfId);
             shelfBook.setBook(book);
             shelfBook.setDateCreated(currentDate);
