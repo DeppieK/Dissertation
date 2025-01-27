@@ -28,8 +28,8 @@ public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
     @Query("SELECT COALESCE(MAX(b.shelfId), 0) FROM Bookshelf b")
     Long findMaxShelfId();
 
-    @Query("SELECT COUNT(b) FROM Bookshelf b WHERE b.label LIKE 'untitled%'")
-    Long countUntitledLabels();
+    @Query("SELECT COUNT(b) FROM Bookshelf b WHERE b.label LIKE 'untitled%' AND b.user = :user")
+    Long countUntitledLabelsByUser(@Param("user") User user);
 
     @Query("SELECT COUNT(b) FROM Bookshelf b WHERE b.label LIKE CONCAT(:labelName, '%')")
     Long countSimilarLabels(@Param("labelName") String labelName);

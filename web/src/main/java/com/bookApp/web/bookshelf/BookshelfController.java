@@ -103,9 +103,6 @@ public class BookshelfController {
         model.addAttribute("wantToReadBooks", getShelfBooks(user,"Want to Read"));
         model.addAttribute("otherBookshelvesBooks", otherBookshelvesBooks);
 
-        System.out.println("otherBookshelvesWithCount: " + otherBookshelvesWithCount);
-        System.out.println("otherBookshelvesBooks: " + otherBookshelvesBooks);
-
         return "bookshelf";
     }
 
@@ -119,7 +116,7 @@ public class BookshelfController {
     public String addShelf(Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
-        Long untitledNumber = bookshelfRepository.countUntitledLabels() + 1L;
+        Long untitledNumber = bookshelfRepository.countUntitledLabelsByUser(user) + 1L;
         Bookshelf bookshelf = new Bookshelf();
         bookshelf.setLabel("untitled " + untitledNumber);
         bookshelf.setShelfId(bookshelfService.getNextShelfId());
