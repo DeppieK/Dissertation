@@ -556,6 +556,47 @@
         const updateProgressPopup = document.getElementById('updateProgressPopup');
         const pageInput = document.getElementById('pageInput');
 
+        document.querySelector('.main-container').addEventListener('click', (event) => {
+            //update progress button
+            if (event.target.closest('.updateBtn')) {
+                const updateBtn = event.target.closest('.updateBtn');
+                selectedBookId = updateBtn.getAttribute('data-book-id');
+                updateProgressPopup.style.display = 'block';
+                updateProgressPopup.style.opacity = '1';
+                pageInput.focus();
+            }
+
+            //handle save button
+            if (event.target.closest('#saveBtn')) {
+                const currentPage = pageInput.value;
+                if (currentPage) {
+                    fetch(`/updateProgress/${selectedBookId}?page=${encodeURIComponent(currentPage)}`, {
+                        method: 'GET',
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Progress updated 🤓');
+                                location.reload();
+                            }
+                            else {
+                                alert('Error updating the progress.')
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+                else {
+                    alert('Please enter a valid page number.');
+                }
+            }
+
+            //handle cancel button
+            if (event.target.closest('#cancelBtn')) {
+                updateProgressPopup.style.display = 'none';
+            }
+        });
+
         const deleteBtns = document.querySelectorAll('.deleteBtn');
         deleteBtns.forEach((btn) => {
             btn.addEventListener('click', () => {
@@ -588,46 +629,6 @@
         const noBtn = document.getElementById('noBtn');
         noBtn.addEventListener('click', () =>{
             deletePopup.style.display = 'none';
-        });
-
-        const updateBtns = document.querySelectorAll('.updateBtn');
-        updateBtns.forEach((btn) => {
-            btn.addEventListener('click', () => {
-                selectedBookId = btn.getAttribute('data-book-id');
-                updateProgressPopup.style.display = 'block';
-                updateProgressPopup.style.opacity = '1';
-                pageInput.focus();
-            });
-        });
-
-        const saveBtn = document.getElementById('saveBtn');
-        saveBtn.addEventListener('click', () => {
-            const currentPage = pageInput.value;
-            if (currentPage) {
-                fetch(`/updateProgress/${selectedBookId}?page=${encodeURIComponent(currentPage)}`, {
-                    method: 'GET',
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            alert('Progress updated 🤓');
-                            location.reload();
-                        }
-                        else {
-                            alert('Error updating the progress.')
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-                }
-            else {
-                alert('Please enter a valid page number.');
-            }
-        });
-
-        const cancelBtn = document.getElementById('cancelBtn');
-        cancelBtn.addEventListener('click', () => {
-            updateProgressPopup.style.display = 'none'; //hide popup
         });
     });
 </script>
