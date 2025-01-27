@@ -87,16 +87,32 @@ public class BookshelfController {
         long readCount = bookshelfService.countByShelfId(bookshelfService.getShelfIdByUserAndLabel(user,"Read"));
         long wantToReadCount = bookshelfService.countByShelfId(bookshelfService.getShelfIdByUserAndLabel(user,"Want to Read"));
 
+        Map<String, List<ShelfBook>> otherBookshelvesBooks = new HashMap<>();
+
+        for (Bookshelf bookshelf : otherBookshelves) {
+            List<ShelfBook> books = getShelfBooks(user, bookshelf.getLabel());
+            otherBookshelvesBooks.put(bookshelf.getLabel(), books);
+        }
+
         model.addAttribute("currentlyReadingCount", currentlyReadingCount);
         model.addAttribute("readCount", readCount);
         model.addAttribute("wantToReadCount", wantToReadCount);
 
-        Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,"Currently Reading");
-        List<ShelfBook> currentlyReadingBooks = shelfBookRepository.findByShelfId(shelfId);
+        model.addAttribute("currentlyReadingBooks", getShelfBooks(user,"Currently Reading"));
+        model.addAttribute("readBooks", getShelfBooks(user,"Read"));
+        model.addAttribute("wantToReadBooks", getShelfBooks(user,"Want to Read"));
+        model.addAttribute("otherBookshelvesBooks", otherBookshelvesBooks);
 
-        model.addAttribute("currentlyReadingBooks", currentlyReadingBooks);
+        System.out.println("otherBookshelvesWithCount: " + otherBookshelvesWithCount);
+        System.out.println("otherBookshelvesBooks: " + otherBookshelvesBooks);
 
         return "bookshelf";
+    }
+
+    private List<ShelfBook> getShelfBooks(User user, String label) {
+        Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
+        List<ShelfBook> books = shelfBookRepository.findByShelfId(shelfId);
+        return books;
     }
 
     @PostMapping("/addShelf")

@@ -363,6 +363,32 @@
             background-color: #4d5cda;
         }
 
+        li {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li img {
+            width: 80px;
+            height: 120px;
+            margin-right: -40px;
+            margin-left: 5px;
+            display: inline-block;
+            object-fit: cover;
+        }
+
+        td li {
+            display: inline-block;
+            padding-right: 10px;
+        }
+
+        td li img {
+            width: 70px;
+            height: 105px;
+        }
+
+
     </style>
 </head>
 
@@ -436,12 +462,12 @@
             <tbody>
             <tr>
                 <td>
-                    image
-                    <!--<li th:each="bookshelf, iterStat : ${currentlyReadingBookshelves}"
-                        th:if="${iterStat.index < 3}"
-                        id="currentlyReadingBooks">
-                        <img th:src="${bookshelf.book.photoUrl}" alt="Book Image" />
-                    </li>-->
+                    <a class="href" th:href="@{/myBookshelf/{label}(label='Currently Reading')}">
+                        <li th:each="currentlyReadingBooks, iterStat : ${currentlyReadingBooks}"
+                            th:if="${iterStat.index < 3}" id="currentlyReadingBooks">
+                            <img th:src="${currentlyReadingBooks.book.photoUrl}" alt="Book Image" />
+                        </li>
+                    </a>
                 </td>
 
                 <td>books currently reading
@@ -452,10 +478,12 @@
             </tr>
             <tr>
                 <td>
-                    image
-                    <!--<li th:each="bookshelf : ${readBookshelves}" id="readBooks">
-                        <img th:src="${bookshelf.book.photoUrl}" />
-                    </li>-->
+                    <a class="href" th:href="@{/myBookshelf/{label}(label='Read')}">
+                        <li th:each="readBooks, iterStat : ${readBooks}"
+                            th:if="${iterStat.index < 3}" id="readBooks">
+                            <img th:src="${readBooks.book.photoUrl}" alt="Book Image" />
+                        </li>
+                    </a>
                 </td>
                 <td>books read
                     <a class="amountOfBooks" th:href="@{/myBookshelf/{label}(label='Read')}">
@@ -465,10 +493,12 @@
             </tr>
             <tr>
                 <td>
-                    image
-                    <!--<li th:each="bookshelf : ${wantToReadBookshelves}" id="wantToReadBooks">
-                        <img th:src="${bookshelf.book.photoUrl}" />
-                    </li>-->
+                    <a class="href" th:href="@{/myBookshelf/{label}(label='Want to Read')}">
+                        <li th:each="wantToReadBooks, iterStat : ${wantToReadBooks}"
+                            th:if="${iterStat.index < 3}" id="wantToRead">
+                            <img th:src="${wantToReadBooks.book.photoUrl}" alt="Book Image" />
+                        </li>
+                    </a>
                 </td>
                 <td>want to read
                     <a class="amountOfBooks" th:href="@{/myBookshelf/{label}(label='Want to Read')}">
@@ -482,7 +512,14 @@
         <table class="bookshelf">
             <tbody>
             <tr th:each="entry : ${otherBookshelvesWithCount}">
-                <td>image</td>
+                <td>
+                    <a class="href" th:href="@{/myBookshelf/{shelfId}(shelfId=${entry.key})}">
+                        <li th:each="shelfbook, iterStat : ${otherBookshelvesBooks[entry.key]}"
+                            th:if="${iterStat.index < 3}">
+                            <img th:src="${shelfbook.book.photoUrl}" alt="Book Image" />
+                        </li>
+                    </a>
+                </td>
                 <td>[[${entry.key}]]
                     <a class="amountOfBooks" th:href="@{/myBookshelf/{shelfId}(shelfId=${entry.key})}">
                         <div class="amountOfBooks">[[${entry.value}]] books</div>
