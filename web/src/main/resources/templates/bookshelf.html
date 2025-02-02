@@ -448,7 +448,7 @@
                                 <div class="progress" th:style="'width: ' + ${shelfbook.getProgressPercentage()} + '%'"></div>
                             </div>
                         </div>
-                        <button class="updateBtn" th:data-book-id="${shelfbook.book.id}">Update Progress</button>
+                        <button class="updateBtn" th:data-book-id="${shelfbook.book.id}" th:data-progress="${shelfbook.pageNumber}">Update Progress</button>
                     </div>
                 </div>
             </div>
@@ -563,6 +563,7 @@
                 selectedBookId = updateBtn.getAttribute('data-book-id');
                 updateProgressPopup.style.display = 'block';
                 updateProgressPopup.style.opacity = '1';
+                pageInput.value = updateBtn.getAttribute('data-progress');
                 pageInput.focus();
             }
 
