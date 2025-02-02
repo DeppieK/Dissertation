@@ -2,8 +2,10 @@ package com.bookApp.web.book;
 
 import com.bookApp.web.bookshelf.BookshelfRepository;
 import com.bookApp.web.bookshelf.BookshelfService;
+import com.bookApp.web.friends.Friends;
 import com.bookApp.web.friends.FriendsReadingDto;
 import com.bookApp.web.friends.Dto.FriendsUpdateDto;
+import com.bookApp.web.friends.FriendsRepository;
 import com.bookApp.web.genre.Genre;
 import com.bookApp.web.genre.GenreRepository;
 import com.bookApp.web.ratings.Ratings;
@@ -25,6 +27,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,10 +48,14 @@ public class BookController {
     private final ShelfBookRepository shelfBookRepository;
     private final BookshelfRepository bookshelfRepository;
     private final Book book;
+    private final FriendsRepository friendsRepository;
 
     //constructor
     @Autowired
-    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository, UserService userService, RatingsService ratingsService, GenreRepository genreRepository, BookshelfService bookshelfService, ShelfBookService shelfBookService, ShelfBookRepository shelfBookRepository, BookshelfRepository bookshelfRepository, Book book) {
+    public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository,
+                          UserService userService, RatingsService ratingsService, GenreRepository genreRepository, BookshelfService bookshelfService,
+                          ShelfBookService shelfBookService, ShelfBookRepository shelfBookRepository, BookshelfRepository bookshelfRepository, Book book,
+                          FriendsRepository friendsRepository) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookSearchService = bookSearchService;
@@ -60,6 +68,7 @@ public class BookController {
         this.shelfBookRepository = shelfBookRepository;
         this.bookshelfRepository = bookshelfRepository;
         this.book = book;
+        this.friendsRepository = friendsRepository;
     }
 
     //main page
@@ -165,12 +174,14 @@ public class BookController {
 
         System.out.println(allUpdates);
 
-        Map<Long, Double> bookRatings = new HashMap<>();
+        Map<Long, String> bookRatings = new HashMap<>();
+        DecimalFormat df = new DecimalFormat("#.##");
 
         for (FriendsUpdateDto update : allUpdates) {
             long bookId = update.getBookId();
             Double averageRating = ratingsRepository.findAverageRatingForBookId(bookId);
-            bookRatings.put(bookId, (averageRating != null) ? averageRating : 0.0);
+            String formattedRating = (averageRating != null) ? df.format(averageRating) : "0.00";
+            bookRatings.put(bookId, formattedRating);
         }
 
         Map<Long, Double> currentUserRatings = new HashMap<>();
@@ -179,7 +190,6 @@ public class BookController {
             long bookId = update.getBookId();
             Ratings rating = ratingsRepository.findByBookIdAndUserId(bookId, user.getId());
             if (rating != null) {
-                System.out.println("Hi!!");
                 userRating = rating.getStars();
             }
             currentUserRatings.put(bookId, userRating);
@@ -241,8 +251,8 @@ public class BookController {
     private static AverageRating getAverageRating(List<Ratings> ratings) {
         //check if there are any ratings
         boolean hasRatings = !ratings.isEmpty();
-
         double average = 0.0;
+
         if (hasRatings) {
             double totalRating = 0;
             for (Ratings rating : ratings) {
@@ -250,7 +260,12 @@ public class BookController {
             }
             average = totalRating / ratings.size();
         }
-        return new AverageRating(hasRatings, average);
+
+        //format value to 2 decimal digits
+        DecimalFormat df = new DecimalFormat("#.##");
+        double formattedAverage = Double.parseDouble(df.format(average));
+
+        return new AverageRating(hasRatings, formattedAverage);
     }
 
     private record AverageRating(boolean hasRatings, double averageRating) {
@@ -370,6 +385,7 @@ public class BookController {
         return "redirect:/books/" + bookId;
     }
 
+    //consistent mappings
     @GetMapping("/books/delete-rating/{ratingId}")
     @ResponseBody
     public ResponseEntity<Void> deleteRating(@PathVariable long ratingId) {
@@ -400,6 +416,38 @@ public class BookController {
             return ResponseEntity.ok().build(); //success
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @GetMapping("/discoverBooks")
+    public String discoverBooks(Principal principal, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userService.findByUsername(username);
+
+        List<User> friends = friendsRepository.findConnectedUsersByStatus(user, Friends.Status.ACCEPTED);
+        List<Book> booksFriendsRead = bookRepository.findBooksMarkedAsReadByUsers(friends);
+        List<Book> booksHighlyRated = bookRepository.findBooksHighlyRated(user.getId());
+        List<Book> booksWithSimilarGenres = bookRepository.findBooksWithSimilarGenres(booksHighlyRated);
+        //combine booksFriendsRead and booksWithSimilarGenres avoiding duplicates
+        Set<Book> combinedBooks = new HashSet<>(booksFriendsRead);
+        combinedBooks.addAll(booksWithSimilarGenres);
+
+        List<Book> finalList = bookRepository.findBooksNotInUsersBookshelf(user, new ArrayList<>(combinedBooks));
+
+        Map<Book, String> bookRatings = new HashMap<>();
+        DecimalFormat df = new DecimalFormat("#.##");
+
+        for (Book book : finalList) {
+            Double averageRating = ratingsRepository.findAverageRatingForBookId(book.getId());
+            String formattedRating = (averageRating != null) ? df.format(averageRating) : "0.00";
+            bookRatings.put(book, formattedRating);
+        }
+
+        model.addAttribute("books", finalList);
+        model.addAttribute("bookRatings", bookRatings);
+
+        return "discoverBooks";
     }
 
 }

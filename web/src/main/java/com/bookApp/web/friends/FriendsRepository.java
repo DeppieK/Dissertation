@@ -47,6 +47,9 @@ public interface FriendsRepository extends JpaRepository<Friends, Long> {
             "AND f.receiver = :currentUser")
     void deleteDeclinedRequestsOlderThan10Days(User currentUser, @Param("thresholdDate") LocalDate thresholdDate);
 
-
+    @Query("SELECT u FROM User u " +
+            "WHERE u IN (SELECT f.sender FROM Friends f WHERE f.receiver = :user AND f.status = :status) " +
+            "OR u IN (SELECT f.receiver FROM Friends f WHERE f.sender = :user AND f.status = :status)")
+    List<User> findConnectedUsersByStatus(@Param("user") User user, @Param("status") Friends.Status status);
 
 }

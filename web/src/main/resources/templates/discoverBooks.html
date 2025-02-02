@@ -119,8 +119,70 @@
         .profileIcon{
             text-decoration: none;
         }
+
         .menu{
             font-size: 20px;
+        }
+
+        body img {
+            display: block;
+            margin: auto;
+            width: 30%;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #books {
+            text-align: left;
+        }
+
+        .books {
+            margin: 0px 30px 0px 0px;
+            text-align: center;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .books li {
+            margin: 20px;
+            text-align: center;
+            width: 300px;
+
+        }
+
+        .books li img {
+            width: 100%;
+            height: auto;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .books li:hover img {
+            transform: scale(1.03);
+            box-shadow: 0 0 50px #5168ef;
+        }
+
+        #book-title {
+            text-align: center;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        #avgRating {
+            text-align: center;
+        }
+
+        .avgRating {
+            color: #4d5cda;
+            font-weight: bold;
         }
 
     </style>
@@ -164,6 +226,24 @@
                 <a class="href2" th:href="@{/myFriends}"> My Friends </a>
             </li>
         </ul>
+    </div>
+    <div class="content">
+        <div class="image-container">
+            <ul class="books">
+                <li th:each="book : ${books}" id="books">
+                    <a th:href="@{/books/{bookId}(bookId = ${book.id})}">
+                        <img th:src="${book.photoUrl}" />
+                    </a>
+                    <p id="book-title" th:text="${book.title}"></p>
+                    <p id="avgRating">
+                        Average Rating:
+                        <th:block th:with="rating=${bookRatings.get(book)}">
+                            <span class="avgRating" th:text="${rating != null ? rating : 0.0} + '⭐'"></span>
+                        </th:block>
+                    </p>
+                </li>
+            </ul>
+        </div>
     </div>
 
 </div>

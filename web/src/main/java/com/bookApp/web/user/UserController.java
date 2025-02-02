@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -152,12 +153,4 @@ public class UserController {
         return "profile";
     }
 
-    @GetMapping("/discoverBooks")
-    public String discoverBooks(Model model) {
-        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //String username = authentication.getName();
-        //User user = userService.findByUsername(username);
-
-        return "discoverBooks";
-    }
 }
