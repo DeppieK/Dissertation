@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -141,12 +142,14 @@ public class BookshelfController {
 
         List<ShelfBook> shelfBooks = shelfBookRepository.findByShelfId(shelfId);
 
-        Map<Long, Double> bookRatings = new HashMap<>();
+        Map<Long, String> bookRatings = new HashMap<>();
+        DecimalFormat df = new DecimalFormat("#.##");
 
         for (ShelfBook shelfBook : shelfBooks) {
             Long bookId = shelfBook.getBook().getId();
             Double averageRating = ratingsRepository.findAverageRatingForBookId(bookId);
-            bookRatings.put(bookId, (averageRating != null) ? averageRating : 0.0);
+            String formattedRating = (averageRating != null) ? df.format(averageRating) : "0.00";
+            bookRatings.put(bookId, formattedRating);
         }
 
         model.addAttribute("bookRatings", bookRatings);
