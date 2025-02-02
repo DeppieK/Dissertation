@@ -206,20 +206,20 @@
                 <a class="href2" th:href="@{/myFriends}"> My Friends </a>
             </li>
         </ul>
+    </div><div class="content">
+    <div class="image-container">
+        <ul class="books">
+            <li th:each="book : ${books}" id="books">
+                <a th:href="@{/books/{bookId}(bookId = ${book.id})}">
+                    <img th:src="${book.photoUrl}" />
+                </a>
+                <p id="book-title" th:text="${book.title}"></p>
+            </li>
+        </ul>
     </div>
+</div>
 
-    <div class="content">
-        <div class="image-container">
-            <ul class="books">
-                <li th:each="book : ${books}" id="books">
-                    <a th:href="@{/books/{bookId}(bookId = ${book.id})}">
-                        <img th:src="${book.photoUrl}" />
-                    </a>
-                    <p id="book-title" th:text="${book.title}"></p>
-                </li>
-            </ul>
-        </div>
-    </div>
+
 </div>
 
 </body>
