@@ -538,6 +538,12 @@
                                                 <li class="hover"><button type="submit">Want to Read</button></li>
                                                 <input type="hidden" name="bookId" th:value="${book.id}" />
                                             </form>
+                                            <th:block th:each="otherShelf : ${otherBookshelves}">
+                                                <form th:action="@{/{label}(label=${otherShelf.label})}" method="post">
+                                                    <li class="hover"><button type="submit">[[${otherShelf.label}]]</button></li>
+                                                    <input type="hidden" name="bookId" th:value="${book.id}" />
+                                                </form>
+                                            </th:block>
                                         </ul>
                                     </div>
                                 </td>

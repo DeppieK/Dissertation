@@ -1,5 +1,6 @@
 package com.bookApp.web.book;
 
+import com.bookApp.web.bookshelf.Bookshelf;
 import com.bookApp.web.bookshelf.BookshelfRepository;
 import com.bookApp.web.bookshelf.BookshelfService;
 import com.bookApp.web.friends.Friends;
@@ -236,6 +237,8 @@ public class BookController {
         }
         orderedRatings.addAll(otherRatings);
 
+        List<Bookshelf> otherBookshelves = bookshelfRepository.findBookshelvesWithoutSpecifiedLabels(user);
+
         model.addAttribute("user", user);
         model.addAttribute("book", book);
         model.addAttribute("ratings", orderedRatings);
@@ -244,6 +247,7 @@ public class BookController {
         model.addAttribute("userRating", userRating);
         model.addAttribute("hasRatings", averageRating.hasRatings());
         model.addAttribute("averageRating", averageRating.averageRating());
+        model.addAttribute("otherBookshelves", otherBookshelves);
 
         return "detailsPage";
     }
