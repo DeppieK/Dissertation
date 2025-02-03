@@ -64,6 +64,11 @@ public class UserController {
                            @RequestParam String lastname,
                            @RequestParam String email,
                            RedirectAttributes redirectAttributes) {
+        if (userService.existsByUsername(username)) {
+            redirectAttributes.addFlashAttribute("error", "Username already exists");
+            return "redirect:/signup";
+        }
+
         if (!password.equals(confirmPassword)) {
             redirectAttributes.addFlashAttribute("error", "Passwords do not match");
             return "redirect:/signup";
@@ -84,25 +89,20 @@ public class UserController {
         userService.save(user);
 
         //make a function for this ;)
-        Bookshelf bookshelf1 = new Bookshelf();
-        bookshelf1.setLabel("Currently Reading");
-        bookshelf1.setUser(user);
-        bookshelf1.setShelfId(bookshelfService.getNextShelfId());
-        bookshelfService.save(bookshelf1);
-
-        Bookshelf bookshelf2 = new Bookshelf();
-        bookshelf2.setLabel("Read");
-        bookshelf2.setUser(user);
-        bookshelf2.setShelfId(bookshelfService.getNextShelfId());
-        bookshelfService.save(bookshelf2);
-
-        Bookshelf bookshelf3 = new Bookshelf();
-        bookshelf3.setLabel("Want to Read");
-        bookshelf3.setUser(user);
-        bookshelf3.setShelfId(bookshelfService.getNextShelfId());
-        bookshelfService.save(bookshelf3);
+        createDefaultBookshelves(user);
 
         return "redirect:/login";
+    }
+
+    private void createDefaultBookshelves(User user) {
+        String[] labels = {"Currently Reading", "Read", "Want to Read"};
+        for (String label : labels) {
+            Bookshelf bookshelf = new Bookshelf();
+            bookshelf.setLabel(label);
+            bookshelf.setUser(user);
+            bookshelf.setShelfId(bookshelfService.getNextShelfId());
+            bookshelfService.save(bookshelf);
+        }
     }
 
     private String capitalizeFirstLetter(String name) {
@@ -119,6 +119,8 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findByUsername(username);
+
+        int requestsNotifications = friendsRepository.friendRequestsCount(user);
 
         Long shelfId = bookshelfService.getShelfIdByUserAndLabel(user,"Read");
 
@@ -142,13 +144,12 @@ public class UserController {
             averageRating = Math.round(averageRating * 100.0) / 100.0;
         }
 
-
         model.addAttribute("user", user);
         model.addAttribute("readCount", readCount);
         model.addAttribute("booksInBookshelf", booksInBookshelf);
         model.addAttribute("friendsCount", friendsCount);
         model.addAttribute("averageRating", averageRating);
-
+        model.addAttribute("requestsNotifications", requestsNotifications);
 
         return "profile";
     }
