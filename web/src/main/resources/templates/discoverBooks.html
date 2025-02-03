@@ -185,6 +185,28 @@
             font-weight: bold;
         }
 
+        .notification-bubble {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 6px;
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+        }
+
+        .purple {
+            background-color: #4d5cda;
+        }
+
+        .red {
+            background-color: red;
+        }
+
     </style>
 </head>
 
@@ -223,7 +245,11 @@
                 <a class="href2" th:href="@{/discoverBooks}"> Discover Books </a>
             </li>
             <li>
-                <a class="href2" th:href="@{/myFriends}"> My Friends </a>
+                <a class="href2" th:href="@{/myFriends}"> My Friends
+                    <span th:text="${requestsNotifications}"
+                          th:class="${requestsNotifications == 0} ? 'notification-bubble purple' : 'notification-bubble red'">
+                    </span>
+                </a>
             </li>
         </ul>
     </div>

@@ -52,4 +52,7 @@ public interface FriendsRepository extends JpaRepository<Friends, Long> {
             "OR u IN (SELECT f.receiver FROM Friends f WHERE f.sender = :user AND f.status = :status)")
     List<User> findConnectedUsersByStatus(@Param("user") User user, @Param("status") Friends.Status status);
 
+    @Query("SELECT COUNT (f) FROM Friends f WHERE f.receiver = :user AND f.status = 'PENDING' ")
+    int friendRequestsCount(@Param("user") User user);
+
 }

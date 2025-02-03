@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -79,6 +80,8 @@ public class BookController {
         String username = authentication.getName();
 
         User user = userService.findByUsername(username);
+
+        int requestsNotifications = friendsRepository.friendRequestsCount(user);
 
         LocalDateTime currentDate = LocalDateTime.now();
         LocalDateTime thresholdDate = currentDate.minusDays(30);
@@ -199,6 +202,7 @@ public class BookController {
         model.addAttribute("bookRatings", bookRatings);
         model.addAttribute("allUpdates", allUpdates);
         model.addAttribute("currentUserRatings", currentUserRatings);
+        model.addAttribute("requestsNotifications", requestsNotifications);
 
         return "index";
     }
@@ -210,6 +214,8 @@ public class BookController {
         String username = authentication.getName();
 
         User user = userService.findByUsername(username);
+
+        int requestsNotifications = friendsRepository.friendRequestsCount(user);
 
         Book book = bookService.findBookById(bookId);
         List<Ratings> ratings = ratingsRepository.findByBookId(bookId);
@@ -248,6 +254,7 @@ public class BookController {
         model.addAttribute("hasRatings", averageRating.hasRatings());
         model.addAttribute("averageRating", averageRating.averageRating());
         model.addAttribute("otherBookshelves", otherBookshelves);
+        model.addAttribute("requestsNotifications", requestsNotifications);
 
         return "detailsPage";
     }
@@ -335,9 +342,17 @@ public class BookController {
 
     //display books based on a specific genre
     @GetMapping("/books/genre/{genre}")
-    public String findBooksByGenre(@PathVariable("genre") String genre, Model model) {
+    public String findBooksByGenre(@PathVariable("genre") String genre, Model model,Principal principal) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+        int requestsNotifications = friendsRepository.friendRequestsCount(user);
+
         List<Book> books = bookRepository.findByGenre(genre);
+
         model.addAttribute("books", books);
+        model.addAttribute("requestsNotifications", requestsNotifications);
+
         return "genres";
     }
 
@@ -351,7 +366,13 @@ public class BookController {
 
     //genres page
     @GetMapping("/genres")
-    public String genres(Model model) {
+    public String genres(Model model, Principal principal) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        int requestsNotifications = friendsRepository.friendRequestsCount(user);
+        model.addAttribute("requestsNotifications", requestsNotifications);
 
         return "genres";
     }
@@ -428,6 +449,7 @@ public class BookController {
         String username = authentication.getName();
 
         User user = userService.findByUsername(username);
+        int requestsNotifications = friendsRepository.friendRequestsCount(user);
 
         List<User> friends = friendsRepository.findConnectedUsersByStatus(user, Friends.Status.ACCEPTED);
         List<Book> booksFriendsRead = bookRepository.findBooksMarkedAsReadByUsers(friends);
@@ -450,6 +472,7 @@ public class BookController {
 
         model.addAttribute("books", finalList);
         model.addAttribute("bookRatings", bookRatings);
+        model.addAttribute("requestsNotifications", requestsNotifications);
 
         return "discoverBooks";
     }

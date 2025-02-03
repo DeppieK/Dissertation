@@ -4,6 +4,7 @@ import com.bookApp.web.book.Book;
 import com.bookApp.web.book.BookRepository;
 import com.bookApp.web.book.BookSearchService;
 import com.bookApp.web.book.BookService;
+import com.bookApp.web.friends.FriendsRepository;
 import com.bookApp.web.ratings.RatingsRepository;
 import com.bookApp.web.shelf_book.ShelfBook;
 import com.bookApp.web.shelf_book.ShelfBookRepository;
@@ -39,11 +40,12 @@ public class BookshelfController {
     private final ShelfBookService shelfBookService;
     private final Book book;
     private final RatingsRepository ratingsRepository;
+    private final FriendsRepository friendsRepository;
 
     @Autowired
     public BookshelfController(BookRepository bookRepository, BookService bookService,
                                BookshelfRepository bookshelfRepository, BookshelfService bookshelfService,
-                               UserService userService, ShelfBookRepository shelfBookRepository, BookSearchService bookSearchService, ShelfBookService shelfBookService, Book book, RatingsRepository ratingsRepository) {
+                               UserService userService, ShelfBookRepository shelfBookRepository, BookSearchService bookSearchService, ShelfBookService shelfBookService, Book book, RatingsRepository ratingsRepository, FriendsRepository friendsRepository) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookshelfRepository = bookshelfRepository;
@@ -54,6 +56,7 @@ public class BookshelfController {
         this.shelfBookService = shelfBookService;
         this.book = book;
         this.ratingsRepository = ratingsRepository;
+        this.friendsRepository = friendsRepository;
     }
 
     //bookshelf page
@@ -61,6 +64,7 @@ public class BookshelfController {
     public String listBooks(Model model, Principal principal) {
         //get the current user
         User user = userService.findByUsername(principal.getName());
+        int requestsNotifications = friendsRepository.friendRequestsCount(user);
 
         List<Bookshelf> bookshelves = bookshelfService.getBookshelfByUser(user);
         model.addAttribute("bookshelves", bookshelves);
@@ -98,11 +102,11 @@ public class BookshelfController {
         model.addAttribute("currentlyReadingCount", currentlyReadingCount);
         model.addAttribute("readCount", readCount);
         model.addAttribute("wantToReadCount", wantToReadCount);
-
         model.addAttribute("currentlyReadingBooks", getShelfBooks(user,"Currently Reading"));
         model.addAttribute("readBooks", getShelfBooks(user,"Read"));
         model.addAttribute("wantToReadBooks", getShelfBooks(user,"Want to Read"));
         model.addAttribute("otherBookshelvesBooks", otherBookshelvesBooks);
+        model.addAttribute("requestsNotifications", requestsNotifications);
 
         return "bookshelf";
     }
@@ -134,6 +138,8 @@ public class BookshelfController {
         //get the current user
         User user = userService.findByUsername(principal.getName());
 
+        int requestsNotifications = friendsRepository.friendRequestsCount(user);
+
         //get the user's bookshelves
         Bookshelf bookshelves = bookshelfService.getBookshelfByUserAndLabel(user,label);
         model.addAttribute("label", label);
@@ -154,6 +160,7 @@ public class BookshelfController {
 
         model.addAttribute("bookRatings", bookRatings);
         model.addAttribute("shelfBooks", shelfBooks);
+        model.addAttribute("requestsNotifications", requestsNotifications);
 
         return "bookshelfDetails";
 
@@ -275,6 +282,7 @@ public class BookshelfController {
     @GetMapping("/sortByDateAsc")
     public String sortByDateAsc(@RequestParam String label, Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
+        int requestsNotifications = friendsRepository.friendRequestsCount(user);
 
         Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
         List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfIdAndSort(shelfId, Sort.by(Sort.Direction.ASC,"dateCreated"));
@@ -291,6 +299,7 @@ public class BookshelfController {
         model.addAttribute("shelfBooks", sortedShelfBooks);
         model.addAttribute("label", label);
         model.addAttribute("bookRatings", bookRatings);
+        model.addAttribute("requestsNotifications", requestsNotifications);
 
         return "bookshelfDetails";
     }
@@ -298,6 +307,7 @@ public class BookshelfController {
     @GetMapping("/sortByDateDesc")
     public String sortByDateDesc(@RequestParam String label, Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
+        int requestsNotifications = friendsRepository.friendRequestsCount(user);
 
         Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
         List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfIdAndSort(shelfId, Sort.by(Sort.Direction.DESC,"dateCreated"));
@@ -313,7 +323,7 @@ public class BookshelfController {
         model.addAttribute("shelfBooks", sortedShelfBooks);
         model.addAttribute("label", label);
         model.addAttribute("bookRatings", bookRatings);
-
+        model.addAttribute("requestsNotifications", requestsNotifications);
 
         return "bookshelfDetails";
     }
@@ -321,6 +331,7 @@ public class BookshelfController {
     @GetMapping("/sortByRatingAsc")
     public String sortByRatingAsc(@RequestParam String label, Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
+        int requestsNotifications = friendsRepository.friendRequestsCount(user);
 
         Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
         List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfId(shelfId);
@@ -339,6 +350,7 @@ public class BookshelfController {
         model.addAttribute("shelfBooks", sortedShelfBooks);
         model.addAttribute("label", label);
         model.addAttribute("bookRatings", bookRatings);
+        model.addAttribute("requestsNotifications", requestsNotifications);
 
         return "bookshelfDetails";
     }
@@ -346,6 +358,7 @@ public class BookshelfController {
     @GetMapping("/sortByRatingDesc")
     public String sortByRatingDesc(@RequestParam String label, Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
+        int requestsNotifications = friendsRepository.friendRequestsCount(user);
 
         Long shelfId = bookshelfRepository.findShelfIdByUserAndLabel(user,label);
         List<ShelfBook> sortedShelfBooks = shelfBookRepository.findByShelfId(shelfId);
@@ -367,6 +380,7 @@ public class BookshelfController {
         model.addAttribute("shelfBooks", sortedShelfBooks);
         model.addAttribute("label", label);
         model.addAttribute("bookRatings", bookRatings);
+        model.addAttribute("requestsNotifications", requestsNotifications);
 
         return "bookshelfDetails";
     }
