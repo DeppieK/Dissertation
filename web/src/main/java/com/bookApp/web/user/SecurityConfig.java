@@ -34,7 +34,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/books", true)  // Redirect to /books after successful login
+                        .defaultSuccessUrl("/books", true)  //redirect to /books after successful login
                         .permitAll()
                 )
                 .logout(logout -> logout
