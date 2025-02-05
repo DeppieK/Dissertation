@@ -2,6 +2,8 @@ package com.bookApp.web.ratings;
 
 import com.bookApp.web.book.Book;
 import com.bookApp.web.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,6 +17,8 @@ public interface RatingsRepository extends JpaRepository<Ratings, Long> {
 
     List<Ratings> findByBookId(Long bookId);
 
+    Page<Ratings> findByBookId(Long bookId, Pageable pageable);
+
     List<Ratings> findByUser(User user);
 
     Ratings findById(long id);
@@ -23,11 +27,10 @@ public interface RatingsRepository extends JpaRepository<Ratings, Long> {
 
     @Query("SELECT r FROM Ratings r JOIN Friends f " +
             "ON (r.user = f.receiver OR r.user = f.sender) " +
-            "WHERE r.dateUpdated >= :thresholdDate " +
-            "AND f.status = 'ACCEPTED' " +
+            "WHERE f.status = 'ACCEPTED' " +
             "AND (f.receiver = :currentUser OR f.sender = :currentUser) " +
             "AND r.user <> :currentUser")
-    List<Ratings> getFriendsRatingsInASpecificTimestamp(@Param("currentUser") User currentUser, @Param("thresholdDate") LocalDateTime thresholdDate);
+    List<Ratings> getFriendsRatings(@Param("currentUser") User currentUser);
 
     @Query("SELECT AVG(r.stars) FROM Ratings r WHERE r.book.id = :bookId")
     Double findAverageRatingForBookId(@Param("bookId") long bookId);

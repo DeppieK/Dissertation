@@ -225,88 +225,149 @@
             background-color: red;
         }
 
+        #load-more {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4d5cda;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #load-more:hover {
+            background-color: #3b4bbd;
+        }
+
     </style>
 </head>
 
 <body>
-<header>
-    <div class="title">
-        <img th:src="@{/images/booksIcon.png}" style="width: 50px;height: 50px; ">
-        <a th:href="@{/books}" class="href">&nbsp;Literary Haven</a>
-    </div>
-    <div class="searchBar">
-        <form th:action="@{/books/search}">
-            <input type="search" placeholder="Search books, authors, ISBNs..." name="query">
-        </form>
-    </div>
-    <div>
-        <a th:href="@{/profile}" class="profileIcon"> <img th:src="@{/images/profileIcon.png}" style="width: 30px;height: 30px;"></a>
-    </div>
-    <div>
-        <a th:href="@{/logout}" class="logoutIcon"> <img th:src="@{/images/logoutIcon.png}" style="width: 30px;height: 30px;"></a>
-    </div>
-</header>
-
-<div class="main-container">
-    <div class="sidebar">
-        <div class="menu">
-            Menu
+    <header>
+        <div class="title">
+            <img th:src="@{/images/booksIcon.png}" style="width: 50px;height: 50px; ">
+            <a th:href="@{/books}" class="href">&nbsp;Literary Haven</a>
         </div>
-        <ul>
-            <li>
-                <a class="href2" th:href="@{/genres}"> Genres </a>
-            </li>
-            <li>
-                <a class="href2" th:href="@{/myBooks}"> My Books </a>
-            </li>
-            <li>
-                <a class="href2" th:href="@{/discoverBooks}"> Discover Books </a>
-            </li>
-            <li>
-                <a class="href2" th:href="@{/myFriends}"> My Friends
-                    <span th:text="${requestsNotifications}"
-                          th:class="${requestsNotifications == 0} ? 'notification-bubble purple' : 'notification-bubble red'">
-                    </span>
-                </a>
-            </li>
-        </ul>
-    </div>
+        <div class="searchBar">
+            <form th:action="@{/books/search}">
+                <input type="search" placeholder="Search books, authors, ISBNs..." name="query">
+            </form>
+        </div>
+        <div>
+            <a th:href="@{/profile}" class="profileIcon"> <img th:src="@{/images/profileIcon.png}" style="width: 30px;height: 30px;"></a>
+        </div>
+        <div>
+            <a th:href="@{/logout}" class="logoutIcon"> <img th:src="@{/images/logoutIcon.png}" style="width: 30px;height: 30px;"></a>
+        </div>
+    </header>
 
-    <div class="content">
-        <div class="friends-updates">
-            <div th:each="update : ${allUpdates}" class="container">
-                <p>
-                    <span th:text="${update.username}" class="username"></span>
-                    <span th:switch="${update.type}">
-                        <span th:case="'rating'">gave this book <span th:text="${update.stars}"></span> stars ⭐️</span>
-                        <span th:case="'review'">
-                            wrote a review for this book 🖋
-                            <br/>
-                            <span th:text="|&quot;${update.description}&quot;|" class="review-text"></span>
-                        </span>
-                        <span th:case="'currentlyReading'">is currently reading <span th:text="${update.bookTitle}"></span> 📖💜</span>
-                        <span th:case="'read'">read <span th:text="${update.bookTitle}"></span> 🤓</span>
-                        <span th:case="'wantToRead'">wants to read <span th:text="${update.bookTitle}"></span> 💭</span>
-                    </span>
-                </p>
-                <a th:href="@{/books/{bookId}(bookId = ${update.bookId})}">
-                    <img th:src="${update.bookPhotoUrl}" />
-                </a>
-                <div class="center">
-                    <div class="averageRating">
-                        <p th:text="${update.bookTitle}"></p>
-                        Average Rating:
-                        <span class = "avgRating" th:text="${bookRatings[update.bookId] != null ? bookRatings[update.bookId] : 0.0} + '⭐'"></span>
-                    </div>
-                    <div class="userRating">
-                        Your Rating:
-                        <span class = "userRatingStars" th:text="${currentUserRatings[update.bookId] != null ? currentUserRatings[update.bookId] : 0.0} + '⭐'"></span>
-                    </div>
-                </div>
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="menu">
+                Menu
             </div>
+            <ul>
+                <li>
+                    <a class="href2" th:href="@{/genres}"> Genres </a>
+                </li>
+                <li>
+                    <a class="href2" th:href="@{/myBooks}"> My Books </a>
+                </li>
+                <li>
+                    <a class="href2" th:href="@{/discoverBooks}"> Discover Books </a>
+                </li>
+                <li>
+                    <a class="href2" th:href="@{/myFriends}"> My Friends
+                        <span th:text="${requestsNotifications}"
+                              th:class="${requestsNotifications == 0} ? 'notification-bubble purple' : 'notification-bubble red'">
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <div class="friends-updates" id="updates-container">
+
+            </div>
+            <button id="load-more">Load More</button>
         </div>
     </div>
-</div>
+    <script>
+        let page = 0;
+        const size = 10;
 
+        async function loadUpdates() {
+            try {
+                const response = await fetch(`/books/api?page=${page}&size=${size}`);
+                const data = await response.json();
+
+                const updates = data.updates.content; //extract updates list
+                const bookRatings = data.bookRatings; // extract book avg ratings
+                const currentUserRatings = data.currentUserRatings //user ratings
+
+                if (updates.length === 0) {
+                    document.getElementById("load-more").style.display = "none";
+                    return;
+                }
+
+                updates.forEach(update => {
+                    let avgRating = bookRatings[update.bookId] || "0.00";
+                    let userRating = currentUserRatings[update.bookId] || "0.0";
+
+                    let updateHtml =
+                        `<div class="container">
+                            <p>
+                                <span class="username">${update.username}</span>
+                                ${getUpdateText(update)}
+                            </p>
+                            <a href="/books/${update.bookId}">
+                                <img src="${update.bookPhotoUrl}" alt="${update.bookTitle}" />
+                            </a>
+                            <div class="center">
+                                <div class="averageRating">
+                                    <p>${update.bookTitle}</p>
+                                    Average Rating: <span class="avgRating">${avgRating} ⭐</span>
+                                </div>
+                                <div class="userRating">
+                                    Your Rating: <span class="userRatingStars">${userRating} ⭐</span>
+                                </div>
+                            </div>
+                        </div>`;
+                    document.getElementById("updates-container").insertAdjacentHTML("beforeend", updateHtml);
+                });
+
+                page++;
+            } catch (error) {
+                console.error("Error loading updates:", error);
+            }
+        }
+
+        function getUpdateText(update) {
+            switch (update.type) {
+                case "rating":
+                    return `gave this book ${update.stars} stars ⭐️`;
+                case "review":
+                    return `wrote a review for this book 🖋<br/><span class="review-text">"${update.description}"</span>`;
+                case "currentlyReading":
+                    return `is currently reading ${update.bookTitle} 📖💜`;
+                case "read":
+                    return `read ${update.bookTitle} 🤓`;
+                case "wantToRead":
+                    return `wants to read ${update.bookTitle} 💭`;
+                default:
+                    return "";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadUpdates();
+        });
+
+        document.getElementById("load-more").addEventListener("click", () => {
+            loadUpdates();
+        });
+    </script>
 </body>
 </html>

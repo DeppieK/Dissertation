@@ -4,9 +4,9 @@ import com.bookApp.web.bookshelf.Bookshelf;
 import com.bookApp.web.bookshelf.BookshelfRepository;
 import com.bookApp.web.bookshelf.BookshelfService;
 import com.bookApp.web.friends.Friends;
-import com.bookApp.web.friends.FriendsReadingDto;
 import com.bookApp.web.friends.Dto.FriendsUpdateDto;
 import com.bookApp.web.friends.FriendsRepository;
+import com.bookApp.web.friends.FriendsService;
 import com.bookApp.web.genre.Genre;
 import com.bookApp.web.genre.GenreRepository;
 import com.bookApp.web.ratings.Ratings;
@@ -18,11 +18,11 @@ import com.bookApp.web.shelf_book.ShelfBookService;
 import com.bookApp.web.user.User;
 import com.bookApp.web.user.UserService;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,13 +51,14 @@ public class BookController {
     private final BookshelfRepository bookshelfRepository;
     private final Book book;
     private final FriendsRepository friendsRepository;
+    private final FriendsService friendsService;
 
     //constructor
     @Autowired
     public BookController(BookRepository bookRepository, BookService bookService, BookSearchService bookSearchService, RatingsRepository ratingsRepository,
                           UserService userService, RatingsService ratingsService, GenreRepository genreRepository, BookshelfService bookshelfService,
                           ShelfBookService shelfBookService, ShelfBookRepository shelfBookRepository, BookshelfRepository bookshelfRepository, Book book,
-                          FriendsRepository friendsRepository) {
+                          FriendsRepository friendsRepository, FriendsService friendsService) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.bookSearchService = bookSearchService;
@@ -71,112 +72,18 @@ public class BookController {
         this.bookshelfRepository = bookshelfRepository;
         this.book = book;
         this.friendsRepository = friendsRepository;
+        this.friendsService = friendsService;
     }
 
     //main page
     @GetMapping("/books")
-    public String listBooks(Model model){
+    public String listBooks(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
         User user = userService.findByUsername(username);
 
         int requestsNotifications = friendsRepository.friendRequestsCount(user);
-
-        LocalDateTime currentDate = LocalDateTime.now();
-        LocalDateTime thresholdDate = currentDate.minusDays(30);
-
-        List<Ratings> friendsRatings = ratingsRepository.getFriendsRatingsInASpecificTimestamp(user,thresholdDate);
-
-        //extract in a method?
-        List<FriendsReadingDto> friendsCurrentlyReading = bookshelfRepository.getFriendsBooksWithSpecifiedLabels(user,thresholdDate,"Currently Reading");
-        List<FriendsReadingDto> friendsRead = bookshelfRepository.getFriendsBooksWithSpecifiedLabels(user,thresholdDate,"Read");
-        List<FriendsReadingDto> friendsWantToRead = bookshelfRepository.getFriendsBooksWithSpecifiedLabels(user,thresholdDate,"Want to Read");
-
-        List<FriendsUpdateDto> allUpdates = new ArrayList<>();
-
-        //ratings
-        for (Ratings rating : friendsRatings) {
-            System.out.println("Rating dateUpdated: " + rating.getDateUpdated());
-            allUpdates.add(new FriendsUpdateDto(
-                    "rating",
-                    rating.getUser().getUsername(),
-                    rating.getBook().getId(),
-                    rating.getBook().getTitle(),
-                    rating.getBook().getPhotoUrl(),
-                    rating.getDateUpdated(),
-                    rating.getStars(),
-                    null
-            ));
-        }
-
-        //reviews
-        for (Ratings rating : friendsRatings) {
-            if (rating.getDescription() != null && !rating.getDescription().trim().isEmpty()) {
-                allUpdates.add(new FriendsUpdateDto(
-                        "review",
-                        rating.getUser().getUsername(),
-                        rating.getBook().getId(),
-                        rating.getBook().getTitle(),
-                        rating.getBook().getPhotoUrl(),
-                        rating.getDateUpdated(),
-                        0,
-                        rating.getDescription()
-                ));
-            }
-        }
-
-        //currently reading
-        for (FriendsReadingDto reading : friendsCurrentlyReading) {
-            System.out.println("Reading dateUpdated: " + reading.getDateUpdated());
-
-            allUpdates.add(new FriendsUpdateDto(
-                    "currentlyReading",
-                    reading.getBookshelf().getUser().getUsername(),
-                    reading.getBook().getId(),
-                    reading.getBook().getTitle(),
-                    reading.getBook().getPhotoUrl(),
-                    reading.getShelfBook().getDateUpdated(),
-                    0,
-                    null
-            ));
-        }
-
-        //books read
-        for (FriendsReadingDto read : friendsRead) {
-            System.out.println("read dateUpdated: " + read.getDateUpdated());
-
-            allUpdates.add(new FriendsUpdateDto(
-                    "read",
-                    read.getBookshelf().getUser().getUsername(),
-                    read.getBook().getId(),
-                    read.getBook().getTitle(),
-                    read.getBook().getPhotoUrl(),
-                    read.getShelfBook().getDateUpdated(),
-                    0,
-                    null
-            ));
-        }
-
-        //want to read
-        for (FriendsReadingDto wantToRead : friendsWantToRead) {
-            System.out.println("wantToRead dateUpdated: " + wantToRead.getDateUpdated());
-
-            allUpdates.add(new FriendsUpdateDto(
-                    "wantToRead",
-                    wantToRead.getBookshelf().getUser().getUsername(),
-                    wantToRead.getBook().getId(),
-                    wantToRead.getBook().getTitle(),
-                    wantToRead.getBook().getPhotoUrl(),
-                    wantToRead.getShelfBook().getDateUpdated(),
-                    0,
-                    null
-            ));
-        }
-
-        allUpdates.sort(Comparator.comparing(FriendsUpdateDto::getDateUpdated, Comparator.nullsLast(LocalDateTime::compareTo)).reversed());
-
-        System.out.println(allUpdates);
+        List<FriendsUpdateDto> allUpdates = friendsService.fetchFriendsUpdates(user);
 
         Map<Long, String> bookRatings = new HashMap<>();
         DecimalFormat df = new DecimalFormat("#.##");
@@ -189,14 +96,10 @@ public class BookController {
         }
 
         Map<Long, Double> currentUserRatings = new HashMap<>();
-        Double userRating = 0.0;
         for (FriendsUpdateDto update : allUpdates) {
             long bookId = update.getBookId();
             Ratings rating = ratingsRepository.findByBookIdAndUserId(bookId, user.getId());
-            if (rating != null) {
-                userRating = rating.getStars();
-            }
-            currentUserRatings.put(bookId, userRating);
+            currentUserRatings.put(bookId, (rating != null) ? rating.getStars() : 0.0);
         }
 
         model.addAttribute("bookRatings", bookRatings);
@@ -207,9 +110,45 @@ public class BookController {
         return "index";
     }
 
+    @GetMapping("/books/api")
+    @ResponseBody
+    public Map<String, Object> getFriendsUpdate(@RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "10") int size) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        List<FriendsUpdateDto> allUpdates = friendsService.fetchFriendsUpdates(user);
+        DecimalFormat df = new DecimalFormat("#.##");
+
+        Map<Long, String> bookRatings = new HashMap<>();
+        Map<Long, Double> currentUserRatings = new HashMap<>();
+
+        for (FriendsUpdateDto update : allUpdates) {
+            long bookId = update.getBookId();
+            Double avgRating = ratingsRepository.findAverageRatingForBookId(bookId);
+            bookRatings.put(bookId, (avgRating != null) ? df.format(avgRating) : "0.00");
+
+            Ratings rating = ratingsRepository.findByBookIdAndUserId(bookId, user.getId());
+            currentUserRatings.put(bookId, (rating != null) ? rating.getStars() : 0.0);
+        }
+
+        //pageable response
+        int start = Math.min(page * size, allUpdates.size());
+        int end = Math.min(start + size, allUpdates.size());
+        List<FriendsUpdateDto> paginatedUpdates = allUpdates.subList(start, end);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("updates", new PageImpl<>(paginatedUpdates, PageRequest.of(page, size), allUpdates.size()));
+        response.put("bookRatings", bookRatings);
+        response.put("currentUserRatings", currentUserRatings);
+
+        return response;
+    }
+
     //details page
     @GetMapping("/books/{bookId}")
-    public String bookDetail(@PathVariable("bookId") long bookId, Model model) throws ChangeSetPersister.NotFoundException {
+    public String bookDetail(@PathVariable("bookId") long bookId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "4") int size , Model model) throws ChangeSetPersister.NotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
@@ -244,6 +183,7 @@ public class BookController {
         orderedRatings.addAll(otherRatings);
 
         List<Bookshelf> otherBookshelves = bookshelfRepository.findBookshelvesWithoutSpecifiedLabels(user);
+        Page<Ratings> ratingsPage = ratingsRepository.findByBookId(bookId,PageRequest.of(page, size));
 
         model.addAttribute("user", user);
         model.addAttribute("book", book);
@@ -255,6 +195,9 @@ public class BookController {
         model.addAttribute("averageRating", averageRating.averageRating());
         model.addAttribute("otherBookshelves", otherBookshelves);
         model.addAttribute("requestsNotifications", requestsNotifications);
+        model.addAttribute("ratings", ratingsPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", ratingsPage.getTotalPages());
 
         return "detailsPage";
     }

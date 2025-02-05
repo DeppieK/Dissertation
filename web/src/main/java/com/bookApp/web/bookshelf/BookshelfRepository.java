@@ -44,14 +44,12 @@ public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
             "JOIN ShelfBook s ON b.shelfId = s.shelfId " +
             "JOIN s.book book " +
             "JOIN Friends f ON (b.user = f.receiver OR b.user = f.sender) " +
-            "WHERE s.dateUpdated >= :thresholdDate " +
-            "AND b.label = :bookshelfLabel " +
+            "WHERE b.label = :bookshelfLabel " +
             "AND f.status = 'ACCEPTED' " +
             "AND (f.receiver = :currentUser OR f.sender = :currentUser) " +
             "AND b.user <> :currentUser")
     List<FriendsReadingDto> getFriendsBooksWithSpecifiedLabels(
             @Param("currentUser") User currentUser,
-            @Param("thresholdDate") LocalDateTime thresholdDate,
             @Param("bookshelfLabel") String bookshelfLabel);
 
 }
