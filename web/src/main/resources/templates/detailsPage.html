@@ -478,6 +478,49 @@
             background-color: red;
         }
 
+        .showMoreBtn {
+            margin-left: 35px;
+            transform: translateX(-50%);
+            background-color: #4d5cda;
+            color: white;
+            border: none;
+            padding: 5px 5px;
+            font-size: 10px;
+            font-family: Geneva, sans-serif;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .showMoreBtn:hover {
+            background-color: #3a48b1;
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            background-color: #4d5cda;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 0 10px;
+        }
+
+        .pagination button:hover {
+            background-color: #3a48b1;
+            transform: scale(1.05);
+        }
+
     </style>
 </head>
 <body>
@@ -599,9 +642,7 @@
                 </tr>
             </table>
         </div>
-
         <br><br>
-
         <div class="container margin" th:if="${hasRatings}">
             <div th:each="rating : ${ratings}" class="rating-container comment">
                 <p>
@@ -625,25 +666,31 @@
                     <button id="saveBtn">Save</button>
                     <button id="cancelBtn">Cancel</button>
                 </div>
-
                 <p id="ratingStars" th:utext="${rating.getStarsAsEmoji()}"></p>
-                <p id="ratingDesc" th:text="${rating.description}"></p>
-
+                <p class="ratingDesc">
+                    <span class="shortDesc" th:text="${#strings.length(rating.description) > 500 ? #strings.substring(rating.description, 0, 500) + '...' : rating.description}"></span>
+                    <span class="fullDesc" th:text="${rating.description}" style="display: none;"></span>
+                    <button class="showMoreBtn" th:if="${#strings.length(rating.description) > 150}">Show More</button>
+                </p>
                 <div th:if="${rating.user.username == user.username}">
                     <button class="deleteBtn" th:rating-id="${rating.id}">
                         <img th:src="@{/images/test2.png}"/>
                     </button>
                 </div>
-
                 <div id="deletePopup">
                     <label>Are you sure you want to delete your rating?</label></br>
                     <button id="yesBtn">Yes</button>
                     <button id="noBtn">No</button>
                 </div>
-
             </div>
         </div>
+        <div class="pagination" th:if="${totalPages > 1}">
+            <button th:if="${currentPage > 0}" th:onclick="'window.location.href=\'?page=' + (${currentPage - 1}) + '\''" id="prevBtn">Previous</button>
 
+            <span th:text="'Page ' + (${currentPage + 1}) + ' of ' + ${totalPages}"></span>
+
+            <button th:if="${currentPage + 1 < totalPages}" th:onclick="'window.location.href=\'?page=' + (${currentPage + 1}) + '\''" id="nextBtn">Next</button>
+        </div>
         <br><br>
         <div class="container margin" th:if="${!userRatingExists}">
             <div class="rating-form">
@@ -771,7 +818,41 @@
     noBtn.addEventListener('click', () =>{
         deletePopup.style.display = 'none';
     });
+    document.querySelectorAll('.showMoreBtn').forEach(button => {
+        button.addEventListener('click', function () {
+            let shortDesc = this.previousElementSibling.previousElementSibling;
+            let fullDesc = this.previousElementSibling;
 
+            if (fullDesc.style.display === 'none') {
+                shortDesc.style.display = 'none';
+                fullDesc.style.display = 'inline';
+                this.textContent = 'Show Less';
+            } else {
+                shortDesc.style.display = 'inline';
+                fullDesc.style.display = 'none';
+                this.textContent = 'Show More';
+            }
+        });
+    });
+
+    document.querySelectorAll('.pagination button').forEach(button => {
+        button.addEventListener('click', function () {
+            let page = this.getAttribute('data-page');
+
+            sessionStorage.setItem('scrollPos', window.scrollY);
+
+            fetch(`/book/${bookId}?page=${page}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.querySelector('.ratings-section').innerHTML = html;
+                    let scrollPos = sessionStorage.getItem('scrollPos');
+                    if (scrollPos !== null) {
+                        window.scrollTo(0, parseInt(scrollPos));
+                    }
+                })
+                .catch(error => console.error('Error loading ratings:', error));
+        });
+    });
 </script>
 </body>
 </html>
